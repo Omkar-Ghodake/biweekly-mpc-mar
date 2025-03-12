@@ -1,8 +1,8 @@
 import React, { useContext } from 'react'
 import { ModalContext } from '../context/ModalProvider'
-import Modal from '../components/Modal/Modal'
-import ModalHead from '../components/Modal/ModalHead'
-import ModalBody from '../components/Modal/ModalBody'
+import Modal from '../layouts/Modal/Modal'
+import ModalHead from '../layouts/Modal/ModalHead'
+import ModalBody from '../layouts/Modal/ModalBody'
 
 const Landing = () => {
   const { openModal } = useContext(ModalContext)
@@ -21,6 +21,7 @@ const Landing = () => {
           nostrum, natus animi beatae culpa doloremque consequuntur reiciendis
           quae blanditiis corrupti deleniti repellat veniam quidem sit modi quia
           est. Illo, earum!
+
         </ModalBody>
       </Modal>
       <div>

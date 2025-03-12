@@ -12,11 +12,11 @@ const Modal = ({ children, className }) => {
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        className='w-screen h-screen absolute inset-0 bg-black/10 backdrop-blur-sm z-50 flex justify-center items-center'
+        className='w-screen h-screen p-10 absolute inset-0 bg-black/10 backdrop-blur-sm z-50 flex justify-center items-center'
       >
         <div
           className={twMerge(
-            'w-1/2 m-auto bg-white min-h-[70vh] rounded-md p-5 relative',
+            'w-3/5 m-auto bg-white min-h-[70vh] max-h-[90vh] rounded-md p-5 relative',
             className
           )}
         >
@@ -24,7 +24,7 @@ const Modal = ({ children, className }) => {
 
           <RxCross2
             onClick={closeModal}
-            className='cursor-pointer absolute -top-10 -right-10 text-2xl hover:text-black/50 duration-150'
+            className='cursor-pointer absolute -right-10 -top-5 text-2xl hover:text-black/50 duration-150'
           />
         </div>
       </motion.div>
