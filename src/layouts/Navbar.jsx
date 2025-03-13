@@ -3,7 +3,7 @@ import { Link } from "react-router";
 
 const Navbar = () => {
   return (
-    <div className="absolute right-0 bottom-0">
+    <div className="absolute right-0 bottom-0 ">
       <ul className="navlist list-disc">
         <li className="navitem hover:underline text-blue-500">
           <Link to="/" className="navlink">
