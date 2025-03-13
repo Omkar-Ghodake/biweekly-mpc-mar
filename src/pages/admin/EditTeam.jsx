@@ -24,10 +24,22 @@ const EditTeam = () => {
           hidden: { opacity: 0 },
           visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
         }}
-        className="flex flex-col space-y-3 w-3/4 max-h-40 min-h-5/6 bg-sky-400 p-4 rounded-xl overflow-y-scroll [&::-webkit-scrollbar]:hidden"
+        className="flex flex-col space-y-3 w-3/4 max-h-40 min-h-5/6 px-4 py-3 rounded-xl overflow-y-scroll [&::-webkit-scrollbar]:hidden"
       >
+        <div className="flex flex-row justify-between ">
+          <div className="text-3xl font-bold px-6 py-3 text-white bg-sky-700 rounded-lg shadow-md w-fit ml-24">
+            Players
+          </div>
+          <button
+            className="text-xl font-bold px-4 py-1 text-white bg-sky-700 rounded-lg shadow-md w-fit cursor-pointer hover:bg-green-800 hover:shadow-xl hover:scale-102 mr-24"
+            onClick={openModal}
+          >
+            Add
+          </button>
+        </div>
+
         {/* Header Row */}
-        <div className="w-10/12 mx-auto p-2 bg-slate-100 font-bold rounded-3xl grid grid-cols-6 text-center items-center ">
+        <div className="w-10/12 mx-auto p-2 bg-slate-300 font-bold rounded-3xl grid grid-cols-6 text-center items-center ">
           <span className="p-1 col-span-1 border-r border-gray-400">
             Sr. no.
           </span>
@@ -41,14 +53,15 @@ const EditTeam = () => {
         </div>
 
         {/* Animated Pointlist Items */}
-        <div
-          className="list flex flex-col space-y-3 cursor-pointer"
-          
-        >
-          {arr.map((item, index) => (
-            <Pointlist item={item} index={index} onClick={openModal}/>
-          ))}
-        </div>
+
+        {arr.map((item, index) => (
+          <div
+            className="list flex flex-col space-y-3 cursor-pointer"
+            onClick={openModal}
+          >
+            <Pointlist item={item} index={index} />
+          </div>
+        ))}
       </motion.div>
       <Modal>
         <ModalHead>players profile</ModalHead>
@@ -58,16 +71,20 @@ const EditTeam = () => {
               <div className="flex flex-row items-center space-x-5">
                 <img src={ball} alt="" className="w-36 h-36 rounded-full" />
                 <label htmlFor="">Name</label>
-                <input type="text" value="Name" className="border rounded-3xl w-1/2 p-2"/></div>
-                <label htmlFor="">Name</label>
-                <input type="text" value="" />
-                <label htmlFor="">Name</label>
-                <input type="text" value="" />
-                <label htmlFor="">Name</label>
-                <input type="text" value="" />
-                <label htmlFor="">Name</label>
-                <input type="text" value="" />
-              
+                <input
+                  type="text"
+                  value="Name"
+                  className="border rounded-3xl w-1/2 p-2"
+                />
+              </div>
+              <label htmlFor="">Name</label>
+              <input type="text" value="" />
+              <label htmlFor="">Name</label>
+              <input type="text" value="" />
+              <label htmlFor="">Name</label>
+              <input type="text" value="" />
+              <label htmlFor="">Name</label>
+              <input type="text" value="" />
             </form>
           </div>
         </ModalBody>
