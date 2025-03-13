@@ -6,6 +6,8 @@ import { ModalContext } from "../../context/ModalProvider";
 import ModalHead from "../../layouts/Modal/ModalHead";
 import ModalBody from "../../layouts/Modal/ModalBody";
 import ball from "../../assets/ball.jpg";
+import background from "../../assets/background.jpg";
+import { IoMdAdd } from "react-icons/io";
 
 const EditTeam = () => {
   const arr = [
@@ -16,7 +18,10 @@ const EditTeam = () => {
   const updateDetails = () => {};
 
   return (
-    <div className="h-screen flex items-center justify-center">
+    <div
+      className="h-screen flex items-center justify-center bg-cover bg-center"
+      style={{ backgroundImage: `url(${background})` }}
+    >
       <motion.div
         initial="hidden"
         animate="visible"
@@ -24,17 +29,24 @@ const EditTeam = () => {
           hidden: { opacity: 0 },
           visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
         }}
-        className="flex flex-col space-y-3 w-3/4 max-h-40 min-h-5/6 px-4 py-3 rounded-xl overflow-y-scroll [&::-webkit-scrollbar]:hidden"
+        className="flex flex-col space-y-3 w-3/4 max-h-40 backdrop-blur-md min-h-5/6 px-4 py-3 rounded-xl overflow-y-scroll [&::-webkit-scrollbar]:hidden"
       >
         <div className="flex flex-row justify-between ">
-          <div className="text-3xl font-bold px-6 py-3 text-white bg-sky-700 rounded-lg shadow-md w-fit ml-24">
+          <div
+            className="text-3xl font-bold px-6 py-3 text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-lg shadow-md w-1/5 text-center ml-24"
+          >
             Players
           </div>
+
           <button
-            className="text-xl font-bold px-4 py-1 text-white bg-sky-700 rounded-lg shadow-md w-fit cursor-pointer hover:bg-green-800 hover:shadow-xl hover:scale-102 mr-24"
+            className="text-xl font-bold px-4 py-1 <IoMdAdd />
+ bg-sky-700  text-white rounded-lg shadow-md w-fit cursor-pointer hover:bg-sky-800 hover:shadow-xl hover:scale-102 mr-24"
             onClick={openModal}
           >
-            Add
+            <div className="flex justify-center items-center ">
+              <IoMdAdd />
+              Add a player
+            </div>
           </button>
         </div>
 
