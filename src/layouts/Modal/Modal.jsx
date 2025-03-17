@@ -16,7 +16,7 @@ const Modal = ({ children, className }) => {
       >
         <div
           className={twMerge(
-            `w-3/5 m-auto ${className} min-h-[70vh] max-h-[90vh] rounded-md p-5 relative`,
+            "w-3/5 m-auto bg-white min-h-[70vh] max-h-[90vh] rounded-md p-5 relative",
             className
           )}
         >

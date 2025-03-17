@@ -86,7 +86,7 @@ const Scores = () => {
         </div>
       </div>
       {selectedPlayer && (
-        <Modal className={"bg-transparent"}>
+        <Modal className="bg-transparent">
           <ModalHead>
             <div className="flex flex-col w-full h-auto font-bold rounded-lg p-3 uppercase bg-amber-200 relative">
               <span className="text-2xl">{selectedPlayer.name}</span>
