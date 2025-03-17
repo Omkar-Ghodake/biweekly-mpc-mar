@@ -21,7 +21,7 @@ const StadiumBack = () => {
   return (
     <div className="w-screen h-screen">
       <Canvas
-        camera={{ position: [5, 10, 17], fov: 30 }}
+        camera={{ position: [5, 10, 17], fov: 40 }}
         style={{ width: "100vw", height: "100vh", background: "black" }}
       >
         <color attach="background" args={["#98D2C0"]} />
