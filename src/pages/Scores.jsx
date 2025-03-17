@@ -128,7 +128,7 @@ const Scores = () => {
               <img
                 src={img}
                 alt="Placeholder Image"
-                className=" w-auto h-auto absolute -top-90 right-auto z-10"
+                className=" w-auto h-[620px] absolute -top-100 right-auto z-10"
               />
             </div>
           </div>
