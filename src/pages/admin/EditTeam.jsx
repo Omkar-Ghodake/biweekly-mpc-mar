@@ -8,6 +8,8 @@ import ModalBody from "../../layouts/Modal/ModalBody";
 import ball from "../../assets/ball.jpg";
 import background from "../../assets/background.jpg";
 import { IoMdAdd } from "react-icons/io";
+import { MdDeleteOutline } from "react-icons/md";
+
 import img from "../../glb/dhoni1.png";
 import Button from "../../components/Button";
 
@@ -70,7 +72,7 @@ const EditTeam = () => {
     formData.minor * 1;
   return (
     <div
-      className="h-screen flex items-center justify-center bg-cover bg-center"
+      className="h-screen flex items-center justify-center bg-cover bg-center transition-all delay-200"
       style={{ backgroundImage: `url(${background})` }}
     >
       <motion.div
@@ -124,9 +126,9 @@ const EditTeam = () => {
           </div>
         ))}
       </motion.div>
-      <Modal className="h-[84vh] text-md">
+      <Modal className="h-[84vh] text-md ">
         <ModalHead className="w-1/3">
-          <div className="w-full text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-4xl shadow-md p-3">
+          <div className="w-full text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3">
             <span>Players profile</span>
           </div>
         </ModalHead>
@@ -135,8 +137,7 @@ const EditTeam = () => {
             <form onSubmit={updateDetails} className="space-y-6 ">
               {/* Profile Image and Name Input */}
               <div className="flex flex-col md:flex-row items-center space-y-5 md:space-y-0 md:space-x-5 ">
-                
-                <div className="flex flex-col w-full space-y-4">
+                <div className="flex flex-col w-full space-y-4 ">
                   {/* Name Input Field */}
                   <div className="flex items-center">
                     <label htmlFor="name" className="font-medium">
@@ -211,15 +212,23 @@ const EditTeam = () => {
                     {isEditing && (
                       <button
                         onClick={addCourseField}
-                        className="ml-20 px-3 py-1 bg-green-500 text-white rounded-md hover:bg-green-600 transition w-fit"
+                        className="ml-[7.3rem] px-2 py-1  bg-sky-700 text-white rounded-md hover:bg-sky-600 transition w-fit"
                       >
-                        ➕
+                        <IoMdAdd className="text-2xl font-bold" />
                       </button>
                     )}
                   </div>
-                  <div className="space-y-1  space-x-3 items-center max-h-28  w-fit overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                  <div className="space-y-1 space-x-3 items-center max-h-28 h-28 w-fit overflow-y-scroll [&::-webkit-scrollbar]:hidden">
                     {formData.courses.map((course, index) => (
-                      <div key={index} className="flex items-center space-x-3">
+                      <div
+                        key={`course-${index}`}
+                        className="flex items-center space-x-3"
+                      >
+                        {/* Numbering the input fields */}
+                        <span className="font-medium text-gray-700">
+                          {index + 1}.
+                        </span>
+
                         <input
                           type="text"
                           value={course}
@@ -233,19 +242,20 @@ const EditTeam = () => {
                           }`}
                           readOnly={!isEditing}
                         />
-                        {/* Delete Button (Only if Editing & More than 1 Field Exists) */}
+
                         {isEditing && formData.courses.length > 1 && (
                           <button
                             onClick={() => removeCourseField(index)}
-                            className="p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
+                            className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
                           >
-                            🗑️
+                            <MdDeleteOutline />
                           </button>
                         )}
                       </div>
                     ))}
                   </div>
-                </div><div className="flex flex-col justify-center items-center h-[55vh] w-1/3">
+                </div>
+                <div className="flex flex-col justify-center items-center h-[55vh] w-1/3">
                   <img
                     src={img}
                     alt="Profile"
@@ -262,7 +272,7 @@ const EditTeam = () => {
               </div>
 
               {/* Buttons Fixed at Bottom */}
-              <div className="w-full p-4 bg-white border-t flex justify-center space-x-4 absolute bottom-0 left-0">
+              <div className="w-full p-4 bg-white border-t flex justify-center space-x-4 rounded-b-2xl absolute bottom-0 left-0">
                 <button
                   type="button"
                   className="px-4 py-2 bg-sky-700 text-white rounded-lg shadow-md hover:bg-sky-800"
