@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import img from "../glb/dhoni1.png";
 import { motion } from "framer-motion";
 import { ModalContext } from "../context/ModalProvider";
@@ -16,33 +16,39 @@ const Scores = () => {
     }),
   };
   const { openModal } = useContext(ModalContext);
+  const [selectedPlayer, setSelectedPlayer] = useState(null);
 
   const players = [
-    { name: "Virat Kohli", image: img },
-    { name: "Rohit Sharma", image: img },
-    { name: "MS Dhoni", image: img },
-    { name: "Jasprit Bumrah", image: img },
-    { name: "Ravindra Jadeja", image: img },
-    { name: "KL Rahul", image: img },
-    { name: "Hardik Pandya", image: img },
-    { name: "Rishabh Pant", image: img },
-    { name: "Shubman Gill", image: img },
-    { name: "Mohammed Shami", image: img },
-    { name: "Yuzvendra Chahal", image: img },
-    { name: "Shubman Gill", image: img },
-    { name: "Mohammed Shami", image: img },
-    { name: "Yuzvendra Chahal", image: img },
-    { name: "Mohammed Shami", image: img },
-    { name: "Yuzvendra Chahal", image: img },
-    { name: "Yuzvendra Chahal", image: img },
-    { name: "Mohammed Shami", image: img },
-    { name: "Yuzvendra Chahal", image: img },
-    { name: "Mohammed Shami", image: img },
-    { name: "Yuzvendra Chahal", image: img },
-    { name: "Mohammed Shami", image: img },
-    { name: "Yuzvendra Chahal", image: img },
-    { name: "Mohammed Shami", image: img },
+    { id: 1, name: "Virat Kohli", image: img },
+    { id: 2, name: "Rohit Sharma", image: img },
+    { id: 3, name: "MS Dhoni", image: img },
+    { id: 4, name: "Jasprit Bumrah", image: img },
+    { id: 5, name: "Ravindra Jadeja", image: img },
+    { id: 6, name: "KL Rahul", image: img },
+    { id: 7, name: "Hardik Pandya", image: img },
+    { id: 8, name: "Rishabh Pant", image: img },
+    { id: 9, name: "Shubman Gill", image: img },
+    { id: 10, name: "Mohammed Shami", image: img },
+    { id: 12, name: "Yuzvendra Chahal", image: img },
+    { id: 13, name: "Shubman Gill", image: img },
+    { id: 14, name: "Mohammed Shami", image: img },
+    { id: 15, name: "Yuzvendra Chahal", image: img },
+    { id: 16, name: "Mohammed Shami", image: img },
+    { id: 17, name: "Yuzvendra Chahal", image: img },
+    { id: 18, name: "Yuzvendra Chahal", image: img },
+    // { id:19,name: "Mohammed Shami", image: img },
+    // { id:1,name: "Yuzvendra Chahal", image: img },
+    // { id:1,name: "Mohammed Shami", image: img },
+    // { id:1,name: "Yuzvendra Chahal", image: img },
+    // { id:1,name: "Mohammed Shami", image: img },
+    // { id:1,name: "Yuzvendra Chahal", image: img },
+    // { id:1,name: "Mohammed Shami", image: img },
   ];
+
+  const handleCardClick = (player) => {
+    setSelectedPlayer(player);
+    openModal();
+  };
 
   return (
     <div className="bg-black w-full min-h-screen flex flex-col items-center justify-center ">
@@ -65,7 +71,7 @@ const Scores = () => {
                 variants={gridItemVariants}
                 custom={index}
                 key={index}
-                onClick={openModal}
+                onClick={() => handleCardClick(player)}
                 className="bg-gradient-to-t from-blue-500 to-blue-200 p-4 shadow-lg flex flex-col items-center rounded-tl-3xl rounded-br-3xl border-2 border-blue-900"
               >
                 <img
@@ -79,61 +85,63 @@ const Scores = () => {
           </div>
         </div>
       </div>
-      <Modal>
-        <ModalHead>
-          <div className="flex flex-col w-full h-auto font-bold rounded-lg p-3 uppercase bg-amber-200 relative">
-            <span className="text-2xl">Umakant Patil</span>
-            <h4 className="text-lg">MPC</h4>
-          </div>
-        </ModalHead>
+      {selectedPlayer && (
+        <Modal className={"bg-transparent"}>
+          <ModalHead>
+            <div className="flex flex-col w-full h-auto font-bold rounded-lg p-3 uppercase bg-amber-200 relative">
+              <span className="text-2xl">{selectedPlayer.name}</span>
+              <h4 className="text-lg">MPC</h4>
+            </div>
+          </ModalHead>
 
-        <ModalBody>
-          <div className="flex flex-row items-center space-x-5 p-5 relative">
-            <div className="flex flex-col w-2/3 h-96 rounded-lg bg-gray-200 space-y-3 p-5">
-              <div className="flex flex-row items-center w-auto h-auto justify-center rounded-lg bg-amber-200 space-x-5 text-2xl font-bold uppercase">
-                MPC Career
+          <ModalBody>
+            <div className="flex flex-row items-center space-x-5 p-5 relative">
+              <div className="flex flex-col w-2/3 h-96 rounded-lg bg-gray-200 space-y-3 p-0">
+                <div className="flex flex-row items-center w-auto h-auto justify-center rounded-lg bg-amber-200 space-x-5 text-2xl font-bold uppercase py-3">
+                  MPC Career
+                </div>
+
+                <div className="relative grid grid-cols-2 md:grid-rows-2 justify-evenly gap-10 p-2 my-5 mx-3 font-bold text-xl">
+                  {/* Vertical Line */}
+                  <div className="absolute inset-y-0 my-2 left-1/2 w-0.5 bg-gray-400"></div>
+
+                  <div className="flex flex-col items-center">
+                    <span>Current Score</span>
+                    <span className="text-xl font-bold">23</span>
+                  </div>
+
+                  <div className="flex flex-col items-center">
+                    <span>Previous Score</span>
+                    <span className="text-xl font-bold">20</span>
+                  </div>
+
+                  <div className="flex flex-col items-center">
+                    <span>Issue Count</span>
+                    <span className="text-xl font-bold">20</span>
+                  </div>
+
+                  <div className="flex flex-col items-center">
+                    <span>No. Of Courses</span>
+                    <span className="text-xl font-bold">20</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-row items-center w-auto h-full my-auto justify-center rounded-lg bg-amber-200 space-x-5  text-2xl font-bold uppercase">
+                  1st Ranking
+                </div>
               </div>
 
-              <div className="relative grid grid-cols-2 md:grid-rows-2 justify-evenly gap-10 p-2 mx-3 font-bold text-xl">
-                {/* Vertical Line */}
-                <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-400"></div>
-
-                <div className="flex flex-col items-center">
-                  <span>Current Score</span>
-                  <span className="text-xl font-bold">23</span>
-                </div>
-
-                <div className="flex flex-col items-center">
-                  <span>Previous Score</span>
-                  <span className="text-xl font-bold">20</span>
-                </div>
-
-                <div className="flex flex-col items-center">
-                  <span>Issue Count</span>
-                  <span className="text-xl font-bold">20</span>
-                </div>
-
-                <div className="flex flex-col items-center">
-                  <span>No. Of Courses</span>
-                  <span className="text-xl font-bold">20</span>
-                </div>
-              </div>
-
-              <div className="flex flex-row items-center w-auto h-full my-auto justify-center rounded-lg bg-amber-200 space-x-5 text-2xl font-bold uppercase">
-                1st Ranking
+              <div className="w-1/3 flex items-center justify-center relative">
+                <img
+                  src={img}
+                  alt="Placeholder Image"
+                  className=" w-auto h-[620px] absolute -top-100 right-auto z-10"
+                />
               </div>
             </div>
-
-            <div className="w-1/3 flex items-center justify-center relative">
-              <img
-                src={img}
-                alt="Placeholder Image"
-                className=" w-auto h-auto absolute -top-90 right-auto z-10"
-              />
-            </div>
-          </div>
-        </ModalBody>
-      </Modal>
+          </ModalBody>
+        </Modal>
+      )}
     </div>
   );
 };
