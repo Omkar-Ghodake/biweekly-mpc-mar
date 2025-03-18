@@ -88,7 +88,7 @@ const Scores = () => {
       {selectedPlayer && (
         <Modal className="bg-transparent">
           <ModalHead>
-            <div className="flex flex-col w-full h-auto font-bold rounded-lg p-3 uppercase bg-amber-200 relative">
+            <div className="flex flex-col w-full h-auto font-bold rounded-lg p-3 uppercase bg-gradient-to-b from-blue-500 to-blue-300  relative">
               <span className="text-2xl">{selectedPlayer.name}</span>
               <h4 className="text-lg">MPC</h4>
             </div>
@@ -96,8 +96,8 @@ const Scores = () => {
 
           <ModalBody>
             <div className="flex flex-row items-center space-x-5 p-5 relative">
-              <div className="flex flex-col w-2/3 h-96 rounded-lg bg-gray-200 space-y-3 p-0">
-                <div className="flex flex-row items-center w-auto h-auto justify-center rounded-lg bg-amber-200 space-x-5 text-2xl font-bold uppercase py-3">
+              <div className="flex flex-col w-2/3 h-96 rounded-lg bg-gradient-to-t from-gray-400 to-blue-200 opacity-90 space-y-3 p-0">
+                <div className="flex flex-row items-center w-auto h-auto justify-center rounded-lg bg-gradient-to-b from-blue-300 to-gray-200 opacity-90 space-x-5 text-2xl font-bold uppercase py-3">
                   MPC Career
                 </div>
 
@@ -126,7 +126,7 @@ const Scores = () => {
                   </div>
                 </div>
 
-                <div className="flex flex-row items-center w-auto h-full my-auto justify-center rounded-lg bg-amber-200 space-x-5  text-2xl font-bold uppercase">
+                <div className="flex flex-row items-center w-auto h-full my-auto justify-center rounded-lg bg-gradient-to-b from-blue-300 to-gray-200 opacity-90 space-x-5  text-2xl font-bold uppercase">
                   1st Ranking
                 </div>
               </div>
