@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import img from "../glb/dhoni1.png";
+import img from "../glb/Members_Photos_Final/Umakant.png";
 import { motion } from "framer-motion";
 import { ModalContext } from "../context/ModalProvider";
 import Modal from "../layouts/Modal/Modal";
@@ -86,56 +86,56 @@ const Scores = () => {
         </div>
       </div>
       {selectedPlayer && (
-        <Modal className="bg-transparent">
+        <Modal className="bg-transparent ">
           <ModalHead>
-            <div className="flex flex-col w-full h-auto font-bold rounded-lg p-3 uppercase bg-amber-200 relative">
+            <div className="flex flex-col h-auto font-bold uppercase w-full text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3 relative">
               <span className="text-2xl">{selectedPlayer.name}</span>
               <h4 className="text-lg">MPC</h4>
             </div>
           </ModalHead>
 
           <ModalBody>
-            <div className="flex flex-row items-center space-x-5 p-5 relative">
-              <div className="flex flex-col w-2/3 h-96 rounded-lg bg-gray-200 space-y-3 p-0">
-                <div className="flex flex-row items-center w-auto h-auto justify-center rounded-lg bg-amber-200 space-x-5 text-2xl font-bold uppercase py-3">
+            <div className="flex flex-row flex-wrap items-center p-5 relative w-full">
+              <div className="flex flex-col w-3/5 h-96 rounded-lg bg-gray-200 space-y-3 p-0">
+                <div className="flex flex-row items-center w-auto h-auto justify-center rounded-t-lg bg-amber-200 space-x-5 text-2xl  uppercase py-3 font-bold  text-center text-white bg-gradient-to-b from-sky-600 to-sky-800  shadow-md p-3">
                   MPC Career
                 </div>
 
-                <div className="relative grid grid-cols-2 md:grid-rows-2 justify-evenly gap-10 p-2 my-5 mx-3 font-bold text-xl">
+                <div className="relative grid grid-cols-2 md:grid-rows-2 justify-evenly gap-6  my-5 mx-3 font-bold text-xl">
                   {/* Vertical Line */}
-                  <div className="absolute inset-y-0 my-2 left-1/2 w-0.5 bg-gray-400"></div>
+                  {/* <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-400"></div> */}
 
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center  bg-gray-300 p-3 rounded-lg">
                     <span>Current Score</span>
                     <span className="text-xl font-bold">23</span>
                   </div>
 
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center  bg-gray-300 p-3 rounded-lg">
                     <span>Previous Score</span>
                     <span className="text-xl font-bold">20</span>
                   </div>
 
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center  bg-gray-300 p-3 rounded-lg">
                     <span>Issue Count</span>
                     <span className="text-xl font-bold">20</span>
                   </div>
 
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center  bg-gray-300 p-3 rounded-lg">
                     <span>No. Of Courses</span>
                     <span className="text-xl font-bold">20</span>
                   </div>
                 </div>
 
-                <div className="flex flex-row items-center w-auto h-full my-auto justify-center rounded-lg bg-amber-200 space-x-5  text-2xl font-bold uppercase">
+                <div className="flex flex-row items-center w-auto h-full my-auto justify-center rounded-b-lg bg-amber-200 space-x-5  text-2xl font-bold uppercase text-white bg-gradient-to-b from-sky-600 to-sky-800  ">
                   1st Ranking
                 </div>
               </div>
 
-              <div className="w-1/3 flex items-center justify-center relative">
+              <div className=" w-[350px] flex items-center relative">
                 <img
                   src={img}
                   alt="Placeholder Image"
-                  className=" w-auto h-[620px] absolute -top-100 right-auto z-10"
+                  className=" w-full  h-[537px] absolute -top-135 -right-120 z-10"
                 />
               </div>
             </div>
