@@ -95,9 +95,15 @@ const Scores = () => {
           </ModalHead>
 
           <ModalBody>
+<<<<<<< HEAD
+            <div className="flex flex-row items-center space-x-5 p-5 relative">
+              <div className="flex flex-col w-2/3 h-96 rounded-lg bg-gradient-to-t from-gray-400 to-blue-200 opacity-90 space-y-3 p-0">
+                <div className="flex flex-row items-center w-auto h-auto justify-center rounded-lg bg-gradient-to-b from-blue-300 to-gray-200 opacity-90 space-x-5 text-2xl font-bold uppercase py-3">
+=======
             <div className="flex flex-row flex-wrap items-center p-5 relative w-full">
               <div className="flex flex-col w-3/5 h-96 rounded-lg bg-gray-200 space-y-3 p-0">
                 <div className="flex flex-row items-center w-auto h-auto justify-center rounded-t-lg bg-amber-200 space-x-5 text-2xl  uppercase py-3 font-bold  text-center text-white bg-gradient-to-b from-sky-600 to-sky-800  shadow-md p-3">
+>>>>>>> 01ad03203b7186f48970cfcc981c7d3f5ee26d1e
                   MPC Career
                 </div>
 
@@ -126,7 +132,11 @@ const Scores = () => {
                   </div>
                 </div>
 
+<<<<<<< HEAD
+                <div className="flex flex-row items-center w-auto h-full my-auto justify-center rounded-lg bg-gradient-to-b from-blue-300 to-gray-200 opacity-90 space-x-5  text-2xl font-bold uppercase">
+=======
                 <div className="flex flex-row items-center w-auto h-full my-auto justify-center rounded-b-lg bg-amber-200 space-x-5  text-2xl font-bold uppercase text-white bg-gradient-to-b from-sky-600 to-sky-800  ">
+>>>>>>> 01ad03203b7186f48970cfcc981c7d3f5ee26d1e
                   1st Ranking
                 </div>
               </div>
