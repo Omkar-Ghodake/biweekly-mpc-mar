@@ -9,8 +9,7 @@ import ball from "../../assets/ball.jpg";
 import background from "../../assets/background.jpg";
 import { IoMdAdd } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
-
-import img from "../../glb/dhoni1.png";
+import img from "../../glb/Members_Photos_Final/Jaipal.png";
 import Button from "../../components/Button";
 
 const EditTeam = () => {
@@ -129,7 +128,7 @@ const EditTeam = () => {
       <Modal className="h-[84vh] text-md ">
         <ModalHead className="w-1/3">
           <div className="w-full text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3">
-            <span>Players profile</span>
+            <span>{formData.name}</span>
           </div>
         </ModalHead>
         <ModalBody>
@@ -261,7 +260,7 @@ const EditTeam = () => {
                   <img
                     src={img}
                     alt="Profile"
-                    className="w-auto h-72 object-cover"
+                    className="w-auto h-72 object-contain"
                   />
                   <button
                     type="button"

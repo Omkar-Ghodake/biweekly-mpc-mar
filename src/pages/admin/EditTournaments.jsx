@@ -7,6 +7,7 @@ import ModalBody from "../../layouts/Modal/ModalBody";
 import Modal from "../../layouts/Modal/Modal";
 import background from "../../assets/background.jpg";
 import { IoMdAdd } from "react-icons/io";
+import ball from "../../assets/ball.jpg";
 
 const EditActivites = () => {
   const arr = [1, 2, 3, 4];
@@ -53,12 +54,24 @@ const EditActivites = () => {
         </motion.div>
       </div>
       <Modal>
-        <ModalHead>Tournaments</ModalHead>
+        <ModalHead className="w-1/3">
+          <div className="w-full text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3">
+            <span>Namo AI</span>
+          </div>
+        </ModalHead>
         <ModalBody>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Ex,
-          assumenda soluta deleniti, quis repellat porro excepturi labore fuga
-          animi molestias quaerat dolore harum corporis eos, ullam quam magni ab
-          saepe.
+          <div className="p-2 flex flex-row items-center">
+            <div className="w-2/3 border-2 bg-red-300">
+              <form onSubmit={""} className="space-y-6  ">
+                <div>
+                  <label htmlFor="">Tournament name</label><input type="text" />
+                </div>
+              </form>
+            </div>
+            <div className="w-1/3">
+              <img src={ball} alt="" />
+            </div>
+          </div>
         </ModalBody>
       </Modal>
     </>
