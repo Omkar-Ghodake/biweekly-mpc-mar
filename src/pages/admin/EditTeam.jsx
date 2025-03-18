@@ -27,7 +27,7 @@ const EditTeam = () => {
     major: 0,
     normal: 0,
     minor: 0,
-    courses: [""], // Start with one empty course field
+    courses: [], // Start with one empty course field
   });
 
   const handleCourseChange = (index, value) => {
@@ -206,6 +206,7 @@ const EditTeam = () => {
                       {totalScore}
                     </span>
                   </div>
+
                   <div className="flex items-center ">
                     <label className="font-medium">Courses</label>
                     {/* Add Button (Only if Editing) */}
@@ -218,42 +219,43 @@ const EditTeam = () => {
                       </button>
                     )}
                   </div>
-                  <div className="space-y-1 space-x-3 items-center max-h-28 h-28 w-fit overflow-y-scroll [&::-webkit-scrollbar]:hidden">
-                    {formData.courses.map((course, index) => (
-                      <div
-                        key={`course-${index}`}
-                        className="flex items-center space-x-3"
-                      >
-                        {/* Numbering the input fields */}
-                        <span className="font-medium text-gray-700">
-                          {index + 1}.
-                        </span>
 
-                        <input
-                          type="text"
-                          value={course}
-                          onChange={(e) =>
-                            handleCourseChange(index, e.target.value)
-                          }
-                          className={`p-1 rounded-md transition-all duration-200 ${
-                            isEditing
-                              ? "border focus:outline-blue-500"
-                              : "bg-gray-100 cursor-default"
-                          }`}
-                          readOnly={!isEditing}
-                        />
+                  {formData.courses && (
+                    <div className="space-y-1 space-x-3 items-center max-h-28 h-28 w-fit overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                      {formData.courses.map((course, index) => (
+                        <div
+                          key={`course-${index}`}
+                          className="flex items-center space-x-3"
+                        >
+                          {/* Numbering the input fields */}
+                          <span className="font-medium text-gray-700">
+                            {index + 1}.
+                          </span>
 
-                        {isEditing && formData.courses.length > 1 && (
-                          <button
+                          <input
+                            type="text"
+                            value={course}
+                            onChange={(e) =>
+                              handleCourseChange(index, e.target.value)
+                            }
+                            className={`p-1 rounded-md transition-all duration-200 ${
+                              isEditing
+                                ? "border focus:outline-blue-500"
+                                : "bg-gray-100 cursor-default"
+                            }`}
+                            readOnly={!isEditing}
+                          />
+
+                          {isEditing && <button
                             onClick={() => removeCourseField(index)}
                             className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
                           >
                             <MdDeleteOutline />
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
+                          </button>}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-col justify-center items-center h-[55vh] w-1/3">
                   <img
