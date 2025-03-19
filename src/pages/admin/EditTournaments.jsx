@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import TournamentCard from "../../components/TournamentCard";
 import { motion } from "framer-motion";
 import { ModalContext } from "../../context/ModalProvider";
@@ -14,6 +14,7 @@ const EditTournaments = () => {
   const [tournaments, setTournaments] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [currentTournament, setCurrentTournament] = useState(null);
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     // Fetch the tournaments data from an API or backend service
@@ -151,41 +152,42 @@ const EditTournaments = () => {
                         name="description"
                         value={currentTournament.description}
                         onChange={handleInputChange}
-                        className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
+                        className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 resize-none ${
                           isEditing
                             ? "border focus:outline-blue-500"
                             : "bg-gray-100 cursor-default"
                         }`}
                         readOnly={!isEditing}
+                        style={{ height: "150px", width: "300px" }}
                       />
                     </div>
                     <div className="flex items-center">
-                      <label htmlFor="image" className="font-medium">
-                        Tournament Image
-                      </label>
-                      <input
+                        <input
                         id="image"
                         name="image"
                         type="file"
                         accept="image/*"
-                        onChange={handleImageUpload}
+                        ref={fileInputRef}
                         className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
                           isEditing
                             ? "border focus:outline-blue-500"
                             : "bg-gray-100 cursor-default"
                         }`}
                         disabled={!isEditing}
+                        style={{ display: "none" }}
+                        onChange={handleImageUpload}
                       />
-                      <button 
-                        type="button" onChange={handleImageUpload}
-                        className="px-4 py-2 mt-3 bg-sky-700 text-white rounded-lg shadow-md w-fit cursor-pointer 
-                          hover:bg-sky-800 hover:shadow-xl hover:scale-105 transition-transform duration-200"
+                      <button
+                        type="button"
+                        className="px-4 py-2 mt-7 bg-sky-700 text-white rounded-lg shadow-md w-fit cursor-pointer 
+                          hover:bg-sky-800 hover:shadow-xl hover:scale-105 transition-transform duration-200 absolute top-80 right-30"
+                        onClick={() => fileInputRef.current.click()}
                       >
                         Upload
                       </button>
                     </div>
                   </div>
-                  <div className="w-full p-4 bg-white border-t flex justify-center space-x-4 rounded-b-2xl">
+                  <div className="w-full p-4 bg-white border-t flex justify-center space-x-4 rounded-b-2xl absolute bottom-0 left-0">
                     <button
                       type="button"
                       className="px-4 py-2 bg-sky-700 text-white rounded-lg shadow-md hover:bg-sky-800"
