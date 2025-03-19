@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import TournamentCard from "../../components/TournamentCard";
 import { motion } from "framer-motion";
 import { ModalContext } from "../../context/ModalProvider";
@@ -9,12 +9,71 @@ import background from "../../assets/background.jpg";
 import { IoMdAdd } from "react-icons/io";
 import ball from "../../assets/ball.jpg";
 
-const EditActivites = () => {
-  const arr = [1, 2, 3, 4];
-  const { openModal } = useContext(ModalContext);
+const EditTournaments = () => {
+  const { openModal, closeModal } = useContext(ModalContext);
+  const [tournaments, setTournaments] = useState([]);
+  const [isEditing, setIsEditing] = useState(false);
+  const [currentTournament, setCurrentTournament] = useState(null);
+
+  useEffect(() => {
+    // Fetch the tournaments data from an API or backend service
+    const fetchTournaments = async () => {
+      try {
+        const response = await fetch("/api/tournaments"); // Replace with your API endpoint
+        const data = await response.json();
+        setTournaments(data);
+      } catch (error) {
+        console.error("Error fetching tournaments:", error);
+      }
+    };
+
+    fetchTournaments();
+  }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCurrentTournament({ ...currentTournament, [name]: value });
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCurrentTournament({ ...currentTournament, image: reader.result });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const updateDetails = (e) => {
+    e.preventDefault();
+    if (currentTournament.id === null) {
+      // Add new tournament
+      setTournaments([...tournaments, { ...currentTournament, id: Date.now() }]);
+    } else {
+      // Update existing tournament
+      setTournaments((prevTournaments) =>
+        prevTournaments.map((tournament) =>
+          tournament.id === currentTournament.id ? currentTournament : tournament
+        )
+      );
+    }
+    setIsEditing(false);
+    setCurrentTournament(null);
+    closeModal();
+    console.log("Updated Data:", currentTournament);
+    // Add your backend API call here to save the data
+  };
+
+  const startEditing = (tournament) => {
+    setCurrentTournament(tournament);
+    setIsEditing(true);
+    openModal();
+  };
+
   return (
     <>
-      {/* <img src={background} alt="" className="z-10" /> */}
       <div
         className="h-screen flex justify-center items-center bg-cover bg-center"
         style={{ backgroundImage: `url(${background})` }}
@@ -35,7 +94,7 @@ const EditActivites = () => {
               </div>
               <button
                 className="text-xl font-bold px-4 py-1 text-white bg-sky-700 rounded-lg shadow-md w-fit cursor-pointer hover:bg-sky-800 hover:shadow-xl hover:scale-102 mr-6"
-                onClick={openModal}
+                onClick={() => startEditing({ id: null, name: "", description: "", image: "" })}
               >
                 <div className="flex justify-center items-center ">
                   <IoMdAdd />
@@ -44,38 +103,114 @@ const EditActivites = () => {
               </button>
             </div>
             <div className="flex flex-row flex-wrap space-x-5  space-y-7 mt-5 ml-3">
-              {arr.map((item, index) => (
-                <div onClick={openModal}>
-                  <TournamentCard item={item} index={index} />
+              {tournaments.map((tournament) => (
+                <div key={tournament.id} onClick={() => startEditing(tournament)}>
+                  <TournamentCard item={tournament} />
                 </div>
               ))}
             </div>
           </div>
         </motion.div>
       </div>
-      <Modal>
-        <ModalHead className="w-1/3">
-          <div className="w-full text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3">
-            <span>Namo AI</span>
-          </div>
-        </ModalHead>
-        <ModalBody>
-          <div className="p-2 flex flex-row items-center">
-            <div className="w-2/3 border-2 bg-red-300">
-              <form onSubmit={""} className="space-y-6  ">
-                <div>
-                  <label htmlFor="">Tournament name</label><input type="text" />
-                </div>
-              </form>
+      {currentTournament && (
+        <Modal>
+          <ModalHead className="w-1/3">
+            <div className="w-full text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3">
+              <span>{currentTournament.name || "New Tournament"}</span>
             </div>
-            <div className="w-1/3">
-              <img src={ball} alt="" />
+          </ModalHead>
+          <ModalBody>
+            <div className="p-2 flex flex-row items-center">
+              <div className="w-2/3">
+                <form onSubmit={updateDetails} className="space-y-6">
+                  <div className="flex flex-col space-y-4">
+                    <div className="flex items-center">
+                      <label htmlFor="name" className="font-medium">
+                        Tournament Name
+                      </label>
+                      <input
+                        id="name"
+                        name="name"
+                        type="text"
+                        value={currentTournament.name}
+                        onChange={handleInputChange}
+                        className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
+                          isEditing
+                            ? "border focus:outline-blue-500"
+                            : "bg-gray-100 cursor-default"
+                        }`}
+                        readOnly={!isEditing}
+                      />
+                    </div>
+                    <div className="flex items-center">
+                      <label htmlFor="description" className="font-medium">
+                        Tournament Description
+                      </label>
+                      <textarea
+                        id="description"
+                        name="description"
+                        value={currentTournament.description}
+                        onChange={handleInputChange}
+                        className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
+                          isEditing
+                            ? "border focus:outline-blue-500"
+                            : "bg-gray-100 cursor-default"
+                        }`}
+                        readOnly={!isEditing}
+                      />
+                    </div>
+                    <div className="flex items-center">
+                      <label htmlFor="image" className="font-medium">
+                        Tournament Image
+                      </label>
+                      <input
+                        id="image"
+                        name="image"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
+                          isEditing
+                            ? "border focus:outline-blue-500"
+                            : "bg-gray-100 cursor-default"
+                        }`}
+                        disabled={!isEditing}
+                      />
+                      <button 
+                        type="button" onChange={handleImageUpload}
+                        className="px-4 py-2 mt-3 bg-sky-700 text-white rounded-lg shadow-md w-fit cursor-pointer 
+                          hover:bg-sky-800 hover:shadow-xl hover:scale-105 transition-transform duration-200"
+                      >
+                        Upload
+                      </button>
+                    </div>
+                  </div>
+                  <div className="w-full p-4 bg-white border-t flex justify-center space-x-4 rounded-b-2xl">
+                    <button
+                      type="button"
+                      className="px-4 py-2 bg-sky-700 text-white rounded-lg shadow-md hover:bg-sky-800"
+                      onClick={() => setIsEditing((prev) => !prev)}
+                    >
+                      {isEditing ? "Cancel" : "Edit"}
+                    </button>
+                    <button
+                      type="submit"
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700"
+                    >
+                      Save
+                    </button>
+                  </div>
+                </form>
+              </div>
+              <div className="w-1/3 flex justify-center">
+                <img src={currentTournament.image || ball} alt="Tournament" className="w-52 h-52 rounded-full object-cover " />
+              </div>
             </div>
-          </div>
-        </ModalBody>
-      </Modal>
+          </ModalBody>
+        </Modal>
+      )}
     </>
   );
 };
 
-export default EditActivites;
+export default EditTournaments;
