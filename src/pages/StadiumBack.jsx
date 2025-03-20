@@ -10,22 +10,22 @@ const StadiumModel = () => {
 
   useFrame(() => {
     if (modelRef.current) {
-      modelRef.current.rotation.y += 0.001;
+      modelRef.current.rotation.y += 0.0005;
     }
   });
 
-  return <primitive object={scene} scale={0.3} ref={modelRef} />;
+  return <primitive object={scene} scale={0.5} ref={modelRef} />;
 };
 
 const StadiumBack = () => {
   return (
-    <div className="w-screen h-screen">
+    <div className="w-screen h-screen backdrop-opacity-0 blur-xs ">
       <Canvas
-        camera={{ position: [5, 10, 17], fov: 40 }}
-        style={{ width: "100vw", height: "100vh", background: "black" }}
+        camera={{ position: [5, 10, 10], fov:40 }}
+        style={{ width: "100vw", height: "100vh", background: "black",  }}
       >
         <color attach="background" args={["#98D2C0"]} />
-        <ambientLight intensity={0.2} />
+        <ambientLight intensity={0.1} />
         <directionalLight position={[5, 5, 5]} />
         <Suspense fallback={null}>
           <StadiumModel />

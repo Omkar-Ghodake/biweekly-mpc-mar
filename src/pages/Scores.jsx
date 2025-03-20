@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
-import background from "../assets/background.jpg";
+// import background from "../assets/background.jpg";
+// import background from "../assets/background1.avif";
 import { motion } from "framer-motion";
 import { ModalContext } from "../context/ModalProvider";
 import Modal from "../layouts/Modal/Modal";
 import ModalHead from "../layouts/Modal/ModalHead";
 import ModalBody from "../layouts/Modal/ModalBody";
 import { PiSelectionBackgroundDuotone } from "react-icons/pi";
+import StadiumBack from "./StadiumBack";
 
 const Scores = () => {
   const gridItemVariants = {
@@ -133,20 +135,27 @@ const Scores = () => {
   };
 
   return (
-    <div className="bg-black w-screen h-screen bg-center bg-cover max-h-screen flex flex-col items-center justify-center " style={{ backgroundImage: `url(${background})` }}>
-      {/* Header Section */}
-      <div className="w-auto max-h-[950px] min-h-2/3 justify-center items-center  flex flex-col  opacity-90 p-1 rounded-tl-3xl rounded-br-3xl backdrop:blur-lg ">
-        <div className=" text-white bg-gradient-to-b from-sky-600 to-sky-800 shadow-2xl w-full  opacity-90 rounded-3xl p-4 mt-2 ">
-          <div className="flex items-center justify-center text-3xl font-bold font-serif h-10 ">
-            {/* Optional logo */}
-            {/* <img src="logo.png" alt="Logo" className="w-12 h-12 mr-4" /> */}
-            <span>Team members</span>
-          </div>
-        </div>
+    <div className="relative w-screen h-screen">
+      {/* Background Component */}
+      <div className="absolute inset-0 ">
+        <StadiumBack  />
+      </div>
 
-        <div className="w-full flex-1  overflow-y-scroll [&::-webkit-scrollbar]:hidden">
-          {/* Old Implementation */}
-          {/* {players.map((player, index) => (
+      {/* Foreground Content */}
+      <div className="relative z-10 flex flex-col items-center justify-center h-full ">
+        {/* Header Section */}
+        <div className="w-auto max-h-[950px] min-h-2/3 justify-center items-center  flex flex-col  p-1 rounded-3xl ">
+          <div className=" text-white bg-gradient-to-b from-[#1E4788] to-sky-800 shadow-2xl w-full rounded-xl p-4 mt-2 ">
+            <div className="flex items-center justify-center text-3xl font-bold font-serif h-10 uppercase ">
+              {/* Optional logo */}
+              {/* <img src="logo.png" alt="Logo" className="w-12 h-12 mr-4" /> */}
+              <span>Team members</span>
+            </div>
+          </div>
+
+          <div className="w-full flex-1  overflow-y-scroll [&::-webkit-scrollbar]:hidden opacity-90 rounded-lg backdrop-blur-sm">
+            {/* Old Implementation */}
+            {/* {players.map((player, index) => (
               <motion.div
                 initial="hidden"
                 animate="visible"
@@ -164,146 +173,147 @@ const Scores = () => {
                 <p className="mt-1 font-bold text-xl">{player.name}</p>
               </motion.div>
             ))} */}
-          <div className="grid grid-cols-4 md:grid-cols-4 gap-14 my-5 p-5 ">
-            {players.map((player, index) => (
-              <motion.div
-                initial="hidden"
-                animate="visible"
-                variants={gridItemVariants}
-                custom={index}
-                key={index}
-                onClick={() => handleCardClick(player)}
-                class="relative w-56 h-56 bg-gray-900  rounded-t-lg  flex justify-center items-end mx-auto my-4 rounded-b-lg"
-              >
-                <div class="absolute inset-0 bg-gray-300 rounded-t-lg "></div>
+            <div className="grid grid-cols-4 md:grid-cols-4 gap-14 my-5 p-5 ">
+              {players.map((player, index) => (
+                <motion.div
+                  initial="hidden"
+                  animate="visible"
+                  variants={gridItemVariants}
+                  custom={index}
+                  key={index}
+                  onClick={() => handleCardClick(player)}
+                  class="relative w-56 h-56 bg-gray-900  rounded-t-lg  flex justify-center items-end mx-auto my-4 rounded-b-lg"
+                >
+                  <div class="absolute inset-0 bg-gray-300 rounded-t-lg "></div>
 
-                {/* Dark Gray Background (Below Diagonal) */}
-                <div
-                  className="absolute inset-0  z-1 bg-gray-900 "
-                  style={{
-                    clipPath: "polygon(0% 49%, 100% 30%, 100% 100%, 0% 100%)",
-                  }}
-                ></div>
-                <div class="absolute -top-8 right-42 text-6xl text-white  bg-transparent font-bold  px-1 py-0 rounded-r-lg ">
-                  {player.id}
-                </div>
-                {/* <!-- Player Image and Name --> */}
-                <div class=" absolute -top-10 left-18 transform -translate-x-1/2 flex items-center space-x-0">
-                  <img src={player.image} class="w-auto h-36" />
+                  {/* Dark Gray Background (Below Diagonal) */}
+                  <div
+                    className="absolute inset-0  z-1 bg-[#1E4788] "
+                    style={{
+                      clipPath: "polygon(0% 49%, 100% 30%, 100% 100%, 0% 100%)",
+                    }}
+                  ></div>
+                  <div class="absolute -top-8 right-42 text-6xl text-white   bg-transparent font-bold  px-1 py-0 rounded-r-lg ">
+                    {player.id}
+                  </div>
+                  {/* <!-- Player Image and Name --> */}
+                  <div class=" absolute -top-10 left-18 transform -translate-x-1/2 flex items-center space-x-0">
+                    <img src={player.image} class="w-auto h-36" />
 
-                  <span class="text-black font-bold text-lg items-start uppercase ">
-                    {player.role ? player.role : "Player"}
+                    <span class="text-black font-bold text-lg items-start uppercase ">
+                      {player.role ? player.role : "Player"}
+                    </span>
+                  </div>
+                  {/* <!-- Diagonal Line Below Image --> */}
+                  <div class="absolute top-21.5 z-1 left-28 rounded-lg transform -translate-x-1/2 w-[227px]  h-1 bg-white -rotate-10"></div>
+                  {/* Bottom Triangle */}
+                  <div class="absolute bottom-[-40px] w-0 h-0 border-l-[112px] border-r-[112px] border-t-[40px] border-l-transparent border-r-transparent border-t-[#1E4788] "></div>
+                  <span class="absolute bottom-15 left-1/2 transform -translate-x-1/2 text-white font-bold text-xl text-center w-full z-1">
+                    {player.name}
                   </span>
-                </div>
-                {/* <!-- Diagonal Line Below Image --> */}
-                <div class="absolute top-21.5 z-1 left-28 rounded-lg transform -translate-x-1/2 w-[227px]  h-1 bg-white -rotate-10"></div>
-                {/* Bottom Triangle */}
-                <div class="absolute bottom-[-40px] w-0 h-0 border-l-[112px] border-r-[112px] border-t-[40px] border-l-transparent border-r-transparent border-t-gray-900 "></div>
-                <span class="absolute bottom-15 left-1/2 transform -translate-x-1/2 text-white font-bold text-xl text-center w-full z-1">
-                  {player.name}
-                </span>
-                <span class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white text-sm text-center w-full z-1">
-                  Team MPC
-                </span>
-              </motion.div>
-            ))}
+                  <span class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white text-sm text-center w-full z-1">
+                    Team MPC
+                  </span>
+                </motion.div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-      {selectedPlayer && (
-        // <Modal className="bg-transparent ">
-        //   <ModalHead>
-        //     <div className="flex flex-col h-auto font-bold uppercase w-full text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3 relative">
-        //       <span className="text-2xl">{selectedPlayer.name}</span>
-        //       <h4 className="text-lg">MPC</h4>
-        //     </div>
-        //   </ModalHead>
+        {selectedPlayer && (
+          // <Modal className="bg-transparent ">
+          //   <ModalHead>
+          //     <div className="flex flex-col h-auto font-bold uppercase w-full text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3 relative">
+          //       <span className="text-2xl">{selectedPlayer.name}</span>
+          //       <h4 className="text-lg">MPC</h4>
+          //     </div>
+          //   </ModalHead>
 
-        //   <ModalBody>
-        //     <div className="flex flex-row flex-wrap items-center p-5 relative w-full">
-        //       <div className="flex flex-col w-3/5 h-96 rounded-lg bg-gray-200 space-y-3 p-0">
-        //         <div className="flex flex-row items-center w-auto h-auto justify-center rounded-t-lg bg-amber-200 space-x-5 text-2xl  uppercase py-3 font-bold  text-center text-white bg-gradient-to-b from-sky-600 to-sky-800  shadow-md p-3">
-        //           MPC Career
-        //         </div>
+          //   <ModalBody>
+          //     <div className="flex flex-row flex-wrap items-center p-5 relative w-full">
+          //       <div className="flex flex-col w-3/5 h-96 rounded-lg bg-gray-200 space-y-3 p-0">
+          //         <div className="flex flex-row items-center w-auto h-auto justify-center rounded-t-lg bg-amber-200 space-x-5 text-2xl  uppercase py-3 font-bold  text-center text-white bg-gradient-to-b from-sky-600 to-sky-800  shadow-md p-3">
+          //           MPC Career
+          //         </div>
 
-        //         <div className="relative grid grid-cols-2 md:grid-rows-2 justify-evenly gap-6  my-5 mx-3 font-bold text-xl">
-        //           {/* Vertical Line */}
-        //           {/* <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-400"></div> */}
+          //         <div className="relative grid grid-cols-2 md:grid-rows-2 justify-evenly gap-6  my-5 mx-3 font-bold text-xl">
+          //           {/* Vertical Line */}
+          //           {/* <div className="absolute inset-y-0 left-1/2 w-0.5 bg-gray-400"></div> */}
 
-        //           <div className="flex flex-col items-center  bg-gray-300 p-3 rounded-lg">
-        //             <span>Current Score</span>
-        //             <span className="text-xl font-bold">23</span>
-        //           </div>
+          //           <div className="flex flex-col items-center  bg-gray-300 p-3 rounded-lg">
+          //             <span>Current Score</span>
+          //             <span className="text-xl font-bold">23</span>
+          //           </div>
 
-        //           <div className="flex flex-col items-center  bg-gray-300 p-3 rounded-lg">
-        //             <span>Previous Score</span>
-        //             <span className="text-xl font-bold">20</span>
-        //           </div>
+          //           <div className="flex flex-col items-center  bg-gray-300 p-3 rounded-lg">
+          //             <span>Previous Score</span>
+          //             <span className="text-xl font-bold">20</span>
+          //           </div>
 
-        //           <div className="flex flex-col items-center  bg-gray-300 p-3 rounded-lg">
-        //             <span>Issue Count</span>
-        //             <span className="text-xl font-bold">20</span>
-        //           </div>
+          //           <div className="flex flex-col items-center  bg-gray-300 p-3 rounded-lg">
+          //             <span>Issue Count</span>
+          //             <span className="text-xl font-bold">20</span>
+          //           </div>
 
-        //           <div className="flex flex-col items-center  bg-gray-300 p-3 rounded-lg">
-        //             <span>No. Of Courses</span>
-        //             <span className="text-xl font-bold">20</span>
-        //           </div>
-        //         </div>
+          //           <div className="flex flex-col items-center  bg-gray-300 p-3 rounded-lg">
+          //             <span>No. Of Courses</span>
+          //             <span className="text-xl font-bold">20</span>
+          //           </div>
+          //         </div>
 
-        //         <div className="flex flex-row items-center w-auto h-full my-auto justify-center rounded-b-lg bg-amber-200 space-x-5  text-2xl font-bold uppercase text-white bg-gradient-to-b from-sky-600 to-sky-800  ">
-        //           1st Ranking
-        //         </div>
-        //       </div>
+          //         <div className="flex flex-row items-center w-auto h-full my-auto justify-center rounded-b-lg bg-amber-200 space-x-5  text-2xl font-bold uppercase text-white bg-gradient-to-b from-sky-600 to-sky-800  ">
+          //           1st Ranking
+          //         </div>
+          //       </div>
 
-        //       <div className=" w-[350px] flex items-center relative">
-        //         <img
-        //           src={selectedPlayer.image}
-        //           alt="Placeholder Image"
-        //           className=" w-full  h-[537px]  brightness-110 absolute -top-135 -right-120 z-10"
-        //         />
-        //       </div>
-        //     </div>
-        //   </ModalBody>
-        // </Modal>
-        <Modal className="bg-gray-500">
-          <div class="relative w-56 h-56 bg-gray-900  rounded-t-lg border border-t-lg shadow-lg flex justify-center items-end mx-auto">
-            <div class="absolute inset-0 bg-gray-300 rounded-t-lg "></div>
+          //       <div className=" w-[350px] flex items-center relative">
+          //         <img
+          //           src={selectedPlayer.image}
+          //           alt="Placeholder Image"
+          //           className=" w-full  h-[537px]  brightness-110 absolute -top-135 -right-120 z-10"
+          //         />
+          //       </div>
+          //     </div>
+          //   </ModalBody>
+          // </Modal>
+          <Modal className="bg-gray-500">
+            <div class="relative w-56 h-56 bg-gray-900  rounded-t-lg border border-t-lg shadow-lg flex justify-center items-end mx-auto">
+              <div class="absolute inset-0 bg-gray-300 rounded-t-lg "></div>
 
-            {/* Dark Gray Background (Below Diagonal) */}
-            <div
-              class="absolute inset-0 bg-gray-900 rounded-t-lg"
-              style={{
-                clipPath: "polygon(0% 49%, 100% 30%, 100% 100%, 0% 100%)",
-              }}
-            ></div>
-            <div class="absolute -top-8 right-42 text-6xl text-white  bg-transparent font-bold  px-1 py-0 rounded-r-lg ">
-              {selectedPlayer.id}
-            </div>
-            {/* <!-- Player Image and Name --> */}
+              {/* Dark Gray Background (Below Diagonal) */}
+              <div
+                class="absolute inset-0 bg-gray-900 rounded-t-lg"
+                style={{
+                  clipPath: "polygon(0% 49%, 100% 30%, 100% 100%, 0% 100%)",
+                }}
+              ></div>
+              <div class="absolute -top-8 right-42 text-6xl text-white  bg-transparent font-bold  px-1 py-0 rounded-r-lg ">
+                {selectedPlayer.id}
+              </div>
+              {/* <!-- Player Image and Name --> */}
 
-            <div class=" absolute -top-10 left-18 transform -translate-x-1/2 flex items-center space-x-0">
-              <img src={selectedPlayer.image} class="w-auto h-36" />
+              <div class=" absolute -top-10 left-18 transform -translate-x-1/2 flex items-center space-x-0">
+                <img src={selectedPlayer.image} class="w-auto h-36" />
 
-              <span class="text-black font-bold text-lg items-start ">
-                PLAYER
+                <span class="text-black font-bold text-lg items-start ">
+                  PLAYER
+                </span>
+              </div>
+
+              {/* <!-- Diagonal Line Below Image --> */}
+              <div class="absolute top-21 left-27.5 transform -translate-x-1/2 w-[225px]  h-1 bg-white -rotate-11"></div>
+
+              <div class="absolute bottom-[-40px] w-0 h-0 border-l-[112px] border-r-[112px] border-t-[40px] border-l-transparent border-r-transparent border-t-gray-900"></div>
+              <span class="absolute bottom-15 left-1/2 transform -translate-x-1/2 text-white font-bold text-xl text-center w-full">
+                {selectedPlayer.name}
+              </span>
+
+              <span class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white text-sm text-center w-full">
+                Team MPC
               </span>
             </div>
-
-            {/* <!-- Diagonal Line Below Image --> */}
-            <div class="absolute top-21 left-27.5 transform -translate-x-1/2 w-[225px]  h-1 bg-white -rotate-11"></div>
-
-            <div class="absolute bottom-[-40px] w-0 h-0 border-l-[112px] border-r-[112px] border-t-[40px] border-l-transparent border-r-transparent border-t-gray-900"></div>
-            <span class="absolute bottom-15 left-1/2 transform -translate-x-1/2 text-white font-bold text-xl text-center w-full">
-              {selectedPlayer.name}
-            </span>
-
-            <span class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white text-sm text-center w-full">
-              Team MPC
-            </span>
-          </div>
-        </Modal>
-      )}
+          </Modal>
+        )}
+      </div>
     </div>
   );
 };
