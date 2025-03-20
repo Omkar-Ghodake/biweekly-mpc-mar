@@ -23,11 +23,13 @@ const Scores = () => {
       id: 1,
       name: "Vishnu Menon",
       image: "src/glb/Members_Photos_Final/Vishnu.png",
+      role: "Captain",
     },
     {
       id: 2,
       name: "Anagha Shinde",
       image: "src/glb/Members_Photos_Final/Anagha.png",
+      role: "Captain",
     },
     {
       id: 3,
@@ -70,37 +72,37 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Mridul.png",
     },
     {
-      id: 12,
+      id: 11,
       name: "Nikita_Sonawane",
       image: "src/glb/Members_Photos_Final/Nikita_Sonawane.png",
     },
     {
-      id: 13,
+      id: 12,
       name: "Nikita_Suhane",
       image: "src/glb/Members_Photos_Final/Nikita_Suhane.png",
     },
     {
-      id: 14,
+      id: 13,
       name: "Omkar Ghodake",
       image: "src/glb/Members_Photos_Final/Omkar.png",
     },
     {
-      id: 15,
+      id: 14,
       name: "Prithwikumar Selukar",
       image: "src/glb/Members_Photos_Final/Prithwi.png",
     },
     {
-      id: 16,
+      id: 15,
       name: "Rishabh Kanojiya",
       image: "src/glb/Members_Photos_Final/Rishabh.png",
     },
     {
-      id: 17,
-      name: "Sakshi Rail",
+      id: 16,
+      name: "Sakshi Rai",
       image: "src/glb/Members_Photos_Final/Sakshi.png",
     },
     {
-      id: 18,
+      id: 17,
       name: "Sanjeev Prajapati",
       image: "src/glb/Members_Photos_Final/Sanjeev.png",
     },
@@ -110,7 +112,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Shubham.png",
     },
     {
-      id: 18,
+      id: 19,
       name: "Umakant Patil",
       image: "src/glb/Members_Photos_Final/Umakant.png",
     },
@@ -142,9 +144,8 @@ const Scores = () => {
         </div>
 
         <div className="w-full flex-1  overflow-y-scroll [&::-webkit-scrollbar]:hidden">
-          <div className="grid grid-cols-3 md:grid-cols-4 gap-14 my-5 p-5 ">
-            {/* Old Implementation */}
-            {/* {players.map((player, index) => (
+          {/* Old Implementation */}
+          {/* {players.map((player, index) => (
               <motion.div
                 initial="hidden"
                 animate="visible"
@@ -162,6 +163,7 @@ const Scores = () => {
                 <p className="mt-1 font-bold text-xl">{player.name}</p>
               </motion.div>
             ))} */}
+          <div className="grid grid-cols-4 md:grid-cols-4 gap-14 my-5 p-5 ">
             {players.map((player, index) => (
               <motion.div
                 initial="hidden"
@@ -170,13 +172,13 @@ const Scores = () => {
                 custom={index}
                 key={index}
                 onClick={() => handleCardClick(player)}
-                class="relative w-56 h-56 bg-gray-900  rounded-t-lg border border-t-lg shadow-lg flex justify-center items-end mx-auto my-4"
+                class="relative w-56 h-56 bg-gray-900  rounded-t-lg  flex justify-center items-end mx-auto my-4 rounded-b-lg"
               >
                 <div class="absolute inset-0 bg-gray-300 rounded-t-lg "></div>
 
                 {/* Dark Gray Background (Below Diagonal) */}
                 <div
-                  class="absolute inset-0 bg-gray-900 rounded-t-lg"
+                  className="absolute inset-0  z-1 bg-gray-900 "
                   style={{
                     clipPath: "polygon(0% 49%, 100% 30%, 100% 100%, 0% 100%)",
                   }}
@@ -185,24 +187,21 @@ const Scores = () => {
                   {player.id}
                 </div>
                 {/* <!-- Player Image and Name --> */}
-
                 <div class=" absolute -top-10 left-18 transform -translate-x-1/2 flex items-center space-x-0">
                   <img src={player.image} class="w-auto h-36" />
 
-                  <span class="text-black font-bold text-lg items-start ">
-                    PLAYER
+                  <span class="text-black font-bold text-lg items-start uppercase ">
+                    {player.role ? player.role : "Player"}
                   </span>
                 </div>
-
                 {/* <!-- Diagonal Line Below Image --> */}
-                <div class="absolute top-21 left-27.5 transform -translate-x-1/2 w-[225px]  h-1 bg-white -rotate-11"></div>
-
-                <div class="absolute bottom-[-40px] w-0 h-0 border-l-[112px] border-r-[112px] border-t-[40px] border-l-transparent border-r-transparent border-t-gray-900"></div>
-                <span class="absolute bottom-15 left-1/2 transform -translate-x-1/2 text-white font-bold text-xl text-center w-full">
+                <div class="absolute top-21.5 z-1 left-28 rounded-lg transform -translate-x-1/2 w-[227px]  h-1 bg-white -rotate-10"></div>
+                {/* Bottom Triangle */}
+                <div class="absolute bottom-[-40px] w-0 h-0 border-l-[112px] border-r-[112px] border-t-[40px] border-l-transparent border-r-transparent border-t-gray-900 "></div>
+                <span class="absolute bottom-15 left-1/2 transform -translate-x-1/2 text-white font-bold text-xl text-center w-full z-1">
                   {player.name}
                 </span>
-
-                <span class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white text-sm text-center w-full">
+                <span class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white text-sm text-center w-full z-1">
                   Team MPC
                 </span>
               </motion.div>
