@@ -8,7 +8,7 @@ const Landing = () => {
   const { openModal } = useContext(ModalContext)
 
   return (
-    <div>
+    <div> 
       Landing
       <div>
         <button onClick={openModal}>Open Modal</button>
