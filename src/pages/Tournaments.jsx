@@ -12,6 +12,8 @@ const tournaments = [
   { id: 5, name: "The Hundred", logo: "/Tournaments/tournamentdemo.jpg" },
 ];
 
+//hi testing commit
+
 const Tournaments = () => {
   const { openModal } = useContext(ModalContext);
 
