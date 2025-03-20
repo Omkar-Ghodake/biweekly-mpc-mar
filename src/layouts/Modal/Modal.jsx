@@ -4,7 +4,7 @@ import { ModalContext } from "../../context/ModalProvider";
 import { twMerge } from "tailwind-merge";
 import { motion } from "framer-motion";
 
-const Modal = ({ children, className }) => {
+const Modal = ({ children, className, setIsEditing }) => {
   const { isModalOpen, closeModal } = useContext(ModalContext);
 
   return (
@@ -23,7 +23,10 @@ const Modal = ({ children, className }) => {
           {children}
 
           <RxCross2
-            onClick={closeModal}
+            onClick={() => {
+              closeModal();
+              setIsEditing(false);
+            }}
             className="cursor-pointer absolute -right-10 -top-5 text-2xl hover:text-black/50 duration-150"
           />
         </div>

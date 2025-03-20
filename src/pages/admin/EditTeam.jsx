@@ -20,7 +20,7 @@ const EditTeam = () => {
 
   const [isEditing, setIsEditing] = useState(true);
   const [formData, setFormData] = useState({
-    name: "Shubham2.Joshi",
+    name: "",
     blocker: 0,
     critical: 0,
     major: 0,
@@ -44,6 +44,7 @@ const EditTeam = () => {
   };
 
   const removeCourseField = (index) => {
+    
     setFormData((prevData) => ({
       ...prevData,
       courses: prevData.courses.filter((_, i) => i !== index), // Creates a new array safely
@@ -125,10 +126,10 @@ const EditTeam = () => {
           </div>
         ))}
       </motion.div>
-      <Modal className="h-[84vh] text-md ">
-        <ModalHead className="w-1/3">
+      <Modal className="h-[84vh] text-md " setIsEditing = {setIsEditing}>
+        <ModalHead className="w-1/3 ">
           <div className="w-full text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3">
-            <span>{formData.name}</span>
+            {formData.name ? <span>{formData.name}</span> : 'Player Name'}
           </div>
         </ModalHead>
         <ModalBody>
@@ -218,9 +219,9 @@ const EditTeam = () => {
                       </button>
                     )}
                   </div>
-
+                    <div className="bg-gray-200 w-[17.5rem] p-2 rounded-lg">
                   {formData.courses && (
-                    <div className="space-y-1 space-x-3 items-center max-h-28 h-28 w-fit overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                    <div className="space-y-1 space-x-3 items-center max-h-28 h-28 w-fit overflow-y-scroll [&::-webkit-scrollbar]:hidden ">
                       {formData.courses.map((course, index) => (
                         <div
                           key={`course-${index}`}
@@ -245,16 +246,18 @@ const EditTeam = () => {
                             readOnly={!isEditing}
                           />
 
-                          {isEditing && <button
-                            onClick={() => removeCourseField(index)}
-                            className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
-                          >
-                            <MdDeleteOutline />
-                          </button>}
+                          {isEditing && (
+                            <button
+                              onClick={() => removeCourseField(index)}
+                              className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
+                            >
+                              <MdDeleteOutline />
+                            </button>
+                          )}
                         </div>
                       ))}
                     </div>
-                  )}
+                  )}</div>
                 </div>
                 <div className="flex flex-col justify-center items-center h-[55vh] w-1/3">
                   <img
@@ -276,14 +279,20 @@ const EditTeam = () => {
               <div className="w-full p-4 bg-white border-t flex justify-center space-x-4 rounded-b-2xl absolute bottom-0 left-0">
                 <button
                   type="button"
-                  className="px-4 py-2 bg-sky-700 text-white rounded-lg shadow-md hover:bg-sky-800"
+                  className={`px-4 py-2  text-white rounded-lg shadow-md ${
+                    isEditing
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
+                  }`}
                   onClick={() => setIsEditing((prev) => !prev)}
+                  disabled={isEditing}
                 >
-                  {isEditing ? "Cancel" : "Edit"}
+                  Edit
                 </button>
+
                 <button
                   type="submit"
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700"
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 hover:cursor-pointer"
                 >
                   Save
                 </button>
