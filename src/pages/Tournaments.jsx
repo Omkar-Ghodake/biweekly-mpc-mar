@@ -8,6 +8,8 @@ const tournaments = [
   { id: 5, name: "The Hundred", logo: "./assets/png.png" },
 ];
 
+//hi testing commit
+
 const Tournaments = () => {
   return (
     <div className="min-h-screen flex justify-center items-center bg-[url('./assets/stadiumbg.jfif')] bg-cover bg-center p-6">
