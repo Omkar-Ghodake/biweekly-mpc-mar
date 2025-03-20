@@ -1,10 +1,11 @@
 import React, { useContext, useState } from "react";
-
+import background from "../assets/background.jpg";
 import { motion } from "framer-motion";
 import { ModalContext } from "../context/ModalProvider";
 import Modal from "../layouts/Modal/Modal";
 import ModalHead from "../layouts/Modal/ModalHead";
 import ModalBody from "../layouts/Modal/ModalBody";
+import { PiSelectionBackgroundDuotone } from "react-icons/pi";
 
 const Scores = () => {
   const gridItemVariants = {
@@ -132,11 +133,11 @@ const Scores = () => {
   };
 
   return (
-    <div className="bg-black w-full max-h-screen flex flex-col items-center justify-center ">
+    <div className="bg-black w-screen h-screen bg-center bg-cover max-h-screen flex flex-col items-center justify-center " style={{ backgroundImage: `url(${background})` }}>
       {/* Header Section */}
-      <div className="w-auto max-h-[950px] min-h-2/3 justify-center items-center  flex flex-col bg-gradient-to-t from-blue-600 to-blue-200 opacity-90 p-1 rounded-tl-3xl rounded-br-3xl border-2 ">
-        <div className="w-full bg-gradient-to-t from-blue-600 to-blue-200 opacity-90 rounded-tl-3xl rounded-br-3xl border-2 p-4">
-          <div className="flex items-center justify-center text-3xl font-bold font-serif h-10">
+      <div className="w-auto max-h-[950px] min-h-2/3 justify-center items-center  flex flex-col  opacity-90 p-1 rounded-tl-3xl rounded-br-3xl backdrop:blur-lg ">
+        <div className=" text-white bg-gradient-to-b from-sky-600 to-sky-800 shadow-2xl w-full  opacity-90 rounded-3xl p-4 mt-2 ">
+          <div className="flex items-center justify-center text-3xl font-bold font-serif h-10 ">
             {/* Optional logo */}
             {/* <img src="logo.png" alt="Logo" className="w-12 h-12 mr-4" /> */}
             <span>Team members</span>
