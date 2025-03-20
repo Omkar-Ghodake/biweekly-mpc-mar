@@ -1,27 +1,26 @@
-import { Schema,model } from "mongoose";
-
+import { Schema, model } from 'mongoose'
 
 const tournamentSchema = new Schema({
   title: {
-    type: 'string',
+    type: String,
     required: true,
   },
   description: {
-    type: 'string',
+    type: String,
     required: true,
   },
   totalScore: {
-    type: 'number',
+    type: Number,
     required: true,
   },
   issueCount: {
-    type: 'number',
+    type: Number,
     required: true,
   },
-  logo : {
-    type : String,
-    required : true
-  }
+  logo: {
+    type: String,
+    required: true,
+  },
 })
 
-export const Tournament = model("Tournament",tournamentSchema)
+export const Tournament = model('Tournament', tournamentSchema)
