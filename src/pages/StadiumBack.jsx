@@ -4,7 +4,7 @@ import { OrbitControls, useGLTF } from "@react-three/drei";
 import { Suspense } from "react";
 import glb from "../glb/cricket_stadium.glb";
 
-const StadiumModel = () => {
+const StadiumModel = ({ mouse }) => {
   const { scene } = useGLTF(glb);
   const modelRef = useRef();
 
@@ -21,8 +21,8 @@ const StadiumBack = () => {
   return (
     <div className="w-screen h-screen backdrop-opacity-0 blur-xs ">
       <Canvas
-        camera={{ position: [5, 10, 10], fov:40 }}
-        style={{ width: "100vw", height: "100vh", background: "black",  }}
+        camera={{ position: [5, 10, 10], fov: 40 }}
+        style={{ width: "100vw", height: "100vh", background: "black" }}
       >
         <color attach="background" args={["#98D2C0"]} />
         <ambientLight intensity={0.1} />
