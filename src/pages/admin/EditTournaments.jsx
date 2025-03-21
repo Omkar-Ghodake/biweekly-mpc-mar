@@ -52,6 +52,7 @@ const EditTournaments = () => {
     if (currentTournament.id === null) {
       // Add new tournament
       setTournaments([...tournaments, { ...currentTournament, id: Date.now() }]);
+      alert("Tournament details added successfully!");
     } else {
       // Update existing tournament
       setTournaments((prevTournaments) =>
@@ -59,17 +60,19 @@ const EditTournaments = () => {
           tournament.id === currentTournament.id ? currentTournament : tournament
         )
       );
+      alert("Tournament details updated successfully!");
     }
-    setIsEditing(false);
-    setCurrentTournament(null);
-    closeModal();
+    // setIsEditing(false);
+    !isEditing && setCurrentTournament(null);
+    // setCurrentTournament(null);
+    // closeModal();
     console.log("Updated Data:", currentTournament);
     // Add your backend API call here to save the data
   };
 
   const startEditing = (tournament) => {
     setCurrentTournament(tournament);
-    setIsEditing(true);
+    setIsEditing(tournament.id === null);
     openModal();
   };
 
@@ -141,6 +144,7 @@ const EditTournaments = () => {
                             : "bg-gray-100 cursor-default"
                         }`}
                         readOnly={!isEditing}
+                        required
                       />
                     </div>
                     <div className="flex items-center">
@@ -159,6 +163,7 @@ const EditTournaments = () => {
                         }`}
                         readOnly={!isEditing}
                         style={{ height: "150px", width: "300px" }}
+                        required
                       />
                     </div>
                     <div className="flex items-center">
@@ -188,13 +193,18 @@ const EditTournaments = () => {
                     </div>
                   </div>
                   <div className="w-full p-4 bg-white border-t flex justify-center space-x-4 rounded-b-2xl absolute bottom-0 left-0">
-                    <button
-                      type="button"
-                      className="px-4 py-2 bg-sky-700 text-white rounded-lg shadow-md hover:bg-sky-800"
-                      onClick={() => setIsEditing((prev) => !prev)}
-                    >
-                      {isEditing ? "Cancel" : "Edit"}
-                    </button>
+                <button
+                  type="button"
+                  className={`px-4 py-2  text-white rounded-lg shadow-md ${
+                    isEditing
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
+                  }`}
+                  onClick={() => setIsEditing((prev) => !prev)}
+                  disabled={isEditing}
+                >
+                  Edit
+                </button>
                     <button
                       type="submit"
                       className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700"
