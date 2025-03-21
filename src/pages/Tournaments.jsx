@@ -52,6 +52,7 @@ const Tournaments = () => {
         >
           {tournaments[id - 1].name}
         </div>
+        <span></span>
 
       </Modal>
     </div>
