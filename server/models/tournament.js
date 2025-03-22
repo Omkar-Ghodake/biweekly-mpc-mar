@@ -1,6 +1,7 @@
-import { Schema, model } from 'mongoose'
+const mongoose = require('mongoose')
+const { Schema, model } = mongoose
 
-const tournamentSchema = new Schema({
+const TournamentSchema = new Schema({
   title: {
     type: String,
     required: true,
@@ -23,4 +24,4 @@ const tournamentSchema = new Schema({
   },
 })
 
-export const Tournament = model('Tournament', tournamentSchema)
+module.exports = model('Tournament', TournamentSchema)
