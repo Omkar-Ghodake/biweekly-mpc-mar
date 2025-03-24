@@ -1,7 +1,25 @@
 import React from 'react'
+import { twMerge } from 'tailwind-merge'
 
-const Button = ({title}) => {
-  return <div className='px-4 py-2 bg-sky-700  text-white rounded-lg shadow-md w-fit cursor-pointer hover:bg-sky-800 hover:shadow-xl hover:scale-102 '>{title}</div>
+const Button = ({
+  children,
+  className,
+  onClick,
+  size = 'md',
+  variant = 'primary',
+  type = 'solid',
+}) => {
+  return (
+    <button
+      className={twMerge(
+        `btn-${variant} btn-${size} btn-${type} flex items-center justify-between space-x-2 rounded-lg shadow-md w-fit h-fit cursor-pointer font-medium duration-150 border-2 border-inherit`,
+        className
+      )}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  )
 }
 
 export default Button

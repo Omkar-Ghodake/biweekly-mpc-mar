@@ -1,43 +1,43 @@
-import React, { useRef } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, useGLTF } from "@react-three/drei";
-import { Suspense } from "react";
-import glb from "../glb/cricket_stadium.glb";
+import React, { useRef } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { OrbitControls, useGLTF } from '@react-three/drei'
+import { Suspense } from 'react'
+import glb from '../glb/cricket_stadium.glb'
 
 const StadiumModel = ({ mouse }) => {
-  const { scene } = useGLTF(glb);
-  const modelRef = useRef();
+  const { scene } = useGLTF(glb)
+  const modelRef = useRef()
 
   useFrame(() => {
     if (modelRef.current) {
-      modelRef.current.rotation.y += 0.0005;
+      modelRef.current.rotation.y += 0.001
     }
-  });
+  })
 
-  return <primitive object={scene} scale={0.5} ref={modelRef} />;
-};
+  return <primitive object={scene} scale={0.4} ref={modelRef} />
+}
 
 const StadiumBack = () => {
   return (
-    <div className="w-screen h-screen backdrop-opacity-0 blur-xs ">
+    <div className='w-screen h-screen  '>
       <Canvas
-        camera={{ position: [5, 10, 10], fov: 40 }}
-        style={{ width: "100vw", height: "100vh", background: "black" }}
+        camera={{ position: [5, 10, 10], fov: 30 }}
+        style={{ width: '100vw', height: '100vh', background: 'black' }}
       >
-        <color attach="background" args={["#98D2C0"]} />
-        <ambientLight intensity={0.1} />
-        <directionalLight position={[5, 5, 5]} />
+        <color attach='background' args={['#98D2C0']} />
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[7, 7, 7]} />
         <Suspense fallback={null}>
           <StadiumModel />
         </Suspense>
         <OrbitControls
-          enableZoom={false}
+          enableZoom={true}
           autoRotate={false}
-          mouseButtons={false}
+          mouseButtons={true}
         />
       </Canvas>
     </div>
-  );
-};
+  )
+}
 
-export default StadiumBack;
+export default StadiumBack

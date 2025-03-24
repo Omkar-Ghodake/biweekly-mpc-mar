@@ -154,7 +154,7 @@ const Scores = () => {
               </div>
             </div>
 
-            <div className="w-full flex-1  overflow-y-scroll [&::-webkit-scrollbar]:hidden opacity-90 rounded-lg backdrop-blur-sm">
+            <div className="w-full flex-1  overflow-y-scroll [&::-webkit-scrollbar]:hidden opacity-90 rounded-lg">
               {/* Old Implementation */}
               {/* {players.map((player, index) => (
               <motion.div
@@ -277,8 +277,8 @@ const Scores = () => {
             //     </div>
             //   </ModalBody>
             // </Modal>
-            <Modal className={"bg-transparent"}>
-              <div class="relative w-full h-screen     shadow-lg flex justify-center items-end mx-auto">
+            <Modal className="bg-gray-500">
+              <div class="relative w-56 h-56   rounded-t-lg border border-t-lg shadow-lg flex justify-center items-end mx-auto">
                 {/* Dark Gray Background (Below Diagonal) */}
                 {/* <div
                   class="absolute inset-0 bg-gray-900 rounded-t-lg"
@@ -302,27 +302,12 @@ const Scores = () => {
                 {/* <div class="absolute top-21 left-27.5 transform -translate-x-1/2 w-[225px]  h-1 bg-white -rotate-11"></div> */}
 
                 {/* <div class="absolute bottom-[-100px]  border-l-[0px] border-r-[200px]  border-t-[140px] border-l-transparent border-r-transparent border-t-gray-900 rounded-l-xl rounded-t-2xl rounded-r-xl "></div> */}
-                <>
-                  <div
-                    className=" w-[450px]  h-[400px]  -top-50 rounded-2xl rounded-b-2xl bg-gray-900 relative "
-                    style={{
-                      clipPath: "polygon(0% 0%, 100% 0%, 100% 20%, 0% 70%)",
-                    }}
-                  ></div>
-                  {/* Square  */}
-                  <div
-                    className=" w-[450px]  h-[400px]  top-1 bg-gray-900 absolute "
-                    style={{
-                      clipPath: "polygon(0% 70%, 100% 20%, 100% 100%, 0% 100%)",
-                    }}
-                  ></div>
-                  {/* Triangle */}
-                  <div class="absolute bottom-[150px]   h-0 border-l-[225px] border-r-[225px] border-t-[70px] top-101 border-l-transparent border-r-transparent border-t-gray-900 "></div>
-                </>
-                {/* <div
-                  className="  top-12 rounded-2xl rounded-b-2xl bg-gray-900 relative "
-                  
-                ></div> */}
+                <div
+                  className="w-full  h-[150px] bottom-18 rounded-2xl rounded-b-2xl bg-gray-900 relative "
+                  style={{
+                    clipPath: "polygon(0% 0%, 100% 0%, 100% 40%, 0% 100%)",
+                  }}
+                ></div>
 
                 {/* <span class="absolute bottom-15 left-1/2 transform -translate-x-1/2 text-white font-bold text-xl text-center w-full">
                   {selectedPlayer.name}

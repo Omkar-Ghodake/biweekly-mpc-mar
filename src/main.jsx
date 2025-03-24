@@ -15,6 +15,7 @@ import EditTournaments from './pages/admin/EditTournaments.jsx'
 import Navbar from './layouts/Navbar.jsx'
 import StadiumBack from './pages/StadiumBack.jsx'
 import ModalProvider from './context/ModalProvider.jsx'
+import Temp from './pages/Temp.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -37,6 +38,7 @@ createRoot(document.getElementById('root')).render(
           <Route path='/admin/dashboard/editTeam' element={<EditTeam />} />
 
           <Route path='/exit' element={<Exit />} />
+          <Route path='/temp' element={<Temp />} />
         </Routes>
       </ModalProvider>
       <Navbar />
