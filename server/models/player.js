@@ -1,6 +1,7 @@
-import mongoose, { Schema, model } from 'mongoose'
+const mongoose = require('mongoose')
+const { Schema, model } = mongoose
 
-const playerSchema = new Schema({
+const PlayerSchema = new Schema({
   domain_name: {
     type: String,
     required: true,
@@ -37,4 +38,4 @@ const playerSchema = new Schema({
   },
 })
 
-export const Player = model('Player', playerSchema)
+module.exports = model('Player', PlayerSchema)

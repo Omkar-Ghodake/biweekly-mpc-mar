@@ -1,1 +1,77 @@
 @import 'tailwindcss';
+
+@theme {
+  --color-primary: 0, 132, 209;
+  --color-primary-darken: 0, 105, 168;
+  --color-secondary: 0, 166, 62;
+  --color-secondary-darken: 0, 130, 54;
+  --color-danger: 251, 44, 54;
+  --color-danger-darken: 231, 0, 11;
+}
+
+/* Button variants solid */
+.btn-primary.btn-solid {
+  background-color: rgba(var(--color-primary));
+  color: white;
+}
+.btn-primary.btn-solid:hover {
+  background-color: rgba(var(--color-primary-darken));
+}
+
+.btn-secondary.btn-solid {
+  background-color: rgba(var(--color-secondary));
+  color: white;
+}
+.btn-secondary.btn-solid:hover {
+  background-color: rgba(var(--color-secondary-darken));
+}
+
+.btn-danger.btn-solid {
+  background-color: rgba(var(--color-danger));
+  color: white;
+}
+.btn-danger.btn-solid:hover {
+  background-color: rgba(var(--color-danger-darken));
+}
+
+/* Button variants outline */
+.btn-primary.btn-outline {
+  background-color: transparent;
+  color: rgba(var(--color-primary));
+  border-color: rgba(var(--color-primary));
+}
+.btn-primary.btn-outline:hover {
+  background-color: rgba(var(--color-primary), 0.1);
+}
+
+.btn-secondary.btn-outline {
+  background-color: transparent;
+  color: rgba(var(--color-secondary));
+  border-color: rgba(var(--color-secondary));
+}
+.btn-secondary.btn-outline:hover {
+  background-color: rgba(var(--color-secondary), 0.1);
+}
+
+.btn-danger.btn-outline {
+  background-color: transparent;
+  color: rgba(var(--color-danger));
+  border-color: rgba(var(--color-danger));
+}
+.btn-danger.btn-outline:hover {
+  background-color: rgba(var(--color-danger), 0.1);
+}
+
+/* Button sizes */
+.btn-sm {
+  padding: 8px 24px;
+  font-size: 0.8rem;
+}
+.btn-md {
+  padding: 12px 36px;
+  font-size: 1rem;
+}
+.btn-lg {
+  padding: 16px 48px;
+  font-size: 1.2rem;
+}
