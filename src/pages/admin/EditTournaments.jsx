@@ -174,7 +174,7 @@ const EditTournaments = () => {
         </motion.div>
       </div>
       {currentTournament && (
-        <Modal>
+        <Modal afterClosing={() => {}}>
           <ModalHead className="w-1/3">
             <div className="w-full text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3">
               <span>{currentTournament.name || "New Tournament"}</span>
