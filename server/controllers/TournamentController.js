@@ -1,16 +1,30 @@
+const Tournament = require("../models/tournament");
+const {uploadOnCloudinary} = require ("../utils/cloudinary")
 const TournamentModel = require("../models/tournament");
 const { SuccessResponse, ErrorResponse } = require("../utils/response");
 
 exports.createTournament = async (req, res, next) => {
   try {
-    const { title, description, totalScore, issueCount, logo } = req.body;
+    const { title, description, totalScore, issueCount } = req.body;
 
-    const tournament = await TournamentModel.create({
+    const logoLocalPath = req.file?.path;
+    
+    if (!logoLocalPath) {
+      throw new Error("Logo is required");
+    }
+  
+    const logo = await uploadOnCloudinary(logoLocalPath);
+    
+    if (!logo) {
+      throw new Error(400, "Unable to fetch logo from cloudinary")
+    }
+
+    const tournament = await Tournament.create({
       title,
       description,
       totalScore,
       issueCount,
-      logo,
+      logo : logo.url,
     });
 
     SuccessResponse(res, 201, "Tournament Created Successfully.", tournament);
