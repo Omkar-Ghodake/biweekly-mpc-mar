@@ -51,13 +51,18 @@ const EditTournaments = () => {
     e.preventDefault();
     if (currentTournament.id === null) {
       // Add new tournament
-      setTournaments([...tournaments, { ...currentTournament, id: Date.now() }]);
+      setTournaments([
+        ...tournaments,
+        { ...currentTournament, id: Date.now() },
+      ]);
       alert("Tournament details added successfully!");
     } else {
       // Update existing tournament
       setTournaments((prevTournaments) =>
         prevTournaments.map((tournament) =>
-          tournament.id === currentTournament.id ? currentTournament : tournament
+          tournament.id === currentTournament.id
+            ? currentTournament
+            : tournament
         )
       );
       alert("Tournament details updated successfully!");
@@ -98,7 +103,14 @@ const EditTournaments = () => {
               </div>
               <button
                 className="text-xl font-bold px-4 py-1 text-white bg-sky-700 rounded-lg shadow-md w-fit cursor-pointer hover:bg-sky-800 hover:shadow-xl hover:scale-102 mr-6"
-                onClick={() => startEditing({ id: null, name: "", description: "", image: "" })}
+                onClick={() =>
+                  startEditing({
+                    id: null,
+                    name: "",
+                    description: "",
+                    image: "",
+                  })
+                }
               >
                 <div className="flex justify-center items-center ">
                   <IoMdAdd />
@@ -108,7 +120,10 @@ const EditTournaments = () => {
             </div>
             <div className="flex flex-row flex-wrap space-x-5  space-y-7 mt-5 ml-3">
               {tournaments.map((tournament) => (
-                <div key={tournament.id} onClick={() => startEditing(tournament)}>
+                <div
+                  key={tournament.id}
+                  onClick={() => startEditing(tournament)}
+                >
                   <TournamentCard item={tournament} />
                 </div>
               ))}
@@ -128,7 +143,7 @@ const EditTournaments = () => {
               <div className="w-2/3">
                 <form onSubmit={updateDetails} className="space-y-6">
                   <div className="flex flex-col space-y-4">
-                    <div className="flex items-center">
+                    <div className="flex items-center ">
                       <label htmlFor="name" className="font-medium">
                         Tournament Name
                       </label>
@@ -138,7 +153,7 @@ const EditTournaments = () => {
                         type="text"
                         value={currentTournament.name}
                         onChange={handleInputChange}
-                        className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
+                        className={`mx-auto w-1/2 p-2 rounded-3xl transition-all duration-200 ${
                           isEditing
                             ? "border focus:outline-blue-500"
                             : "bg-gray-100 cursor-default"
@@ -156,7 +171,7 @@ const EditTournaments = () => {
                         name="description"
                         value={currentTournament.description}
                         onChange={handleInputChange}
-                        className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 resize-none ${
+                        className={`mx-auto w-1/2 p-2 rounded-3xl transition-all duration-200 resize-none ${
                           isEditing
                             ? "border focus:outline-blue-500"
                             : "bg-gray-100 cursor-default"
@@ -167,7 +182,7 @@ const EditTournaments = () => {
                       />
                     </div>
                     <div className="flex items-center">
-                        <input
+                      <input
                         id="image"
                         name="image"
                         type="file"
@@ -193,18 +208,18 @@ const EditTournaments = () => {
                     </div>
                   </div>
                   <div className="w-full p-4 bg-white border-t flex justify-center space-x-4 rounded-b-2xl absolute bottom-0 left-0">
-                <button
-                  type="button"
-                  className={`px-4 py-2  text-white rounded-lg shadow-md ${
-                    isEditing
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
-                  }`}
-                  onClick={() => setIsEditing((prev) => !prev)}
-                  disabled={isEditing}
-                >
-                  Edit
-                </button>
+                    <button
+                      type="button"
+                      className={`px-4 py-2  text-white rounded-lg shadow-md ${
+                        isEditing
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
+                      }`}
+                      onClick={() => setIsEditing((prev) => !prev)}
+                      disabled={isEditing}
+                    >
+                      Edit
+                    </button>
                     <button
                       type="submit"
                       className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700"
@@ -215,7 +230,11 @@ const EditTournaments = () => {
                 </form>
               </div>
               <div className="w-1/3 flex justify-center">
-                <img src={currentTournament.image || ball} alt="Tournament" className="w-52 h-52 rounded-full object-cover " />
+                <img
+                  src={currentTournament.image || ball}
+                  alt="Tournament"
+                  className="w-52 h-52 rounded-full object-cover "
+                />
               </div>
             </div>
           </ModalBody>
