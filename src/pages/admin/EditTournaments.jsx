@@ -16,13 +16,22 @@ const EditTournaments = () => {
   const [currentTournament, setCurrentTournament] = useState(null);
   const fileInputRef = useRef(null);
 
+  // Fetch tournaments data on component mount
   useEffect(() => {
-    // Fetch the tournaments data from an API or backend service
     const fetchTournaments = async () => {
       try {
-        const response = await fetch("/api/tournaments"); // Replace with your API endpoint
-        const data = await response.json();
-        setTournaments(data);
+        // Mock data for temporary display
+        const mockData = [
+          { id: 1, name: "Tournament 1", description: "Description 1", image: ball },
+          { id: 2, name: "Tournament 2", description: "Description 2", image: ball },
+          { id: 3, name: "Tournament 3", description: "Description 3", image: ball },
+        ];
+        setTournaments(mockData);
+
+        // Uncomment the following lines to fetch data from an API
+        // const response = await fetch("/api/tournaments"); // Replace with your API endpoint
+        // const data = await response.json();
+        // setTournaments(data);
       } catch (error) {
         console.error("Error fetching tournaments:", error);
       }
@@ -31,11 +40,13 @@ const EditTournaments = () => {
     fetchTournaments();
   }, []);
 
+  // Handle input changes for tournament form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCurrentTournament({ ...currentTournament, [name]: value });
   };
 
+  // Handle image upload for tournament
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -47,6 +58,21 @@ const EditTournaments = () => {
     }
   };
 
+  // Handle tournament deletion
+const deleteTournament = () => {
+  setTournaments((prevTournaments) => {
+    const updatedTournaments = prevTournaments.filter(
+      (tournament) => tournament.id !== currentTournament.id
+    );
+    return updatedTournaments;
+  });
+  alert("Tournament deleted successfully!");
+  setCurrentTournament(null);
+  closeModal();
+};
+
+
+  // Handle form submission to add or update tournament details
   const updateDetails = (e) => {
     e.preventDefault();
     if (currentTournament.id === null) {
@@ -55,21 +81,24 @@ const EditTournaments = () => {
       alert("Tournament details added successfully!");
     } else {
       // Update existing tournament
-      setTournaments((prevTournaments) =>
-        prevTournaments.map((tournament) =>
+      setTournaments((prevTournaments) => {
+        const updatedTournaments = prevTournaments.map((tournament) =>
           tournament.id === currentTournament.id ? currentTournament : tournament
-        )
-      );
+        );
+        return updatedTournaments;
+      });
       alert("Tournament details updated successfully!");
     }
-    // setIsEditing(false);
     !isEditing && setCurrentTournament(null);
-    // setCurrentTournament(null);
-    // closeModal();
     console.log("Updated Data:", currentTournament);
-    // Add your backend API call here to save the data
+    // Add backend API call here to save the data
+
+    // Close the modal after saving
+    //closeModal();
+    
   };
 
+  // Start editing a tournament
   const startEditing = (tournament) => {
     setCurrentTournament(tournament);
     setIsEditing(tournament.id === null);
@@ -89,24 +118,24 @@ const EditTournaments = () => {
             hidden: { opacity: 0 },
             visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
           }}
-          className="justify-start  w-3/4 max-h-40 min-h-5/6 py-3 px-3 backdrop-blur-md  rounded-lg overflow-y-scroll [&::-webkit-scrollbar]:hidden"
+          className="justify-start w-3/4 max-h-40 min-h-5/6 py-3 px-3 backdrop-blur-md rounded-lg overflow-y-scroll [&::-webkit-scrollbar]:hidden"
         >
-          <div className="flex flex-col ">
+          <div className="flex flex-col">
             <div className="flex flex-row justify-between">
-              <div className="text-3xl font-bold ml-3 px-6 py-3  bg-gradient-to-b from-sky-600 to-sky-800  text-white bg-sky-700 rounded-lg shadow-md w-1/4 text-center">
+              <div className="text-3xl font-bold ml-3 px-6 py-3 bg-gradient-to-b from-sky-600 to-sky-800 text-white bg-sky-700 rounded-lg shadow-md w-1/4 text-center">
                 Tournaments
               </div>
               <button
                 className="text-xl font-bold px-4 py-1 text-white bg-sky-700 rounded-lg shadow-md w-fit cursor-pointer hover:bg-sky-800 hover:shadow-xl hover:scale-102 mr-6"
                 onClick={() => startEditing({ id: null, name: "", description: "", image: "" })}
               >
-                <div className="flex justify-center items-center ">
+                <div className="flex justify-center items-center">
                   <IoMdAdd />
                   Add a tournament
                 </div>
               </button>
             </div>
-            <div className="flex flex-row flex-wrap space-x-5  space-y-7 mt-5 ml-3">
+            <div className="flex flex-row flex-wrap space-x-5 space-y-7 mt-5 ml-3">
               {tournaments.map((tournament) => (
                 <div key={tournament.id} onClick={() => startEditing(tournament)}>
                   <TournamentCard item={tournament} />
@@ -139,9 +168,7 @@ const EditTournaments = () => {
                         value={currentTournament.name}
                         onChange={handleInputChange}
                         className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
-                          isEditing
-                            ? "border focus:outline-blue-500"
-                            : "bg-gray-100 cursor-default"
+                          isEditing ? "border focus:outline-blue-500" : "bg-gray-100 cursor-default"
                         }`}
                         readOnly={!isEditing}
                         required
@@ -157,9 +184,7 @@ const EditTournaments = () => {
                         value={currentTournament.description}
                         onChange={handleInputChange}
                         className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 resize-none ${
-                          isEditing
-                            ? "border focus:outline-blue-500"
-                            : "bg-gray-100 cursor-default"
+                          isEditing ? "border focus:outline-blue-500" : "bg-gray-100 cursor-default"
                         }`}
                         readOnly={!isEditing}
                         style={{ height: "150px", width: "300px" }}
@@ -167,16 +192,14 @@ const EditTournaments = () => {
                       />
                     </div>
                     <div className="flex items-center">
-                        <input
+                      <input
                         id="image"
                         name="image"
                         type="file"
                         accept="image/*"
                         ref={fileInputRef}
                         className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
-                          isEditing
-                            ? "border focus:outline-blue-500"
-                            : "bg-gray-100 cursor-default"
+                          isEditing ? "border focus:outline-blue-500" : "bg-gray-100 cursor-default"
                         }`}
                         disabled={!isEditing}
                         style={{ display: "none" }}
@@ -193,29 +216,37 @@ const EditTournaments = () => {
                     </div>
                   </div>
                   <div className="w-full p-4 bg-white border-t flex justify-center space-x-4 rounded-b-2xl absolute bottom-0 left-0">
-                <button
-                  type="button"
-                  className={`px-4 py-2  text-white rounded-lg shadow-md ${
-                    isEditing
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
-                  }`}
-                  onClick={() => setIsEditing((prev) => !prev)}
-                  disabled={isEditing}
-                >
-                  Edit
-                </button>
+                    <button
+                      type="button"
+                      className={`px-4 py-2 text-white rounded-lg shadow-md ${
+                        isEditing ? "bg-gray-400 cursor-not-allowed" : "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
+                      }`}
+                      onClick={() => setIsEditing((prev) => !prev)}
+                      disabled={isEditing}
+                    >
+                      Edit
+                    </button>
                     <button
                       type="submit"
                       className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700"
                     >
                       Save
                     </button>
+                    <button
+                      type="button"
+                      className={`px-4 py-2 text-white rounded-lg shadow-md ${
+                      currentTournament && currentTournament.id === null ? "bg-gray-400 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"
+                      }`}
+                      onClick={deleteTournament}
+                      disabled={currentTournament && currentTournament.id === null}
+                      >
+                       Delete
+                    </button>
                   </div>
                 </form>
               </div>
               <div className="w-1/3 flex justify-center">
-                <img src={currentTournament.image || ball} alt="Tournament" className="w-52 h-52 rounded-full object-cover " />
+                <img src={currentTournament.image || ball} alt="Tournament" className="w-52 h-52 rounded-full object-cover" />
               </div>
             </div>
           </ModalBody>
