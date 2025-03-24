@@ -1,10 +1,11 @@
-import { v2 as cloudinary } from "cloudinary";
-import fs from "fs";
-import dotenv from "dotenv"
+const cloudinary = require("cloudinary").v2;
+const fs = require("fs");
 
-dotenv.config({
-    path : './.env'
-})
+
+require("dotenv").config({
+    path: "./.env"
+});
+
 
 cloudinary.config({ 
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
@@ -35,4 +36,4 @@ const uploadOnCloudinary = async (localFilePath) => {
     }
 }
 
-export {uploadOnCloudinary}
+module.exports = { uploadOnCloudinary };
