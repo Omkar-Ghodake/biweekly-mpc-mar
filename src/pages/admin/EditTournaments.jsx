@@ -22,9 +22,24 @@ const EditTournaments = () => {
       try {
         // Mock data for temporary display
         const mockData = [
-          { id: 1, name: "Tournament 1", description: "Description 1", image: ball },
-          { id: 2, name: "Tournament 2", description: "Description 2", image: ball },
-          { id: 3, name: "Tournament 3", description: "Description 3", image: ball },
+          {
+            id: 1,
+            name: "Tournament 1",
+            description: "Description 1",
+            image: ball,
+          },
+          {
+            id: 2,
+            name: "Tournament 2",
+            description: "Description 2",
+            image: ball,
+          },
+          {
+            id: 3,
+            name: "Tournament 3",
+            description: "Description 3",
+            image: ball,
+          },
         ];
         setTournaments(mockData);
 
@@ -59,18 +74,17 @@ const EditTournaments = () => {
   };
 
   // Handle tournament deletion
-const deleteTournament = () => {
-  setTournaments((prevTournaments) => {
-    const updatedTournaments = prevTournaments.filter(
-      (tournament) => tournament.id !== currentTournament.id
-    );
-    return updatedTournaments;
-  });
-  alert("Tournament deleted successfully!");
-  setCurrentTournament(null);
-  closeModal();
-};
-
+  const deleteTournament = () => {
+    setTournaments((prevTournaments) => {
+      const updatedTournaments = prevTournaments.filter(
+        (tournament) => tournament.id !== currentTournament.id
+      );
+      return updatedTournaments;
+    });
+    alert("Tournament deleted successfully!");
+    setCurrentTournament(null);
+    closeModal();
+  };
 
   // Handle form submission to add or update tournament details
   const updateDetails = (e) => {
@@ -84,22 +98,14 @@ const deleteTournament = () => {
       alert("Tournament details added successfully!");
     } else {
       // Update existing tournament
-<<<<<<< HEAD
-      setTournaments((prevTournaments) =>
-        prevTournaments.map((tournament) =>
+      setTournaments((prevTournaments) => {
+        const updatedTournaments = prevTournaments.map((tournament) =>
           tournament.id === currentTournament.id
             ? currentTournament
             : tournament
-        )
-      );
-=======
-      setTournaments((prevTournaments) => {
-        const updatedTournaments = prevTournaments.map((tournament) =>
-          tournament.id === currentTournament.id ? currentTournament : tournament
         );
         return updatedTournaments;
       });
->>>>>>> b2925241e912b54c908700e299c69df0aa0b0250
       alert("Tournament details updated successfully!");
     }
     !isEditing && setCurrentTournament(null);
@@ -108,7 +114,6 @@ const deleteTournament = () => {
 
     // Close the modal after saving
     //closeModal();
-    
   };
 
   // Start editing a tournament
@@ -190,15 +195,10 @@ const deleteTournament = () => {
                         type="text"
                         value={currentTournament.name}
                         onChange={handleInputChange}
-<<<<<<< HEAD
-                        className={`mx-auto w-1/2 p-2 rounded-3xl transition-all duration-200 ${
+                        className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
                           isEditing
                             ? "border focus:outline-blue-500"
                             : "bg-gray-100 cursor-default"
-=======
-                        className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
-                          isEditing ? "border focus:outline-blue-500" : "bg-gray-100 cursor-default"
->>>>>>> b2925241e912b54c908700e299c69df0aa0b0250
                         }`}
                         readOnly={!isEditing}
                         required
@@ -213,15 +213,10 @@ const deleteTournament = () => {
                         name="description"
                         value={currentTournament.description}
                         onChange={handleInputChange}
-<<<<<<< HEAD
-                        className={`mx-auto w-1/2 p-2 rounded-3xl transition-all duration-200 resize-none ${
+                        className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 resize-none ${
                           isEditing
                             ? "border focus:outline-blue-500"
                             : "bg-gray-100 cursor-default"
-=======
-                        className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 resize-none ${
-                          isEditing ? "border focus:outline-blue-500" : "bg-gray-100 cursor-default"
->>>>>>> b2925241e912b54c908700e299c69df0aa0b0250
                         }`}
                         readOnly={!isEditing}
                         style={{ height: "150px", width: "300px" }}
@@ -236,7 +231,9 @@ const deleteTournament = () => {
                         accept="image/*"
                         ref={fileInputRef}
                         className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
-                          isEditing ? "border focus:outline-blue-500" : "bg-gray-100 cursor-default"
+                          isEditing
+                            ? "border focus:outline-blue-500"
+                            : "bg-gray-100 cursor-default"
                         }`}
                         disabled={!isEditing}
                         style={{ display: "none" }}
@@ -255,15 +252,10 @@ const deleteTournament = () => {
                   <div className="w-full p-4 bg-white border-t flex justify-center space-x-4 rounded-b-2xl absolute bottom-0 left-0">
                     <button
                       type="button"
-<<<<<<< HEAD
-                      className={`px-4 py-2  text-white rounded-lg shadow-md ${
+                      className={`px-4 py-2 text-white rounded-lg shadow-md ${
                         isEditing
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
-=======
-                      className={`px-4 py-2 text-white rounded-lg shadow-md ${
-                        isEditing ? "bg-gray-400 cursor-not-allowed" : "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
->>>>>>> b2925241e912b54c908700e299c69df0aa0b0250
                       }`}
                       onClick={() => setIsEditing((prev) => !prev)}
                       disabled={isEditing}
@@ -279,26 +271,26 @@ const deleteTournament = () => {
                     <button
                       type="button"
                       className={`px-4 py-2 text-white rounded-lg shadow-md ${
-                      currentTournament && currentTournament.id === null ? "bg-gray-400 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"
+                        currentTournament && currentTournament.id === null
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-red-600 hover:bg-red-700"
                       }`}
                       onClick={deleteTournament}
-                      disabled={currentTournament && currentTournament.id === null}
-                      >
-                       Delete
+                      disabled={
+                        currentTournament && currentTournament.id === null
+                      }
+                    >
+                      Delete
                     </button>
                   </div>
                 </form>
               </div>
               <div className="w-1/3 flex justify-center">
-<<<<<<< HEAD
                 <img
                   src={currentTournament.image || ball}
                   alt="Tournament"
-                  className="w-52 h-52 rounded-full object-cover "
+                  className="w-52 h-52 rounded-full object-cover"
                 />
-=======
-                <img src={currentTournament.image || ball} alt="Tournament" className="w-52 h-52 rounded-full object-cover" />
->>>>>>> b2925241e912b54c908700e299c69df0aa0b0250
               </div>
             </div>
           </ModalBody>
