@@ -1,5 +1,8 @@
 const Tournament = require("../models/tournament");
 const {uploadOnCloudinary} = require ("../utils/cloudinary")
+const TournamentModel = require("../models/tournament");
+const { SuccessResponse, ErrorResponse } = require("../utils/response");
+
 exports.createTournament = async (req, res, next) => {
   try {
     const { title, description, totalScore, issueCount } = req.body;
@@ -24,16 +27,10 @@ exports.createTournament = async (req, res, next) => {
       logo : logo.url,
     });
 
-    res.status(201).json({
-      success: true,
-      tournament,
-    });
+    SuccessResponse(res, 201, "Tournament Created Successfully.", tournament);
   } catch (error) {
     console.log("Error: ", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error!",
-    });
+    ErrorResponse(res, 500, "Internal Server Error!", error);
   }
 };
 
@@ -43,29 +40,27 @@ exports.updateTournament = async (req, res, next) => {
 
     if (!tournament) {
       console.log("No Tournament Data found!");
-      res.status(404).json({
-        success: false,
-        message: "No Tournament is found!",
-      });
+      ErrorResponse(
+        res,
+        404,
+        "No Tournament Data Found!",
+        new Error("Could not find Tournament with the given id!")
+      );
     }
 
     tournament = await Product.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
-      useFindAndModify: false,
     });
 
-    res.status(200).json({
-      success: true,
-      tournament,
-    });
-
-
+    SuccessResponse(
+      res,
+      200,
+      `Tournament with ${req.params.id} updated`,
+      tournament
+    );
   } catch (error) {
     console.log("Error: ", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error!",
-    });
+    ErrorResponse(res, 500, "Internal Server Error!", error);
   }
 };
 
@@ -76,22 +71,27 @@ exports.deleteTournament = async (req, res, next) => {
     });
     if (deletedCount == 0) {
       console.log("No Tournament Found!");
-      res.status(404).json({
-        success: false,
-        message: "No Tournament Found!",
-      });
+      ErrorResponse(
+        res,
+        404,
+        "No Tournament Data Found!",
+        new Error("Could not find Tournament with the given id!")
+      );
     }
 
     res.status(200).json({
       success: true,
       message: `Tournament Deleted: Affected ${deletedCount} tournament`,
     });
+    SuccessResponse(
+      res,
+      201,
+      `Tournament Deleted: Affected ${deletedCount} tournament.`,
+      deletedCount
+    );
   } catch (error) {
     console.log("Error: ", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error!",
-    });
+    ErrorResponse(res, 500, "Internal Server Error", error);
   }
 };
 
@@ -102,23 +102,24 @@ exports.getAllTournament = async (req, res, next) => {
     //No data found!
     if (!tournaments) {
       console.log("No Tournament Data found!");
-      res.status(404).json({
-        success: false,
-        message: "No Tournament is found!",
-      });
+      ErrorResponse(
+        res,
+        404,
+        "No Tournament Data Found!",
+        new Error("No Data in Tournamnet Collection")
+      );
     }
 
     //If data is found
-    res.status(200).json({
-      success: true,
-      tournaments,
-    });
+    SuccessResponse(
+      res,
+      201,
+      `Successfully Fetched ${tournaments.length} Tournaments.`,
+      tournaments
+    );
   } catch (error) {
     console.log("Error: ", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error!",
-    });
+    ErrorResponse(res, 500, "Internal Server Error", error);
   }
 };
 
@@ -129,22 +130,23 @@ exports.getOneTournament = async (req, res, next) => {
     //No data found!
     if (!tournament) {
       console.log("No Tournament Data found!");
-      res.status(404).json({
-        success: false,
-        message: "No Tournament is found!",
-      });
+      ErrorResponse(
+        res,
+        404,
+        "No Tournament Data Found!",
+        new Error("Could not find Tournament with the given id!")
+      );
     }
 
     //If data is found
-    res.status(200).json({
-      success: true,
-      tournament,
-    });
+    SuccessResponse(
+      res,
+      201,
+      `Successfully Fetched Tournament with Tournament Id: ${req.params.id}`,
+      tournament
+    );
   } catch (error) {
     console.log("Error: ", error);
-    res.status(500).json({
-      success: false,
-      message: "Internal Server Error!",
-    });
+    ErrorResponse(res, 500, "Internal Server Error", error);
   }
 };
