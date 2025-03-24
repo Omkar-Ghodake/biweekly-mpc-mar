@@ -5,6 +5,7 @@ const {
   getAllPlayers,
   updatePlayer,
   deletePlayer,
+  deletePlayers,
 } = require('../controllers/PlayerController')
 const router = express.Router()
 
@@ -17,5 +18,7 @@ router.get('/get-all-players', getAllPlayers)
 router.put('/update-player', updatePlayer)
 
 router.delete('/delete-player', deletePlayer)
+
+router.delete('/delete-players', deletePlayers)
 
 module.exports = router

@@ -18,6 +18,11 @@ const CoachSchema = new Schema({
     required: true,
     unique: true,
   },
+  password: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   image: {
     type: String,
     default: '',

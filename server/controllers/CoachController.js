@@ -107,3 +107,37 @@ exports.deleteCoach = async (req, res) => {
     ErrorResponse(res, 500, 'Internal Server Error!', error)
   }
 }
+
+exports.deleteCoaches = async (req, res) => {
+  try {
+    const { ids } = req.body
+
+    const existingCoaches = await Coach.find({ _id: { $in: ids } })
+
+    if (existingCoaches === 0) {
+      return ErrorResponse(res, 404, 'No coaches found')
+    }
+
+    const deletedCoaches = await Coach.deleteMany({ _id: { $in: ids } })
+
+    return SuccessResponse(
+      res,
+      200,
+      `${existingCoaches.length} coaches deleted successfully`,
+      deletedCoaches
+    )
+  } catch (error) {
+    console.log('Error: ', error)
+    ErrorResponse(res, 500, 'Internal Server Error!', error)
+  }
+}
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    const {}
+
+  } catch (error) {
+    console.log('Error: ', error)
+    ErrorResponse(res, 500, 'Internal Server Error!', error)
+  }
+}

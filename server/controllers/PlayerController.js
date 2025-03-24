@@ -117,3 +117,27 @@ exports.deletePlayer = async (req, res) => {
     ErrorResponse(res, 500, 'Internal Server Error!', error)
   }
 }
+
+exports.deletePlayers = async (req, res) => {
+  try {
+    const { ids } = req.body
+
+    const existingPlayers = await Player.find({ _id: { $in: ids } })
+
+    if (existingPlayers === 0) {
+      return ErrorResponse(res, 404, 'No players found')
+    }
+
+    const deletedPlayers = await Player.deleteMany({ _id: { $in: ids } })
+
+    return SuccessResponse(
+      res,
+      200,
+      `${existingPlayers.length} players deleted successfully`,
+      deletedPlayers
+    )
+  } catch (error) {
+    console.log('Error: ', error)
+    ErrorResponse(res, 500, 'Internal Server Error!', error)
+  }
+}
