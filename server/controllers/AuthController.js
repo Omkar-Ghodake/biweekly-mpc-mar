@@ -1,27 +1,27 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const User = require('../models/employee'); // Assuming you have a User model
-const { SECRET_KEY } = require('../config'); // Replace with your secret key
+const Coach = require('../models/coach'); // Corrected model name
+const { SECRET_KEY } = require('../config'); // Ensure you have a valid SECRET_KEY
 
 const AuthController = {
     authenticateUser: async (req, res) => {
-        const { employeeId, password } = req.body;
+        const { emp_id, password } = req.body; // Corrected field name
 
         try {
-            // Find user by employee ID
-            const user = await User.findOne({ employeeId });
-            if (!user) {
+            // Find user by emp_id
+            const coach = await Coach.findOne({ emp_id });
+            if (!coach) {
                 return res.status(404).json({ message: 'User not found' });
             }
 
             // Compare password
-            const isPasswordValid = await bcrypt.compare(password, user.password);
+            const isPasswordValid = await bcrypt.compare(password, coach.password);
             if (!isPasswordValid) {
                 return res.status(401).json({ message: 'Invalid credentials' });
             }
 
             // Generate JWT token
-            const token = jwt.sign({ id: user._id, employeeId: user.employeeId }, SECRET_KEY, {
+            const token = jwt.sign({ id: coach._id, emp_id: coach.emp_id }, SECRET_KEY, {
                 expiresIn: '1h',
             });
 
