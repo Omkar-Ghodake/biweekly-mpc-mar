@@ -1,11 +1,11 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const Coach = require('../models/coach'); // Corrected model name
+const Coach = require('../models/coach'); 
 const { SECRET_KEY } = require('../config'); // Ensure you have a valid SECRET_KEY
 
 const AuthController = {
     authenticateUser: async (req, res) => {
-        const { emp_id, password } = req.body; // Corrected field name
+        const { emp_id, password } = req.body; 
 
         try {
             // Find user by emp_id
