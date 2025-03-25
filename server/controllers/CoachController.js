@@ -25,7 +25,9 @@ exports.addCoach = async (req, res) => {
       return ErrorResponse(res, 403, 'Domain name already exists')
     }
 
-    const coach = await Coach.create(req.body)
+    const generatedPass = ''
+
+    const coach = await Coach.create({...req.body, password: generatedPass})
 
     SuccessResponse(res, 201, 'Coach Created Successfully.', coach)
   } catch (error) {
