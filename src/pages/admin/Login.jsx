@@ -89,7 +89,7 @@ const Login = () => {
           <div className='flex flex-col'>
             <label className='text-black text-sm font-medium ml-3 mb-2'>Domain Id</label>
             <input
-              className='w-full p-2 border border-gray-300 rounded-2xl bg-transparent focus:outline-none focus:ring-1 focus:ring-green-500 transition-all'
+              className='w-full p-2 border border-gray-300 rounded-2xl bg-transparent focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all'
               placeholder='Enter your domain id'
               type="domain"
               value={domain}
@@ -102,7 +102,7 @@ const Login = () => {
             <label className='text-black text-sm font-medium ml-3 mt-2 mb-2'>Password</label>
             <div className='relative'>
               <input
-                className='w-full p-2 border border-gray-300 rounded-2xl bg-transparent focus:outline-none focus:ring-1 focus:ring-green-500 transition-all'
+                className='w-full p-2 border border-gray-300 rounded-2xl bg-transparent focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all'
                 placeholder='Enter your password'
                 type={isPasswordVisible ? 'text' : 'password'}
                 value={password}
