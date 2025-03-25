@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import Button from './Button';
 
 const sendOTP = (email) => {
   console.log(`Sending OTP to: ${email}`);
@@ -10,7 +11,7 @@ const verifyOTP = (enteredOTP, actualOTP) => {
   return enteredOTP === actualOTP; 
 };
 
-const ForgotPassword = () => {
+const ForgotPassword = ({closeModal}) => {
   const [step, setStep] = useState(1); 
   const [email, setEmail] = useState('');
   const [otp, setOtp] = useState('');
@@ -45,14 +46,18 @@ const ForgotPassword = () => {
   
   const handlePasswordSubmit = () => {
     
-    if (newPassword !== confirmPassword) {
-      alert('Passwords do not match');
-      
+    if(!newPassword || !confirmPassword){
+      return setError('Enter all fields');
     }
-    else
-    {alert('Password reset successfully!');}
+    if (newPassword !== confirmPassword) {
+      setError('Passwords do not match');
+      return;
+    }
+    setError('');
+    alert('Password reset successfully!');
+    closeModal()
   };
-
+  
   
 
   const togglePasswordVisibility1 = () => {
@@ -78,9 +83,12 @@ const ForgotPassword = () => {
               onChange={(e) => setEmail(e.target.value)}
               className='w-full p-2 border border-gray-300 rounded-2xl bg-transparent focus:outline-none focus:ring focus:ring-black transition-all'
             />
-            <button onClick={handleEmailSubmit} className='w-full py-2 mt-7 bg-gradient-to-r bg-blue-500 text-white font-bold rounded-3xl shadow-md hover:shadow-lg focus:outline-none focus:ring-2 transform transition-all hover:scale-101 '>
+             {/* <button onClick={handleEmailSubmit} className='w-full py-2 mt-7 bg-gradient-to-r bg-blue-500 text-white font-bold rounded-3xl shadow-md hover:shadow-lg focus:outline-none focus:ring-2 transform transition-all hover:scale-101 '>
               Send OTP
-            </button>
+            </button>  */}
+            {<Button onClick={handleEmailSubmit} className={'w-full my-2' } >
+              Send OTP
+            </Button>}
           </div>
         )}
 
@@ -93,9 +101,13 @@ const ForgotPassword = () => {
               onChange={(e) => setOtp(e.target.value)}
               className='w-full p-2 border border-gray-300 rounded-2xl bg-transparent focus:outline-none focus:ring focus:ring-black transition-all'
             />
-            <button onClick={handleOTPSubmit} className='w-full py-2 mt-7 bg-gradient-to-r bg-blue-500 text-white font-bold rounded-3xl shadow-md hover:shadow-lg focus:outline-none focus:ring-2 ring-blue-500 transform transition-all hover:scale-101 '>
+            {/* <button onClick={handleOTPSubmit} className='w-full py-2 mt-7 bg-gradient-to-r bg-blue-500 text-white font-bold rounded-3xl shadow-md hover:shadow-lg focus:outline-none focus:ring-2 ring-blue-500 transform transition-all hover:scale-101 '>
               Verify OTP
-            </button>
+            </button> */}
+
+          {<Button onClick={handleOTPSubmit} className={'w-full my-2' } >
+              Verify OTP
+            </Button>}
           </div>
         )}
 
@@ -127,10 +139,14 @@ const ForgotPassword = () => {
                 {isConfirmPasswordVisible ? <AiFillEyeInvisible size={20} /> : <AiFillEye size={20} />}
               </button>}
             </div>
-
-            <button onClick={handlePasswordSubmit} className='w-full py-2 mt-6 bg-gradient-to-r bg-blue-500 text-white font-bold rounded-3xl shadow-md hover:shadow-lg focus:outline-none focus:ring-1 transform transition-all hover:scale-101 '>
+            {error && <div className='text-red-500 text-sm  mt-1'>{error}</div>}
+            {/* <button onClick={handlePasswordSubmit} className='w-full py-2 mt-6 bg-gradient-to-r bg-blue-500 text-white font-bold rounded-3xl shadow-md hover:shadow-lg focus:outline-none focus:ring-1 transform transition-all hover:scale-101 '>
               Reset Password
-            </button>
+            </button> */}
+
+            {<Button onClick={handlePasswordSubmit} className={'w-full mt-5' } >
+              Reset Password
+            </Button>}
           </div>
         )}
       </div>
