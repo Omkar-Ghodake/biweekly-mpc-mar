@@ -36,9 +36,7 @@ const CoachSchema = new Schema({
     enum: ['Male', 'Female'],
     required: true,
   },
-  otp: {
-    type: String,
-  },
+  otp: String,
 })
 
 module.exports = model('Coach', CoachSchema)
