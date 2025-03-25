@@ -6,7 +6,7 @@ import { ModalContext } from "../../context/ModalProvider";
 import ModalHead from "../../layouts/Modal/ModalHead";
 import ModalBody from "../../layouts/Modal/ModalBody";
 import ball from "../../assets/ball.jpg";
-import background from "../../assets/background.jpg";
+import background from "../../assets/background5.jpg";
 import { IoMdAdd } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
 import img from "../../glb/Members_Photos_Final/Jaipal.png";
@@ -21,11 +21,13 @@ const EditTeam = () => {
   const [isEditing, setIsEditing] = useState(true);
   const [formData, setFormData] = useState({
     name: "",
+    empId: null,
     blocker: 0,
     critical: 0,
     major: 0,
     normal: 0,
     minor: 0,
+    previous_score: 0,
     courses: [], // Start with one empty course field
   });
 
@@ -44,7 +46,6 @@ const EditTeam = () => {
   };
 
   const removeCourseField = (index) => {
-    
     setFormData((prevData) => ({
       ...prevData,
       courses: prevData.courses.filter((_, i) => i !== index), // Creates a new array safely
@@ -72,7 +73,7 @@ const EditTeam = () => {
     formData.minor * 1;
   return (
     <div
-      className="h-screen flex items-center justify-center bg-cover bg-center transition-all delay-200"
+      className="h-screen flex items-center justify-center bg-cover bg-center transition-all delay-200 "
       style={{ backgroundImage: `url(${background})` }}
     >
       <motion.div
@@ -126,74 +127,101 @@ const EditTeam = () => {
           </div>
         ))}
       </motion.div>
-      <Modal className="h-[84vh] text-md " afterClosing = {() => setIsEditing(false)}>
+      <Modal
+        className="h-[84vh] text-md "
+        afterClosing={() => setIsEditing(false)}
+      >
         <ModalHead className="w-1/3 ">
           <div className="w-full text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3">
-            {formData.name ? <span>{formData.name}</span> : 'Player Name'}
+            {formData.name ? <span>{formData.name}</span> : "Domain Name"}
           </div>
         </ModalHead>
         <ModalBody>
           <div className="p-2 items-center">
             <form onSubmit={updateDetails} className="space-y-6 ">
               {/* Profile Image and Name Input */}
-              <div className="flex flex-col md:flex-row items-center space-y-5 md:space-y-0 md:space-x-5 ">
+              <div className="flex flex-col md:flex-row items-center space-y-5 md:space-y-0 md:space-x-1 ">
                 <div className="flex flex-col w-full space-y-4 ">
                   {/* Name Input Field */}
-                  <div className="flex items-center">
-                    <label htmlFor="name" className="font-medium">
-                      Name
-                    </label>
-                    <input
-                      id="name"
-                      type="text"
-                      value={formData.name}
-                      onChange={(e) =>
-                        setFormData({ ...formData, name: e.target.value })
-                      }
-                      className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
-                        isEditing
-                          ? "border focus:outline-blue-500"
-                          : "bg-gray-100 cursor-default"
-                      }`}
-                      readOnly={!isEditing}
-                    />
+                  <div className="flex items-center w-full ">
+                    <div className="flex items-center">
+                      <label htmlFor="name" className="font-medium">
+                        Name
+                      </label>
+                      <input
+                        id="name"
+                        type="text"
+                        value={formData.name}
+                        onChange={(e) =>
+                          setFormData({ ...formData, name: e.target.value })
+                        }
+                        className={`mx-5 w-full p-2 rounded-3xl transition-all duration-200 ${
+                          isEditing
+                            ? "border focus:outline-blue-500"
+                            : "bg-gray-100 cursor-default"
+                        }`}
+                        readOnly={!isEditing}
+                      />
+                    </div>
+                    <div>
+                      <label htmlFor="empId" className="font-medium">
+                        Employee Id
+                      </label>
+                      <input
+                        id="empId"
+                        type="Number"
+                        value={formData.empId}
+                        onChange={(e) =>
+                          setFormData({ ...formData, empId: e.target.value })
+                        }
+                        className={`mx-5 p-2 w-1/2 rounded-3xl transition-all duration-200 [&::-webkit-inner-spin-button]:appearance-none 
+         [&::-webkit-outer-spin-button]:appearance-none ${
+           isEditing
+             ? "border focus:outline-blue-500"
+             : "bg-gray-100 cursor-default"
+         }`}
+                        readOnly={!isEditing}
+                      />
+                    </div>
                   </div>
                   {/* Number Inputs Section */}
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                    {["Blocker", "Critical", "Major", "Normal", "Minor"].map(
-                      (label) => {
-                        const key = label.toLowerCase();
-                        return (
-                          <div
-                            key={key}
-                            className="flex items-center space-x-3"
-                          >
-                            <label htmlFor={key} className="font-medium">
-                              {label}
-                            </label>
-                            <input
-                              id={key}
-                              type="number"
-                              value={formData[key]}
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  [key]: Number(e.target.value) || 0,
-                                })
-                              }
-                              className={`p-2 rounded-3xl w-full transition-all duration-200 appearance-none 
+                    {[
+                      "Blocker",
+                      "Critical",
+                      "Major",
+                      "Normal",
+                      "Minor",
+                      "Previous Score",
+                    ].map((label) => {
+                      const key = label.toLowerCase().replace(" ", "_");
+                      return (
+                        <div key={key} className="flex items-center space-x-3">
+                          <label htmlFor={key} className="font-medium">
+                            {label}
+                          </label>
+                          <input
+                            id={key}
+                            type="number"
+                            value={formData[key]}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                [key]: Number(e.target.value) || 0,
+                              })
+                            }
+                            className={`p-2 rounded-3xl w-3/4 transition-all duration-200 appearance-none 
                                 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none
                                 ${
                                   isEditing
                                     ? "border focus:outline-blue-500"
                                     : "bg-gray-100 cursor-default"
                                 }`}
-                              readOnly={!isEditing}
-                            />
-                          </div>
-                        );
-                      }
-                    )}
+                            readOnly={!isEditing}
+                          />
+                        </div>
+                      );
+                    })}
                   </div>
                   {/* Total Issues & Score */}
                   <div className="flex space-x-3 items-center">
@@ -219,51 +247,52 @@ const EditTeam = () => {
                       </button>
                     )}
                   </div>
-                    <div className="bg-gray-200 w-[17.5rem] p-2 rounded-lg">
-                  {formData.courses && (
-                    <div className="space-y-1 space-x-3 items-center max-h-28 h-28 w-fit overflow-y-scroll [&::-webkit-scrollbar]:hidden ">
-                      {formData.courses.map((course, index) => (
-                        <div
-                          key={`course-${index}`}
-                          className="flex items-center space-x-3"
-                        >
-                          {/* Numbering the input fields */}
-                          <span className="font-medium text-gray-700">
-                            {index + 1}.
-                          </span>
+                  <div className="bg-gray-200 w-[17.5rem] p-2 rounded-lg">
+                    {formData.courses && (
+                      <div className="space-y-1 space-x-3 items-center max-h-28 h-28 w-fit overflow-y-scroll [&::-webkit-scrollbar]:hidden ">
+                        {formData.courses.map((course, index) => (
+                          <div
+                            key={`course-${index}`}
+                            className="flex items-center space-x-3"
+                          >
+                            {/* Numbering the input fields */}
+                            <span className="font-medium text-gray-700">
+                              {index + 1}.
+                            </span>
 
-                          <input
-                            type="text"
-                            value={course}
-                            onChange={(e) =>
-                              handleCourseChange(index, e.target.value)
-                            }
-                            className={`p-1 rounded-md transition-all duration-200 ${
-                              isEditing
-                                ? "border focus:outline-blue-500"
-                                : "bg-gray-100 cursor-default"
-                            }`}
-                            readOnly={!isEditing}
-                          />
+                            <input
+                              type="text"
+                              value={course}
+                              onChange={(e) =>
+                                handleCourseChange(index, e.target.value)
+                              }
+                              className={`p-1 rounded-md transition-all duration-200 ${
+                                isEditing
+                                  ? "border focus:outline-blue-500"
+                                  : "bg-gray-100 cursor-default"
+                              }`}
+                              readOnly={!isEditing}
+                            />
 
-                          {isEditing && (
-                            <button
-                              onClick={() => removeCourseField(index)}
-                              className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
-                            >
-                              <MdDeleteOutline />
-                            </button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}</div>
+                            {isEditing && (
+                              <button
+                                onClick={() => removeCourseField(index)}
+                                className="p-2 bg-red-500 text-white rounded-full hover:bg-red-600 transition"
+                              >
+                                <MdDeleteOutline />
+                              </button>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="flex flex-col justify-center items-center h-[55vh] w-1/3">
                   <img
                     src={img}
                     alt="Profile"
-                    className="w-auto h-72 object-contain"
+                    className="fixd w-auto h-72 object-contain"
                   />
                   <button
                     type="button"

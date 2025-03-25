@@ -1,42 +1,71 @@
-const { ErrorResponse, SuccessResponse } = require('../utils/response')
-const Player = require('../models/player')
+const { ErrorResponse, SuccessResponse } = require('../utils/response.js')
+const Player = require('../models/player.js')
+const { uploadOnCloudinary } = require('../utils/cloudinary.js')
 
 exports.addPlayer = async (req, res) => {
   try {
-    // const {
-    //   domain_name,
-    //   emp_id,
-    //   pre_score,
-    //   severity_count,
-    //   total_score,
-    //   courses,
-    //   image,
-    //   gender,
-    //   role,
-    // } = req.body
+    const {
+      domain_name,
+      emp_id,
+      pre_score,
+      severity_count,
+      total_score,
+      courses,
+      gender,
+      role,
+    } = req.body;
 
-    const existingDomainName = Player.findOne(req.body.domain_name)
-    if (!existingDomainName) {
-      return ErrorResponse(res, 403, 'Domain name already exists')
+    // Check if domain_name already exists
+    const existingDomainName = await Player.findOne({ domain_name });
+    if (existingDomainName) {
+      return ErrorResponse(res, 403, 'Domain name already exists');
     }
 
-    const existingEmpID = Player.findOne(req.body.emp_id)
-    if (!existingEmpID) {
-      return ErrorResponse(res, 403, 'Domain name already exists')
+    // Check if emp_id already exists
+    const existingEmpID = await Player.findOne({ emp_id });
+    if (existingEmpID) {
+      return ErrorResponse(res, 403, 'Employee ID already exists');
     }
 
-    const player = await Player.create(req.body)
 
-    SuccessResponse(res, 201, 'Player Created Successfully.', player)
+    // Check if image is uploaded
+    const playerImagePath = req.file?.path;
+
+    if (!playerImagePath) {
+      return ErrorResponse(res, 404, "Player's Image is required");
+    }
+
+    // Upload image to Cloudinary
+    const playerImage = await uploadOnCloudinary(playerImagePath);
+
+    if (!playerImage) {
+      return ErrorResponse(res, 500, "Internal Cloudinary Error");
+    }
+
+    // Create player in DB
+    const player = await Player.create({
+      domain_name,
+      emp_id,
+      pre_score,
+      severity_count,
+      total_score,
+      courses,
+      gender,
+      role,
+      image: playerImage.url
+    });
+
+    SuccessResponse(res, 201, 'Player Created Successfully.', player);
   } catch (error) {
-    console.log('Error: ', error)
-    ErrorResponse(res, 500, 'Internal Server Error!', error)
+    console.error("Error:", error);
+    ErrorResponse(res, 500, 'Internal Server Error!', error);
   }
-}
+};
+
 
 exports.getPlayer = async (req, res) => {
   try {
-    const { id } = req.body
+    const { id } = req.params;
 
     const player = await Player.findById(id)
 
@@ -46,7 +75,6 @@ exports.getPlayer = async (req, res) => {
 
     return SuccessResponse(res, 200, '', player)
   } catch (error) {
-    console.log('Error: ', error)
     ErrorResponse(res, 500, 'Internal Server Error!', error)
   }
 }
@@ -61,42 +89,52 @@ exports.getAllPlayers = async (req, res) => {
 
     return SuccessResponse(res, 200, '', player)
   } catch (error) {
-    console.log('Error: ', error)
     ErrorResponse(res, 500, 'Internal Server Error!', error)
   }
 }
 
 exports.updatePlayer = async (req, res) => {
   try {
-    const { id } = req.body
+    const { id } = req.params;
 
-    const existingPlayer = await Player.findById(id)
-
+    // Check if player exists
+    const existingPlayer = await Player.findById(id);
     if (!existingPlayer) {
-      return ErrorResponse(res, 404, 'Player not found')
+      return ErrorResponse(res, 404, 'Player not found');
     }
 
+    // If an image is uploaded, handle it
+    let playerImageUrl = existingPlayer.image;
+    if (req.file) {
+      const playerImage = await uploadOnCloudinary(req.file.path);
+      if (!playerImage) {
+        return ErrorResponse(res, 500, "Internal Cloudinary Error");
+      }
+      playerImageUrl = playerImage.url; // Update image URL
+    }
+
+    // Update player details
     const updatedPlayer = await Player.findByIdAndUpdate(
       id,
-      { $set: req.body },
-      { new: true }
-    )
+      {
+        $set: {
+          ...req.body,  // Update other fields
+          image: playerImageUrl, // Update image if uploaded
+        },
+      },
+      { new: true } // Return updated document
+    );
 
-    return SuccessResponse(
-      res,
-      200,
-      'Player updated successfully',
-      updatedPlayer
-    )
+    return SuccessResponse(res, 200, 'Player updated successfully', updatedPlayer);
   } catch (error) {
-    console.log('Error: ', error)
-    ErrorResponse(res, 500, 'Internal Server Error!', error)
+    console.error('Error:', error);
+    ErrorResponse(res, 500, 'Internal Server Error!', error);
   }
-}
+};
 
 exports.deletePlayer = async (req, res) => {
   try {
-    const { id } = req.body
+    const { id } = req.params
 
     const existingPlayer = await Player.findById(id)
 
@@ -113,31 +151,41 @@ exports.deletePlayer = async (req, res) => {
       deletedPlayer
     )
   } catch (error) {
-    console.log('Error: ', error)
     ErrorResponse(res, 500, 'Internal Server Error!', error)
   }
 }
 
 exports.deletePlayers = async (req, res) => {
   try {
-    const { ids } = req.body
+    const { ids } = req.body;
 
-    const existingPlayers = await Player.find({ _id: { $in: ids } })
+    console.log("Received IDs:", ids);
 
-    if (existingPlayers === 0) {
-      return ErrorResponse(res, 404, 'No players found')
+    if (!ids || !Array.isArray(ids) || ids.length === 0) {
+      return ErrorResponse(res, 400, 'Invalid or empty player IDs array');
     }
 
-    const deletedPlayers = await Player.deleteMany({ _id: { $in: ids } })
+    // Find existing players
+    const existingPlayers = await Player.find({ _id: { $in: ids } });
+
+    if (existingPlayers.length === 0) {
+      return ErrorResponse(res, 404, 'No players found');
+    }
+
+    // Delete players
+    const deletedPlayers = await Player.deleteMany({ _id: { $in: ids } });
+
+    console.log("Deleted Players:", deletedPlayers);
 
     return SuccessResponse(
       res,
       200,
-      `${existingPlayers.length} players deleted successfully`,
+      `${deletedPlayers.deletedCount} players deleted successfully`,
       deletedPlayers
-    )
+    );
   } catch (error) {
-    console.log('Error: ', error)
-    ErrorResponse(res, 500, 'Internal Server Error!', error)
+    console.error("Error:", error);
+    ErrorResponse(res, 500, 'Internal Server Error!', error);
   }
-}
+};
+

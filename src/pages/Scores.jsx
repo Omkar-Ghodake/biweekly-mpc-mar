@@ -225,9 +225,9 @@ const Scores = () => {
             <Modal className="bg-transparent ">
               <div className="absolute w-[750px] h-[600px] flex justify-center items-end mx-auto">
                 {/* Player Rank (Top-Right Corner) */}
-                <div className="absolute -top-1 right-0 bg-gray-800 opacity-70 text-white font-bold px-4 py-2 rounded-bl-lg rounded-tr-lg text-2xl">
+                {/* <div className="absolute -top-1 right-0 bg-gray-800 opacity-70 text-white font-bold px-4 py-2 rounded-bl-lg rounded-tr-lg text-2xl">
                   {selectedPlayer.id ? ` ${selectedPlayer.id}` : "Unranked"}
-                </div>
+                </div> */}
 
                 {/* Player Image and Name */}
                 <div className="absolute z-10 -top-[0px] right-0 transform -translate-x-40 flex items-center justify-between w-full max-w-[420px]">
