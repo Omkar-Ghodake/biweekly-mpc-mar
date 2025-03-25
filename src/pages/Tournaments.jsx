@@ -20,7 +20,7 @@ const Tournaments = () => {
       
       {/* Header */}
       <h1 className="text-5xl md:text-6xl font-extrabold text-white drop-shadow-lg flex items-center mb-10 tracking-wide">
-        🏏 Tournaments
+         Tournaments
       </h1>
 
       {/* Tournament Cards */}
