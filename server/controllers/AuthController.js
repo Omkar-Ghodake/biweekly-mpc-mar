@@ -1,26 +1,34 @@
-const Employee = require('../models/employee'); // Adjust the path if necessary
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const User = require('../models/employee'); // Assuming you have a User model
+const { SECRET_KEY } = require('../config'); // Replace with your secret key
 
 const AuthController = {
-    login: async (req, res) => {
+    authenticateUser: async (req, res) => {
+        const { employeeId, password } = req.body;
+
         try {
-            const { employeeId } = req.body;
-
-            if (!employeeId) {
-                return res.status(400).json({ message: 'Employee ID is required' });
+            // Find user by employee ID
+            const user = await User.findOne({ employeeId });
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
             }
 
-            // Find employee by ID
-            const employee = await Employee.findOne({ employeeId });
-
-            if (!employee) {
-                return res.status(404).json({ message: 'Employee not found' });
+            // Compare password
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            if (!isPasswordValid) {
+                return res.status(401).json({ message: 'Invalid credentials' });
             }
 
-            // Authentication successful
-            return res.status(200).json({ message: 'Login successful', employee });
+            // Generate JWT token
+            const token = jwt.sign({ id: user._id, employeeId: user.employeeId }, SECRET_KEY, {
+                expiresIn: '1h',
+            });
+
+            res.status(200).json({ message: 'Authentication successful', token });
         } catch (error) {
-            console.error('Error during login:', error);
-            return res.status(500).json({ message: 'Internal server error' });
+            console.error(error);
+            res.status(500).json({ message: 'Internal server error' });
         }
     },
 };
