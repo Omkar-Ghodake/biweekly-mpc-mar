@@ -22,9 +22,24 @@ const EditTournaments = () => {
       try {
         // Mock data for temporary display
         const mockData = [
-          { id: 1, name: "Tournament 1", description: "Description 1", image: ball },
-          { id: 2, name: "Tournament 2", description: "Description 2", image: ball },
-          { id: 3, name: "Tournament 3", description: "Description 3", image: ball },
+          {
+            id: 1,
+            name: "Tournament 1",
+            description: "Description 1",
+            image: ball,
+          },
+          {
+            id: 2,
+            name: "Tournament 2",
+            description: "Description 2",
+            image: ball,
+          },
+          {
+            id: 3,
+            name: "Tournament 3",
+            description: "Description 3",
+            image: ball,
+          },
         ];
         setTournaments(mockData);
 
@@ -59,31 +74,35 @@ const EditTournaments = () => {
   };
 
   // Handle tournament deletion
-const deleteTournament = () => {
-  setTournaments((prevTournaments) => {
-    const updatedTournaments = prevTournaments.filter(
-      (tournament) => tournament.id !== currentTournament.id
-    );
-    return updatedTournaments;
-  });
-  alert("Tournament deleted successfully!");
-  setCurrentTournament(null);
-  closeModal();
-};
-
+  const deleteTournament = () => {
+    setTournaments((prevTournaments) => {
+      const updatedTournaments = prevTournaments.filter(
+        (tournament) => tournament.id !== currentTournament.id
+      );
+      return updatedTournaments;
+    });
+    alert("Tournament deleted successfully!");
+    setCurrentTournament(null);
+    closeModal();
+  };
 
   // Handle form submission to add or update tournament details
   const updateDetails = (e) => {
     e.preventDefault();
     if (currentTournament.id === null) {
       // Add new tournament
-      setTournaments([...tournaments, { ...currentTournament, id: Date.now() }]);
+      setTournaments([
+        ...tournaments,
+        { ...currentTournament, id: Date.now() },
+      ]);
       alert("Tournament details added successfully!");
     } else {
       // Update existing tournament
       setTournaments((prevTournaments) => {
         const updatedTournaments = prevTournaments.map((tournament) =>
-          tournament.id === currentTournament.id ? currentTournament : tournament
+          tournament.id === currentTournament.id
+            ? currentTournament
+            : tournament
         );
         return updatedTournaments;
       });
@@ -95,7 +114,6 @@ const deleteTournament = () => {
 
     // Close the modal after saving
     //closeModal();
-    
   };
 
   // Start editing a tournament
@@ -127,7 +145,14 @@ const deleteTournament = () => {
               </div>
               <button
                 className="text-xl font-bold px-4 py-1 text-white bg-sky-700 rounded-lg shadow-md w-fit cursor-pointer hover:bg-sky-800 hover:shadow-xl hover:scale-102 mr-6"
-                onClick={() => startEditing({ id: null, name: "", description: "", image: "" })}
+                onClick={() =>
+                  startEditing({
+                    id: null,
+                    name: "",
+                    description: "",
+                    image: "",
+                  })
+                }
               >
                 <div className="flex justify-center items-center">
                   <IoMdAdd />
@@ -137,7 +162,10 @@ const deleteTournament = () => {
             </div>
             <div className="flex flex-row flex-wrap space-x-5 space-y-7 mt-5 ml-3">
               {tournaments.map((tournament) => (
-                <div key={tournament.id} onClick={() => startEditing(tournament)}>
+                <div
+                  key={tournament.id}
+                  onClick={() => startEditing(tournament)}
+                >
                   <TournamentCard item={tournament} />
                 </div>
               ))}
@@ -146,7 +174,7 @@ const deleteTournament = () => {
         </motion.div>
       </div>
       {currentTournament && (
-        <Modal>
+        <Modal afterClosing={() => {}}>
           <ModalHead className="w-1/3">
             <div className="w-full text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3">
               <span>{currentTournament.name || "New Tournament"}</span>
@@ -157,7 +185,7 @@ const deleteTournament = () => {
               <div className="w-2/3">
                 <form onSubmit={updateDetails} className="space-y-6">
                   <div className="flex flex-col space-y-4">
-                    <div className="flex items-center">
+                    <div className="flex items-center ">
                       <label htmlFor="name" className="font-medium">
                         Tournament Name
                       </label>
@@ -168,7 +196,9 @@ const deleteTournament = () => {
                         value={currentTournament.name}
                         onChange={handleInputChange}
                         className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
-                          isEditing ? "border focus:outline-blue-500" : "bg-gray-100 cursor-default"
+                          isEditing
+                            ? "border focus:outline-blue-500"
+                            : "bg-gray-100 cursor-default"
                         }`}
                         readOnly={!isEditing}
                         required
@@ -184,7 +214,9 @@ const deleteTournament = () => {
                         value={currentTournament.description}
                         onChange={handleInputChange}
                         className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 resize-none ${
-                          isEditing ? "border focus:outline-blue-500" : "bg-gray-100 cursor-default"
+                          isEditing
+                            ? "border focus:outline-blue-500"
+                            : "bg-gray-100 cursor-default"
                         }`}
                         readOnly={!isEditing}
                         style={{ height: "150px", width: "300px" }}
@@ -199,7 +231,9 @@ const deleteTournament = () => {
                         accept="image/*"
                         ref={fileInputRef}
                         className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
-                          isEditing ? "border focus:outline-blue-500" : "bg-gray-100 cursor-default"
+                          isEditing
+                            ? "border focus:outline-blue-500"
+                            : "bg-gray-100 cursor-default"
                         }`}
                         disabled={!isEditing}
                         style={{ display: "none" }}
@@ -219,7 +253,9 @@ const deleteTournament = () => {
                     <button
                       type="button"
                       className={`px-4 py-2 text-white rounded-lg shadow-md ${
-                        isEditing ? "bg-gray-400 cursor-not-allowed" : "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
+                        isEditing
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
                       }`}
                       onClick={() => setIsEditing((prev) => !prev)}
                       disabled={isEditing}
@@ -235,18 +271,26 @@ const deleteTournament = () => {
                     <button
                       type="button"
                       className={`px-4 py-2 text-white rounded-lg shadow-md ${
-                      currentTournament && currentTournament.id === null ? "bg-gray-400 cursor-not-allowed" : "bg-red-600 hover:bg-red-700"
+                        currentTournament && currentTournament.id === null
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-red-600 hover:bg-red-700"
                       }`}
                       onClick={deleteTournament}
-                      disabled={currentTournament && currentTournament.id === null}
-                      >
-                       Delete
+                      disabled={
+                        currentTournament && currentTournament.id === null
+                      }
+                    >
+                      Delete
                     </button>
                   </div>
                 </form>
               </div>
               <div className="w-1/3 flex justify-center">
-                <img src={currentTournament.image || ball} alt="Tournament" className="w-52 h-52 rounded-full object-cover" />
+                <img
+                  src={currentTournament.image || ball}
+                  alt="Tournament"
+                  className="w-52 h-52 rounded-full object-cover"
+                />
               </div>
             </div>
           </ModalBody>
