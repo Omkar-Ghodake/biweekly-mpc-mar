@@ -126,7 +126,7 @@ const EditTeam = () => {
           </div>
         ))}
       </motion.div>
-      <Modal className="h-[84vh] text-md " setIsEditing = {setIsEditing}>
+      <Modal className="h-[84vh] text-md " afterClosing = {() => setIsEditing(false)}>
         <ModalHead className="w-1/3 ">
           <div className="w-full text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3">
             {formData.name ? <span>{formData.name}</span> : 'Player Name'}

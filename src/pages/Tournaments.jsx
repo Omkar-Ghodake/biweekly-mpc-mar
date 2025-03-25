@@ -3,11 +3,11 @@ import { ModalContext } from "../context/ModalProvider";
 import Modal from "../layouts/Modal/Modal";
 
 const tournaments = [
-  { id: 1, name: "IPL", logo: "/Tournaments/tournamentdemo.jpg" },
-  { id: 2, name: "Big Bash League", logo: "/Tournaments/tournamentdemo.jpg" },
-  { id: 3, name: "CPL", logo: "/Tournaments/tournamentdemo.jpg" },
-  { id: 4, name: "T20 World Cup", logo: "/Tournaments/tournamentdemo.jpg" },
-  { id: 5, name: "The Hundred", logo: "/Tournaments/tournamentdemo.jpg" },
+  { id: 1, name: "IPL", logo: "/Tournaments/MPCTournamentLogo.png" },
+  { id: 2, name: "Big Bash League", logo: "/Tournaments/NamoAILogo.png" },
+  { id: 3, name: "CPL", logo: "/Tournaments/AppRevamp3.png" },
+  { id: 4, name: "T20 World Cup", logo: "/Tournaments/TestCaseLogo.png" },
+  { id: 5, name: "The Hundred", logo: "/Tournaments/PersonalProjects.png" },
 ];
 
 const Tournaments = () => {
@@ -32,12 +32,12 @@ const Tournaments = () => {
               openModal();
               setId(tournament.id);
             }}
-            className="cursor-pointer relative bg-white/10 border border-white/30 backdrop-blur-lg rounded-2xl shadow-xl p-3 flex flex-col items-center w-[280px] transition duration-300 transform hover:scale-110 hover:shadow-2xl hover:border-green-400 hover:bg-white/20"
+            className="cursor-pointer relative bg-white/10 border border-white/30 backdrop-blur-lg px-6 rounded-2xl shadow-xl flex flex-col items-center w-[280px] transition duration-300 transform hover:scale-110 hover:shadow-2xl hover:border-green-400 hover:bg-white/20 object-cover"
           >
             <img
               src={tournament.logo}
               alt={tournament.name}
-              className="w-full h-[220px] object-cover rounded-xl shadow-md transition duration-300 hover:opacity-90"
+              className="w-full h-[220px] object-fill rounded-xl transition duration-300 hover:opacity-90"
             />
           </div>
         ))}

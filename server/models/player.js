@@ -9,7 +9,7 @@ const PlayerSchema = new Schema({
     trim: true,
   },
   emp_id: {
-    type: mongoose.Types.Long,
+    type: Number,
     required: true,
     unique: true,
   },
@@ -35,6 +35,16 @@ const PlayerSchema = new Schema({
   image: {
     type: String,
     default: '',
+  },
+  gender: {
+    type: String,
+    enum: ['Male', 'Female', 'Other'],
+    required: true,
+  },
+  role: {
+    type: String,
+    enum: ['player', 'captain'],
+    default: 'player',
   },
 })
 
