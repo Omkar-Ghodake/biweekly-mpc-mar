@@ -225,9 +225,9 @@ const Scores = () => {
             <Modal className="bg-transparent ">
               <div className="absolute w-[750px] h-[600px] flex justify-center items-end mx-auto">
                 {/* Player Rank (Top-Right Corner) */}
-                {/* <div className="absolute -top-1 right-0 bg-gray-800 opacity-70 text-white font-bold px-4 py-2 rounded-bl-lg rounded-tr-lg text-2xl">
+                <div className="absolute -top-1 right-0 bg-gray-800 opacity-70 text-white font-bold px-4 py-2 rounded-bl-lg rounded-tr-lg text-2xl">
                   {selectedPlayer.id ? ` ${selectedPlayer.id}` : "Unranked"}
-                </div> */}
+                </div>
 
                 {/* Player Image and Name */}
                 <div className="absolute z-10 -top-[0px] right-0 transform -translate-x-40 flex items-center justify-between w-full max-w-[420px]">
@@ -240,12 +240,10 @@ const Scores = () => {
 
                     {/* Player Details Container */}
                     <div className="flex flex-col space-y-2 mt-1">
-                      {/* Player Name */}
                       <span className="font-bold text-2xl">
                         {selectedPlayer.name}
                       </span>
 
-                      {/* Team Name */}
                       <span className="font-bold text-md">Team MPC</span>
                     </div>
                   </div>
@@ -260,7 +258,7 @@ const Scores = () => {
 
                 {/* Background Shapes */}
                 <div
-                  className="w-[450px] h-[405px] -top-50 rounded-2xl rounded-b-2xl bg-gray-300 opacity-50 relative"
+                  className="w-[450px] h-[405px]  -top-50 rounded-2xl rounded-b-2xl bg-slate-200 opacity-90  relative"
                   style={{
                     clipPath: "polygon(0% 0%, 100% 0%, 100% 20%, 0% 70%)",
                   }}
@@ -268,7 +266,7 @@ const Scores = () => {
 
                 {/* Square with Grid Layout */}
                 <div
-                  className="w-[450px] h-[450px] -top-2 bg-gray-900 absolute  text-white"
+                  className="w-[450px] h-[450px] -top-2 bg-[#1E4788] absolute rounded-b-md text-white"
                   style={{
                     clipPath: "polygon(0% 65%, 100% 20%, 100% 100%, 0% 100%)",
                   }}
@@ -283,7 +281,7 @@ const Scores = () => {
                     </div>
 
                     {/* Previous Score */}
-                    <div className="bg-gray-600 p-3 rounded-lg flex flex-col items-center">
+                    <div className="bg-gray-700 p-3 rounded-lg flex flex-col items-center">
                       <span className="text-md font-bold">Previous Score</span>
                       <span className="text-md">
                         {selectedPlayer.previousScore || "N/A"}
@@ -299,7 +297,7 @@ const Scores = () => {
                     </div>
 
                     {/* Number of Courses */}
-                    <div className="bg-gray-600 p-3 rounded-lg flex flex-col items-center">
+                    <div className="bg-gray-700 p-3 rounded-lg flex flex-col items-center">
                       <span className="text-md font-bold">No. of Courses</span>
                       <span className="text-md">
                         {selectedPlayer.numCourses || "N/A"}
@@ -307,9 +305,8 @@ const Scores = () => {
                     </div>
                   </div>
                 </div>
-
                 {/* Triangle */}
-                <div className="absolute bottom-[150px] h-0 border-l-[226.5px] border-r-[226.5px] border-t-[70px] top-109 mt-1  border-l-transparent border-r-transparent border-t-gray-900"></div>
+                <div className="absolute  border-l-[224px] border-r-[224px] border-t-[90px] top-110 border-l-transparent border-r-transparent border-t-[#1E4788] "></div>
               </div>
             </Modal>
           )}
