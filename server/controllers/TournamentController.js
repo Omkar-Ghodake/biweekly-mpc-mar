@@ -106,7 +106,7 @@ exports.getAllTournament = async (req, res, next) => {
         res,
         404,
         "No Tournament Data Found!",
-        new Error("No Data in Tournamnet Collection")
+        new Error("No Data in Tournament Collection")
       );
     }
 
