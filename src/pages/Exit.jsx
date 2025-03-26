@@ -1,5 +1,5 @@
 import React from 'react'
-import ExitVideo from '/public/Exit_BG.jpg';
+import ExitImage from '/public/Exit_BG.jpg';
 import '../Styles/Landing_Exit.css';
 
 
@@ -10,7 +10,7 @@ const Exit = () => {
           {/* Background Video */}
           <img
             className="absolute inset-0 w-full h-full object-cover"
-           src={ExitVideo}
+           src={ExitImage}
            alt='..'
           />
             
