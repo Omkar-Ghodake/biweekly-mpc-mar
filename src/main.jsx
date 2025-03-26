@@ -17,7 +17,7 @@ import StadiumBack from './pages/StadiumBack.jsx'
 import ModalProvider from './context/ModalProvider.jsx'
 import Temp from './pages/Temp.jsx'
 import CoachProvider from './context/CoachProvider.jsx'
-import ChatBot from './components/chatbot/ChatBot.jsx'
+import ChatBot from './layouts/ChatBot/ChatBot.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import ChatBotButton from "./ChatBotButton";
-import ChatBox from "./Chatbox";
+import ChatBox from "./ChatBox";
 
 const ChatBot = () => {
-  const [screen, setScreen] = useState("floatingIcon");
+  const [isChatBoxOpen, setIsChatBoxOpen] = useState(false);
+  const [displayGreeting, setDisplayGreeting] = useState(true);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [isTyping, setIsTyping] = useState(false);
@@ -11,9 +12,7 @@ const ChatBot = () => {
   const sendMessage = () => {
     if (!input.trim()) return;
 
-    if (screen === "greeting") {
-      setScreen("chat");
-    }
+    setDisplayGreeting(false);
 
     const userMessage = { sender: "user", text: input };
     setMessages([...messages, userMessage]);
@@ -34,18 +33,19 @@ const ChatBot = () => {
   };
 
   return (
-    <div className="h-fit w-fit fixed left-6 bottom-6">
-      {screen === "floatingIcon" && <ChatBotButton setScreen={setScreen} />}
-
-      {screen !== "floatingIcon" && (
+    <div className="h-fit w-fit fixed right-6 bottom-6">
+      {isChatBoxOpen ? (
         <ChatBox
           messages={messages}
           isTyping={isTyping}
           input={input}
           setInput={setInput}
           sendMessage={sendMessage}
-          setScreen={setScreen}
+          displayGreeting={displayGreeting}
+          setIsChatBoxOpen={setIsChatBoxOpen}
         />
+      ) : (
+        <ChatBotButton setIsChatBoxOpen={setIsChatBoxOpen} />
       )}
     </div>
   );

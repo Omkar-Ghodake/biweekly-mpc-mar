@@ -29,6 +29,7 @@ const Scores = () => {
       role: "Captain",
       currentScore: 31,
       previousScore: 0,
+      courses: ["C++", "Java", "Backend with Database and springboot"],
     },
     {
       id: 2,
@@ -37,6 +38,7 @@ const Scores = () => {
       role: "Captain",
       currentScore: 18,
       previousScore: 0,
+      courses: ["Python", "JavaScript"],
     },
     {
       id: 3,
@@ -44,6 +46,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Anushree.png",
       currentScore: 13,
       previousScore: 0,
+      courses: ["React", "Node.js"],
     },
     {
       id: 4,
@@ -51,6 +54,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Avinash.png",
       currentScore: 3,
       previousScore: 0,
+      courses: ["C#", "ASP.NET"],
     },
     {
       id: 5,
@@ -58,6 +62,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Bhavya.png",
       currentScore: 10,
       previousScore: 0,
+      courses: ["Data Science", "Machine Learning"],
     },
     {
       id: 6,
@@ -65,6 +70,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Devraj.png",
       currentScore: 5,
       previousScore: 0,
+      courses: ["Cybersecurity", "Blockchain"],
     },
     {
       id: 7,
@@ -72,6 +78,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Dhiraj.png",
       currentScore: 6,
       previousScore: 0,
+      courses: ["Swift", "iOS Development"],
     },
     {
       id: 8,
@@ -79,6 +86,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Jaipal.png",
       currentScore: 3,
       previousScore: 0,
+      courses: ["Kotlin", "Android Development"],
     },
     {
       id: 9,
@@ -86,6 +94,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Manoj.png",
       currentScore: 6,
       previousScore: 0,
+      courses: ["PHP", "Laravel"],
     },
     {
       id: 10,
@@ -93,6 +102,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Mridul.png",
       currentScore: 3,
       previousScore: 0,
+      courses: ["Go", "Rust"],
     },
     {
       id: 11,
@@ -100,6 +110,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Nikita_Sonawane.png",
       currentScore: 4,
       previousScore: 0,
+      courses: ["UI/UX", "Graphic Design"],
     },
     {
       id: 12,
@@ -107,6 +118,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Nikita_Suhane.png",
       currentScore: 5,
       previousScore: 0,
+      courses: ["AWS", "Cloud Computing"],
     },
     {
       id: 13,
@@ -114,6 +126,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Omkar.png",
       currentScore: 8,
       previousScore: 0,
+      courses: ["SQL", "Database Management"],
     },
     {
       id: 14,
@@ -121,6 +134,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Prithwi.png",
       currentScore: 0,
       previousScore: 0,
+      courses: ["Ethical Hacking", "Cybersecurity"],
     },
     {
       id: 15,
@@ -128,6 +142,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Rishabh.png",
       currentScore: 8,
       previousScore: 0,
+      courses: ["Python", "AI"],
     },
     {
       id: 16,
@@ -135,6 +150,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Sakshi.png",
       currentScore: 14,
       previousScore: 0,
+      courses: ["JavaScript", "TypeScript"],
     },
     {
       id: 17,
@@ -142,6 +158,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Sanjeev.png",
       currentScore: 4,
       previousScore: 0,
+      courses: ["C", "Embedded Systems"],
     },
     {
       id: 18,
@@ -149,6 +166,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Shubham.png",
       currentScore: 8,
       previousScore: 0,
+      courses: ["C++", "Java"],
     },
     {
       id: 19,
@@ -156,6 +174,7 @@ const Scores = () => {
       image: "src/glb/Members_Photos_Final/Umakant.png",
       currentScore: 9,
       previousScore: 0,
+      courses: ["Big Data", "Hadoop"],
     },
   ];
 
@@ -207,7 +226,13 @@ const Scores = () => {
                             "polygon(0% 49%, 100% 30%, 100% 100%, 0% 100%)",
                         }}
                       ></div>
-                      <div class="absolute -top-8 right-45   text-6xl text-white  bg-transparent font-bold  px-1 py-0 rounded-r-lg ">
+                      <div
+                        className={`absolute -top-8 text-6xl text-white bg-transparent font-bold px-1 py-0 rounded-r-lg ${
+                          (index + 1).toString().length === 1
+                            ? "right-45"
+                            : "right-43"
+                        }`}
+                      >
                         {index + 1}
                       </div>
                       {/* <!-- Player Image and Name --> */}
@@ -309,37 +334,45 @@ const Scores = () => {
                 clipPath: "polygon(0% 65%, 100% 20%, 100% 100%, 0% 100%)",
               }}
             >
-              <div className="relative grid grid-cols-2 md:grid-cols-2 py-72 p-7 gap-4">
-                {/* Current Score */}
-                <div className="p-3 rounded-lg flex flex-col items-center bg-gray-900/50 backdrop-blur-md">
-                  <span className="text-md font-bold">Current Score</span>
-                  <span className="text-md">
+              <div className="relative grid grid-cols-1 md:grid-cols-3 py-72 p-7 gap-4">
+                {/* Left Side: Scores & Issues */}
+                <div className="col-span-2 w-3/4 flex flex-col gap-4">
+                  {/* Current Score */}
+                  <div className="p-2  rounded-lg bg-gray-900/50 backdrop-blur-md">
+                    <span className="text-md font-bold">Current Score: </span>
                     {selectedPlayer.currentScore || "N/A"}
-                  </span>
-                </div>
+                  </div>
 
-                {/* Previous Score */}
-                <div className="bg-gray-900/50 p-3 rounded-lg flex flex-col items-center">
-                  <span className="text-md font-bold">Previous Score</span>
-                  <span className="text-md">
+                  {/* Previous Score */}
+                  <div className="bg-gray-900/50 p-2 rounded-lg">
+                    <span className="text-md font-bold">Previous Score: </span>
                     {selectedPlayer.previousScore || "N/A"}
-                  </span>
-                </div>
+                  </div>
 
-                {/* Total Issue Count */}
-                <div className="bg-gray-900/50 p-3 rounded-lg flex flex-col items-center">
-                  <span className="text-md font-bold">Total Issues</span>
-                  <span className="text-md">
+                  {/* Total Issue Count */}
+                  <div className="bg-gray-900/50 p-2 rounded-lg">
+                    <span className="text-md font-bold">Total Issues: </span>
                     {selectedPlayer.totalIssues || "N/A"}
-                  </span>
+                  </div>
                 </div>
 
-                {/* Number of Courses */}
-                <div className="bg-gray-900/50 p-3 rounded-lg flex flex-col items-center">
-                  <span className="text-md font-bold">No. of Courses</span>
-                  <span className="text-md">
-                    {selectedPlayer.numCourses || "N/A"}
-                  </span>
+                {/* Right Side: Number of Courses */}
+                <div className="col-span-1 flex flex-col gap-4 w-full md:w-44 -mx-13">
+                  <div className="bg-gray-900/50 p-2 rounded-lg flex flex-col w-full">
+                    <span className="text-lg font-bold  flex justify-center items-center">
+                      Courses
+                    </span>
+                    <ul className="list-disc pl-5 max-h-23 my-2  overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                      {selectedPlayer.courses &&
+                      Array.isArray(selectedPlayer.courses) ? (
+                        selectedPlayer.courses.map((course, index) => (
+                          <li key={index}>{course}</li>
+                        ))
+                      ) : (
+                        <li>N/A</li>
+                      )}
+                    </ul>
+                  </div>
                 </div>
               </div>
             </div>
