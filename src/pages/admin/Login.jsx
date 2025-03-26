@@ -61,6 +61,8 @@ const Login = () => {
 
       const json = await response.json()
 
+      // {message: '', data: []}
+
       // if (domain.length <= 8) {
       //   setError('Enter valid domain')
       //   return
