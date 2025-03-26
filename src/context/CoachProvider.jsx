@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 
 const CoachContext = createContext()
 
@@ -8,7 +8,7 @@ const CoachProvider = ({ children }) => {
 
   const login = (token, coachData) => {
     localStorage.setItem('token', token)
-    if (coachData.domain_name) {
+    if (coachData?.domain_name) {
       setIsCoachAuthenticated(true)
     }
 
@@ -20,6 +20,10 @@ const CoachProvider = ({ children }) => {
     setCoach(undefined)
     localStorage.removeItem('token')
   }
+
+  useEffect(() => {
+    login()
+  }, [])
 
   return (
     <CoachContext.Provider

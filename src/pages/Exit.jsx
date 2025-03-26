@@ -1,29 +1,26 @@
 import React from 'react'
-import ExitImage from '/public/Exit_BG.jpg';
-import '../Styles/Landing_Exit.css';
-
+import '../Styles/Landing_Exit.css'
 
 const Exit = () => {
-  return <div>
+  return (
+    <div>
+      <div className='relative w-full h-screen overflow-hidden bg-blur'>
+        {/* Background Video */}
+        <img
+          className='absolute inset-0 w-full h-full object-cover'
+          src={'/Exit_BG.jpg'}
+          alt='..'
+        />
 
-    <div className="relative w-full h-screen overflow-hidden bg-blur">
-          {/* Background Video */}
-          <img
-            className="absolute inset-0 w-full h-full object-cover"
-           src={ExitImage}
-           alt='..'
-          />
-            
-          
-          {/* Overlay Content */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className='exit_content'>
+        {/* Overlay Content */}
+        <div className='absolute inset-0 flex items-center justify-center'>
+          <div className='exit_content'>
             <h1>Thank you !</h1>
-            </div>
-            
           </div>
         </div>
-  </div>
+      </div>
+    </div>
+  )
 }
 
 export default Exit
