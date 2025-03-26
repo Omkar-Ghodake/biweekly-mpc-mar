@@ -31,7 +31,7 @@ exports.authenticateUser = async (req, res) => {
       }
     )
 
-    SuccessResponse(res, 200, 'Authentication successful', token)
+    SuccessResponse(res, 200, 'Authentication successful', { token, coach })
   } catch (error) {
     console.log('Error: ', error)
     ErrorResponse(res, 500, 'Internal Server Error!', error)
