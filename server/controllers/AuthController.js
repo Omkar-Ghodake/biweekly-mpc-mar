@@ -1,25 +1,30 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const Coach = require('../models/coach')
-const { SECRET_KEY } = require('../config') // Ensure you have a valid SECRET_KEY
+// const { SECRET_KEY } = require('../config')
 const { SuccessResponse, ErrorResponse } = require('../utils/response')
 const nodemailer = require('nodemailer')
 
+const SECRET_KEY = 'ramtaJogi'
+
 exports.authenticateUser = async (req, res) => {
-  const { emp_id, password } = req.body
+  req.body.domain_name = req.body.domain_name?.toLowerCase()
+  const { domain_name, password } = req.body
 
   try {
-    // Find user by emp_id
-    const coach = await Coach.findOne({ emp_id })
-    if (!coach) ErrorResponse(res, 404, 'User not found')
+    if (!domain_name) return ErrorResponse(res, 401, 'Domain name required')
+    if (!password) return ErrorResponse(res, 401, 'Username required')
 
-    // Compare password
+    const coach = await Coach.findOne({
+      domain_name,
+    })
+    if (!coach) return ErrorResponse(res, 404, 'User not found')
+
     const isPasswordValid = await bcrypt.compare(password, coach.password)
-    if (!isPasswordValid) ErrorResponse(res, 401, 'Invalid credentials')
+    if (!isPasswordValid) return ErrorResponse(res, 401, 'Invalid credentials')
 
-    // Generate JWT token
     const token = jwt.sign(
-      { id: coach._id, emp_id: coach.emp_id },
+      { id: coach._id, domain_name: coach.domain_name },
       SECRET_KEY,
       {
         expiresIn: '1h',
@@ -37,16 +42,22 @@ exports.sendOTP = async (req, res) => {
   try {
     const { username, email } = req.body
 
-    let success = false
+    if (!username) return ErrorResponse(res, 401, 'Username required')
+    if (!email) return ErrorResponse(res, 401, 'Email required')
 
     const raw_otp = Math.floor(100000 + Math.random() * 900000).toString()
 
     const salt = await bcrypt.genSalt(10)
-    const hash_otp = await bcrypt.hash(raw_otp, salt)
+    const hashed_otp = await bcrypt.hash(raw_otp, salt)
 
-    Coach.findOneAndUpdate({
-      domain_name: email.substring(0, email.indexOf('@')),
-    })
+    const updatedCoach = await Coach.findOneAndUpdate(
+      {
+        domain_name: email.substring(0, email.indexOf('@')),
+        // domain_name: 'Omkar.Ghodake',
+      },
+      { otp: hashed_otp },
+      { new: true }
+    )
 
     const msg = {
       from: 'testbot.1831@gmail.com',
@@ -65,7 +76,6 @@ exports.sendOTP = async (req, res) => {
         `,
     }
 
-    // this code is for establishing the connection between gmail and node
     nodemailer
       .createTransport({
         service: 'gmail',
@@ -79,10 +89,9 @@ exports.sendOTP = async (req, res) => {
       })
       .sendMail(msg, (err) => {
         if (err) {
-          return res.json({ success, error: err })
+          return ErrorResponse(res, 500, 'Email not sent', err)
         } else {
-          success = true
-          return res.json({ success, message: 'Email Sent' })
+          return SuccessResponse(res, 200, 'Email sent', updatedCoach)
         }
       })
   } catch (error) {
@@ -93,15 +102,28 @@ exports.sendOTP = async (req, res) => {
 
 exports.verifyOTP = async (req, res) => {
   try {
-    const { domain_name, userOtp } = req.body
+    const { domain_name, user_otp } = req.body
 
-    let userEnteredOtp = ''
+    if (!user_otp) return ErrorResponse(res, 404, 'OTP required')
 
-    bcrypt.genSalt(saltRounds, function (err, salt) {
-      bcrypt.hash(userOtp, salt, function (err, hash) {
-        // compare this hash to the stored encrypted otp and generate the response accordingly
-      })
-    })
+    const existingCoach = await Coach.findOne({ domain_name })
+    if (!existingCoach) return ErrorResponse(res, 404, 'User not found')
+
+    const created_otp = existingCoach.otp
+
+    const isOTPValid = await bcrypt.compare(user_otp, created_otp)
+
+    if (!isOTPValid) return ErrorResponse(res, 404, 'Invalid OTP')
+
+    const updatedCoach = await Coach.findOneAndUpdate(
+      {
+        domain_name,
+      },
+      { otp: '' },
+      { new: true }
+    )
+
+    SuccessResponse(res, 200, 'OTP is valid', updatedCoach)
   } catch (error) {
     console.log('Error: ', error)
     ErrorResponse(res, 500, 'Internal Server Error!', error)

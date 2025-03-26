@@ -9,7 +9,7 @@ const Exit = () => {
     <div className="relative w-full h-screen overflow-hidden bg-blur">
           {/* Background Video */}
           <video
-            className="absolute inset-0 w-full h-full object-cover opacity-80"
+            className="absolute inset-0 w-full h-full object-cover"
             autoPlay
             muted
           >

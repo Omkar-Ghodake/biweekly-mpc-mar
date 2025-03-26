@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
 
 @theme {
   --color-primary: 0, 132, 209;
@@ -7,6 +8,13 @@
   --color-secondary-darken: 0, 130, 54;
   --color-danger: 251, 44, 54;
   --color-danger-darken: 231, 0, 11;
+}
+
+.body {
+  font-family: 'Raleway', sans-serif;
+  /* font-optical-sizing: auto;
+  font-weight: <weight>;
+  font-style: normal; */
 }
 
 /* Button variants solid */

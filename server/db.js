@@ -9,7 +9,7 @@ const connectToMongo = async () => {
     if (connectionStatus) return console.log('Using existing connection...')
 
     const con = await mongoose.connect(
-      'mongodb+srv://omkar-ghodake:Omkar1831@cluster0.w5b4a.mongodb.net/MPC_Biweekly_Jan2025'
+      'mongodb+srv://omkar-ghodake:Omkar1831@cluster0.w5b4a.mongodb.net/MPC_Biweekly_Mar2025'
     )
 
     connectionStatus = con.connections[0].readyState

@@ -4,7 +4,7 @@ const TournamentModel = require("../models/tournament");
 const { SuccessResponse, ErrorResponse } = require("../utils/response");
 const { default: mongoose } = require("mongoose");
 
-exports.createTournament = async (req, res, next) => {
+exports.createTournament = async (req, res) => {
   try {
     const { title, description, totalScore, issueCount } = req.body;
 
@@ -35,51 +35,63 @@ exports.createTournament = async (req, res, next) => {
   }
 };
 
-exports.updateTournament = async (req, res, next) => {
+exports.updateTournament = async (req, res) => {
   try {
-    let tournament = await TournamentModel.findById(req.params.id);
+    const { id } = req.params;
+
+    let tournament = await Tournament.findById(id);
 
     if (!tournament) {
       console.log("No Tournament Data found!");
       return ErrorResponse(
         res,
         404,
-        `Tournament with id: ${req.params.id} Not Found `
+        "No Tournament Data Found!",
+        new Error("Could not find Tournament with the given ID!")
       );
     }
 
-    tournament = await TournamentModel.findByIdAndUpdate(
-      req.params.id,
-      req.body,
-      {
-        new: true,
-      }
-    );
+    let updatedData = { ...req.body };
 
-    SuccessResponse(
+    if (req.file) {
+      const imagePath = req.file.path;
+      console.log("New Image Path:", imagePath);
+
+      const uploadedImage = await uploadOnCloudinary(imagePath);
+      console.log("Uploaded Image URL:", uploadedImage);
+
+      if (!uploadedImage) {
+        return ErrorResponse(res, 500, "Image upload failed");
+      }
+
+      updatedData.image = uploadedImage.url;
+    }
+
+    tournament = await Tournament.findByIdAndUpdate(id, updatedData, { new: true });
+
+    return SuccessResponse(
       res,
       200,
-      `Tournament with ${req.params.id} updated`,
+      `Tournament with ID ${id} updated successfully`,
       tournament
     );
   } catch (error) {
-    console.log("Error: ", error);
-    ErrorResponse(res, 500, "Internal Server Error!", error);
+    console.error("Error:", error);
+    return ErrorResponse(res, 500, "Internal Server Error!", error);
   }
 };
 
-exports.deleteTournament = async (req, res, next) => {
+exports.deleteTournament = async (req, res) => {
   try {
-    const deleted = await TournamentModel.deleteOne({
-      _id: req.params.id,
-    });
+    const result = await TournamentModel.deleteOne({ _id: req.params.id });
 
-    if (!deleted.deletedCount) {
+    if (result.deletedCount === 0) {
       console.log("No Tournament Found!");
       return ErrorResponse(
         res,
         404,
-        `Tournament with id: ${req.params.id} Not Found `
+        "No Tournament Data Found!",
+        new Error("Could not find Tournament with the given ID!")
       );
     }
 
@@ -123,12 +135,12 @@ exports.deleteManyTournament = async (req, res, next) => {
       deleted
     );
   } catch (error) {
-    console.log("Error: ", error);
-    ErrorResponse(res, 500, "Internal Server Error", error);
+    console.error("Error:", error);
+    return ErrorResponse(res, 500, "Internal Server Error", error);
   }
 };
 
-exports.getAllTournament = async (req, res, next) => {
+exports.getAllTournament = async (req, res) => {
   try {
     const tournaments = await TournamentModel.find();
 
@@ -151,7 +163,7 @@ exports.getAllTournament = async (req, res, next) => {
   }
 };
 
-exports.getOneTournament = async (req, res, next) => {
+exports.getOneTournament = async (req, res) => {
   try {
     const tournament = await TournamentModel.findById(req.params.id);
 
