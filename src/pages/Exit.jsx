@@ -1,5 +1,5 @@
 import React from 'react'
-import ExitVideo from '/public/Exit_BG.mp4';
+import ExitVideo from '/public/Exit_BG.jpg';
 import '../Styles/Landing_Exit.css';
 
 
@@ -8,19 +8,17 @@ const Exit = () => {
 
     <div className="relative w-full h-screen overflow-hidden bg-blur">
           {/* Background Video */}
-          <video
+          <img
             className="absolute inset-0 w-full h-full object-cover"
-            autoPlay
-            muted
-          >
-            <source src={ExitVideo} type="video/mp4" />
-            Your browser does not support the video tag.
-          </video>
+           src={ExitVideo}
+           alt='..'
+          />
+            
           
           {/* Overlay Content */}
-          <div className="absolute inset-0 flex mt-40 justify-center ">
-            <div className='exit_content text-center'>
-            <h1>Thank you</h1>
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className='exit_content'>
+            <h1>Thank you !</h1>
             </div>
             
           </div>
