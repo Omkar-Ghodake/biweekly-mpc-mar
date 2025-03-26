@@ -1,4 +1,4 @@
-import { StrictMode } from 'react'
+import { StrictMode, Suspense } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
@@ -16,30 +16,40 @@ import Navbar from './layouts/Navbar.jsx'
 import StadiumBack from './pages/StadiumBack.jsx'
 import ModalProvider from './context/ModalProvider.jsx'
 import Temp from './pages/Temp.jsx'
+import CoachProvider from './context/CoachProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <ModalProvider>
-        <Routes>
-          <Route path='/' element={<App />} />
-          <Route path='/background' element={<StadiumBack />} />
-          <Route path='/landing' element={<Landing />} />
-          <Route path='/team' element={<Team />} />
-          <Route path='/tournaments' element={<Tournaments />} />
-          <Route path='/scores' element={<Scores />} />
-          <Route path='/login' element={<Login />} />
+        <CoachProvider>
+          <Routes>
+            <Route path='/' element={<App />} />
+            <Route path='/background' element={<StadiumBack />} />
+            <Route path='/landing' element={<Landing />} />
+            <Route path='/team' element={<Team />} />
+            <Route path='/tournaments' element={<Tournaments />} />
+            <Route
+              path='/scores'
+              element={
+                <Suspense fallback={null}>
+                  <Scores />
+                </Suspense>
+              }
+            />
+            <Route path='/login' element={<Login />} />
 
-          <Route path='/admin/dashboard' element={<Dashboard />} />
-          <Route
-            path='/admin/dashboard/editTournaments'
-            element={<EditTournaments />}
-          />
-          <Route path='/admin/dashboard/editTeam' element={<EditTeam />} />
+            <Route path='/admin/dashboard' element={<Dashboard />} />
+            <Route
+              path='/admin/dashboard/editTournaments'
+              element={<EditTournaments />}
+            />
+            <Route path='/admin/dashboard/editTeam' element={<EditTeam />} />
 
-          <Route path='/exit' element={<Exit />} />
-          <Route path='/temp' element={<Temp />} />
-        </Routes>
+            <Route path='/exit' element={<Exit />} />
+            <Route path='/temp' element={<Temp />} />
+          </Routes>
+        </CoachProvider>
       </ModalProvider>
       <Navbar />
     </BrowserRouter>

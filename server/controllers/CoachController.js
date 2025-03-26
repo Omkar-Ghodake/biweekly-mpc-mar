@@ -1,5 +1,7 @@
 const { ErrorResponse, SuccessResponse } = require('../utils/response')
 const Coach = require('../models/coach')
+const bcrypt = require('bcrypt')
+const mongoose = require('mongoose')
 
 exports.addCoach = async (req, res) => {
   try {
@@ -15,17 +17,28 @@ exports.addCoach = async (req, res) => {
     //   role,
     // } = req.body
 
-    const existingDomainName = Coach.findOne(req.body.domain_name)
-    if (!existingDomainName) {
+    req.body.domain_name = req.body.domain_name.toLowerCase()
+
+    const existingDomainName = await Coach.findOne({
+      domain_name: req.body.domain_name,
+    })
+    if (existingDomainName) {
       return ErrorResponse(res, 403, 'Domain name already exists')
     }
 
-    const existingEmpID = Coach.findOne(req.body.emp_id)
-    if (!existingEmpID) {
-      return ErrorResponse(res, 403, 'Domain name already exists')
+    const existingEmpID = await Coach.findOne({
+      emp_id: req.body.emp_id,
+    })
+    if (existingEmpID) {
+      return ErrorResponse(res, 403, 'Employee ID already exists')
     }
 
-    const coach = await Coach.create(req.body)
+    const generatedPass = 'Temp@1831$'
+
+    const salt = await bcrypt.genSalt(10)
+    const hashedPass = await bcrypt.hash(generatedPass, salt)
+
+    const coach = await Coach.create({ ...req.body, password: hashedPass })
 
     SuccessResponse(res, 201, 'Coach Created Successfully.', coach)
   } catch (error) {
@@ -36,7 +49,7 @@ exports.addCoach = async (req, res) => {
 
 exports.getCoach = async (req, res) => {
   try {
-    const { id } = req.body
+    const { id } = req.params
 
     const coach = await Coach.findById(id)
 
@@ -91,7 +104,8 @@ exports.updateCoach = async (req, res) => {
 
 exports.deleteCoach = async (req, res) => {
   try {
-    const { id } = req.body
+    if (!req.body.id) return ErrorResponse(res, 404, 'ID is required')
+    const id = new mongoose.Types.ObjectId(req.body.id)
 
     const existingCoach = await Coach.findById(id)
 
@@ -132,10 +146,26 @@ exports.deleteCoaches = async (req, res) => {
   }
 }
 
-exports.forgotPassword = async (req, res) => {
+exports.changePassword = async (req, res) => {
   try {
-    const {}
+    const { currentPassword, newPassword } = req.body
+    const { id } = req.coach
 
+    const existingCoach = await Coach.findById(id)
+    if (!existingCoach) return ErrorResponse(res, 404, 'Coach not found')
+
+    const isCurrentPasswordValid = await bcrypt.compare(
+      currentPassword,
+      existingCoach.password
+    )
+    if (!isCurrentPasswordValid)
+      return ErrorResponse(res, 401, 'Invalid credentials')
+
+    const salt = await bcrypt.genSalt(10)
+    const hashedPass = await bcrypt.hash(newPassword, salt)
+
+    existingCoach.password = hashedPass
+    await existingCoach.save()
   } catch (error) {
     console.log('Error: ', error)
     ErrorResponse(res, 500, 'Internal Server Error!', error)
