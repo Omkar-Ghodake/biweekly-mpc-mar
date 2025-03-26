@@ -55,7 +55,7 @@ exports.addPlayer = async (req, res) => {
       image: playerImage.url
     });
 
-    SuccessResponse(res, 201, 'Player Created Successfully.', player);
+    SuccessResponse({...res,emp_id: emp_id.toString()}, 201, 'Player Created Successfully.', player);
   } catch (error) {
     console.error("Error:", error);
     ErrorResponse(res, 500, 'Internal Server Error!', error);
