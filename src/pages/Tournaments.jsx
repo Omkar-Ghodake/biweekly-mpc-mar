@@ -84,7 +84,7 @@ const Tournaments = () => {
           {/* Group 13 - Circular Element with Shadow */}
           <div className="absolute left-[70.49%] -right-8 top-[13.48%] bottom-[23.38%] drop-shadow-lg">
             {/* Outer Dark Blue Circle */}
-            <div className="absolute inset-0 bg-[#03104A] rounded-full"></div>
+            <div className="absolute inset-2 bg-[#03104A] rounded-full"></div>
             {/* Inner White Circle */}
             <div className="absolute left-[4.91%] right-[3.91%] top-[4.24%]  bottom-[4.24%] bg-white rounded-full"></div>
           </div>
