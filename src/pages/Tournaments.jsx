@@ -52,45 +52,53 @@ const Tournaments = () => {
       </div>
 
       {/* Modal Section */}
-      <Modal
-        setIsEditing={setIsEditing}
-        className=" bg-white rounded-[40px] shadow-[0_4px_6px_rgba(0,0,0,0.25)]"
-      >
-        {/* Main Content */}
-        <div className="relative w-full h-full">
-          {/* Top-right decorative border (Group 12) */}
-          <div className="absolute top-[-40px] left-1/2 -translate-x-1/2 w-[86px] h-[53px] flex justify-center items-center">
-            <div className="absolute w-[286px] h-[53px] bg-[#03104A] rounded-tr-[40px] rounded-bl-[20px]"></div>
-            <h1 className="absolute w-[286px] h-[53px] flex items-center justify-center text-xl font-bold z-10">
-              {tournaments[id - 1]?.name || "Tournament"}
-            </h1>
-            <div className="absolute w-[279px] h-[45px] top-[8px] bg-white rounded-tr-[45px] rounded-bl-[20px]"></div>
+      <Modal className="bg-transparent">
+        {/* <div className="relative w-full h- left-[201px] top-[175px] drop-shadow-lg"> */}
+        {/* Modal Container */}
+        <div className="absolute left-[0.99%]  right-[6.27%] top-[9.56%] bottom-[3.24%] bg-[#03104A] rounded-[40px] ">
+          {/* White Background Layer */}
+          <div className="absolute inset-0 bottom-6 right-3 bg-white rounded-[40px]"></div>
+
+          {/* Inner Light Gray Box */}
+          <div className="absolute left-[6.18%] right-[19.53%] top-[23.38%] bottom-[29.52%] bg-[#F2F2F2] rounded-[20px]"></div>
+
+          {/* Bottom Blue Rectangle with V-Cut Corners */}
+          <div
+            className="absolute top-[95.40%] -bottom-0 bg-[#1E4788]  left-[18.82%] right-[26.7%]"
+            style={{
+              clipPath: "polygon(0% 0%, 100% 0%, 90% 100%,10% 100%)",
+            }}
+          ></div>
+
+          {/* Rounded Top Blue Section */}
+          <div className="absolute left-[23.12%] right-[30.29%] top-[85.67%]  bottom-0 bg-[#03104A] rounded-t-[40px]"></div>
+
+          {/* Group 12 - Inner Section */}
+          <div className="absolute left-[22.13%] right-[30.11%] top-0 bottom-[83.28%]">
+            {/* Blue Box */}
+            <div className="absolute left-[0.75%] right-0 top-0 bottom-0 bg-[#03104A] rounded-[20px]"></div>
+            {/* White Box */}
+            <div className="absolute left-0 right-[2.44%] top-[14.29%] bottom-0 bg-white rounded-[20px]"></div>
           </div>
 
-          {/* Trophy Icon (Vector) */}
-
-          <div className="absolute w-[645px] h-[248px] top-[74px] left-[37px] bg-[#F2F2F2] rounded-2xl shadow-md p-2">
-            <div className="">
-              <FaTrophy className="text-[#03104A] text-[16px] inline mr-5" />
-              <span>Demo Description</span>
-            </div>
-          </div>
-
-          {/* Circular Placeholder (Group 13) */}
-          <div className="absolute top-16 right-[-60px] ">
+          {/* Group 13 - Circular Element with Shadow */}
+          <div className="absolute left-[70.49%] -right-8 top-[13.48%] bottom-[23.38%] drop-shadow-lg">
             {/* Outer Dark Blue Circle */}
-            <div className="w-[250px] h-[250px] bg-[#03104A] rounded-full flex items-center justify-center">
-              {/* Inner White Circle with Image */}
-              <div className="w-[230px] h-[230px] bg-white rounded-full overflow-hidden flex items-center justify-center">
-                <img
-                  src="/Tournaments/MPCTournamentLogo.png"
-                  alt="Tournament Logo"
-                  className="w-full h-full object-cover rounded-full"
-                />
-              </div>
-            </div>
+            <div className="absolute inset-0 bg-[#03104A] rounded-full"></div>
+            {/* Inner White Circle */}
+            <div className="absolute left-[4.91%] right-[3.91%] top-[4.24%]  bottom-[4.24%] bg-white rounded-full"></div>
           </div>
+
+          {/* Small Black Vector */}
+          <div className="absolute left-[8.96%] right-[88.17%] top-[28.67%] bottom-[66.21%] bg-black"></div>
+
+          {/* Close Button (mdi:cross-circle-outline) */}
+          <div className="absolute h-[43px] left-[96.15%] right-0 top-[-21px]"></div>
+
+          {/* Vector Overlay */}
+          <div className="absolute left-[8.33%] z right-[8.33%] top-[8.33%] bottom-[8.33%] bg-transparent"></div>
         </div>
+        {/* </div> */}
       </Modal>
     </div>
   );
