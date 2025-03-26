@@ -10,16 +10,26 @@ import { IoMdAdd } from "react-icons/io";
 import ball from "../../assets/ball.jpg";
 
 const EditTournaments = () => {
+  // Context for opening and closing the modal
   const { openModal, closeModal } = useContext(ModalContext);
+
+  // State to store the list of tournaments
   const [tournaments, setTournaments] = useState([]);
+
+  // State to track if the form is in editing mode
   const [isEditing, setIsEditing] = useState(false);
+
+  // State to store the currently selected tournament
   const [currentTournament, setCurrentTournament] = useState(null);
+
+  // Reference for the file input field
   const fileInputRef = useRef(null);
 
   // Fetch tournaments data on component mount
   useEffect(() => {
     const fetchTournaments = async () => {
       try {
+        // Mock data for tournaments
         const mockData = [
           {
             id: 1,
@@ -55,13 +65,13 @@ const EditTournaments = () => {
     fetchTournaments();
   }, []);
 
-  // Handle input changes for tournament form
+  // Handle input changes for the tournament form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCurrentTournament({ ...currentTournament, [name]: value });
   };
 
-  // Handle image upload for tournament
+  // Handle image upload for the tournament
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -90,14 +100,14 @@ const EditTournaments = () => {
   const updateDetails = (e) => {
     e.preventDefault();
     if (currentTournament.id === null) {
-      // Add new tournament
+      // Add a new tournament
       setTournaments([
         ...tournaments,
         { ...currentTournament, id: Date.now() },
       ]);
       alert("Tournament details added successfully!");
     } else {
-      // Update existing tournament
+      // Update an existing tournament
       setTournaments((prevTournaments) => {
         const updatedTournaments = prevTournaments.map((tournament) =>
           tournament.id === currentTournament.id
@@ -121,10 +131,12 @@ const EditTournaments = () => {
 
   return (
     <>
+      {/* Background container */}
       <div
         className="h-screen flex justify-center items-center bg-cover bg-center"
         style={{ backgroundImage: `url(${background})` }}
       >
+        {/* Main content container */}
         <motion.div
           initial="hidden"
           animate="visible"
@@ -135,10 +147,12 @@ const EditTournaments = () => {
           className="justify-start w-3/4 max-h-40 min-h-5/6 py-3 px-3 backdrop-blur-md rounded-lg overflow-y-scroll [&::-webkit-scrollbar]:hidden"
         >
           <div className="flex flex-col">
+            {/* Header section */}
             <div className="flex flex-row justify-between">
               <div className="text-3xl font-bold ml-3 px-6 py-3 bg-gradient-to-b from-sky-600 to-sky-800 text-white bg-sky-700 rounded-lg shadow-md w-1/4 text-center">
                 Tournaments
               </div>
+              {/* Add tournament button */}
               <button
                 className="text-xl font-bold px-4 py-1 text-white bg-sky-700 rounded-lg shadow-md w-fit cursor-pointer hover:bg-sky-800 hover:shadow-xl hover:scale-102 mr-6"
                 onClick={() =>
@@ -158,6 +172,7 @@ const EditTournaments = () => {
                 </div>
               </button>
             </div>
+            {/* Tournament cards */}
             <div className="flex flex-row flex-wrap space-x-5 space-y-7 mt-5 ml-3">
               {tournaments.map((tournament) => (
                 <div
@@ -171,6 +186,7 @@ const EditTournaments = () => {
           </div>
         </motion.div>
       </div>
+      {/* Modal for editing or adding tournaments */}
       {currentTournament && (
         <Modal afterClosing={() => {}}>
           <ModalHead className="w-1/3">
@@ -195,9 +211,11 @@ const EditTournaments = () => {
           </ModalHead>
           <ModalBody>
             <div className="p-2 flex flex-row items-start">
+              {/* Form for editing tournament details */}
               <div className="w-2/3">
                 <form onSubmit={updateDetails} className="space-y-6">
                   <div className="flex flex-col space-y-4">
+                    {/* Tournament Name */}
                     <div className="flex items-center">
                       <label htmlFor="name" className="font-medium w-1/3 text-left pr-4">
                         Tournament Name
@@ -217,6 +235,7 @@ const EditTournaments = () => {
                         required
                       />
                     </div>
+                    {/* Tournament Description */}
                     <div className="flex items-center">
                       <label htmlFor="description" className="font-medium w-1/3 text-left pr-4">
                         Tournament Description
@@ -236,6 +255,7 @@ const EditTournaments = () => {
                         required
                       />
                     </div>
+                    {/* Total Score */}
                     {isEditing && (
                       <div className="flex items-center">
                         <label htmlFor="totalScore" className="font-medium w-1/3 text-left pr-4">
@@ -252,6 +272,7 @@ const EditTournaments = () => {
                         />
                       </div>
                     )}
+                    {/* Issue Count */}
                     <div className="flex items-center">
                       <label htmlFor="issueCount" className="font-medium w-1/3 text-left pr-4">
                         Issue Count
@@ -272,6 +293,7 @@ const EditTournaments = () => {
                       />
                     </div>
                   </div>
+                  {/* Action buttons */}
                   <div className="w-full p-4 bg-white border-t flex justify-center space-x-4 rounded-b-2xl">
                     <button
                       type="button"
@@ -308,6 +330,7 @@ const EditTournaments = () => {
                   </div>
                 </form>
               </div>
+              {/* Image and Upload Button */}
               <div className="w-1/3 flex flex-col items-center space-y-4">
                 <img
                   src={currentTournament.image || ball}
