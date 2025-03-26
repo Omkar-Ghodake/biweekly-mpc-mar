@@ -44,7 +44,6 @@ exports.updateTournament = async (req, res) => {
     if (!tournament) {
       console.log("No Tournament Data found!");
       return ErrorResponse(
-      return ErrorResponse(
         res,
         404,
         "No Tournament Data Found!",
@@ -88,7 +87,6 @@ exports.deleteTournament = async (req, res) => {
 
     if (result.deletedCount === 0) {
       console.log("No Tournament Found!");
-      return ErrorResponse(
       return ErrorResponse(
         res,
         404,
