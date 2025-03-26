@@ -5,6 +5,7 @@ import React, { useContext, useState } from 'react'
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
 import Button from '../../components/Button'
 import { CoachContext } from '../../context/CoachProvider'
+import { ToastContext } from '../../context/ToastProvider'
 
 const Login = () => {
   const [domain, setDomain] = useState('')
@@ -15,6 +16,7 @@ const Login = () => {
 
   const { openModal, closeModal } = useContext(ModalContext)
   const { login } = useContext(CoachContext)
+  const { showToast } = useContext(ToastContext)
 
   const handleEmailChange = (e) => {
     setDomain(e.target.value)
@@ -31,6 +33,7 @@ const Login = () => {
     e.preventDefault()
 
     if (!domain || !password) {
+      showToast('Credentials required', 'error')
       setError('Please enter both domain id and password')
       return
     }

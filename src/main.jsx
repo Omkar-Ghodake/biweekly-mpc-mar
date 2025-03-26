@@ -20,6 +20,8 @@ import CoachProvider from './context/CoachProvider.jsx'
 import ChatBot from './layouts/ChatBot/ChatBot.jsx'
 import TournamentsProvider from './context/TournamentsProvider.jsx'
 import PlayersProvider from './context/PlayersProvider.jsx'
+import ToastNotification from './layouts/ToastNotification.jsx'
+import ToastProvider from './context/ToastProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -28,42 +30,45 @@ createRoot(document.getElementById('root')).render(
         <PlayersProvider>
           <TournamentsProvider>
             <CoachProvider>
-              <Routes>
-                <Route path='/' element={<App />} />
-                <Route path='/background' element={<StadiumBack />} />
-                <Route path='/landing' element={<Landing />} />
-                <Route path='/team' element={<Team />} />
-                <Route path='/tournaments' element={<Tournaments />} />
-                <Route
-                  path='/scores'
-                  element={
-                    <Suspense fallback={null}>
-                      <Scores />
-                    </Suspense>
-                  }
-                />
-                <Route path='/login' element={<Login />} />
+              <ToastProvider>
+                <Routes>
+                  <Route path='/' element={<App />} />
+                  <Route path='/background' element={<StadiumBack />} />
+                  <Route path='/landing' element={<Landing />} />
+                  <Route path='/team' element={<Team />} />
+                  <Route path='/tournaments' element={<Tournaments />} />
+                  <Route
+                    path='/scores'
+                    element={
+                      <Suspense fallback={null}>
+                        <Scores />
+                      </Suspense>
+                    }
+                  />
+                  <Route path='/login' element={<Login />} />
 
-                <Route path='/admin/dashboard' element={<Dashboard />} />
-                <Route
-                  path='/admin/dashboard/editTournaments'
-                  element={<EditTournaments />}
-                />
-                <Route
-                  path='/admin/dashboard/editTeam'
-                  element={<EditTeam />}
-                />
+                  <Route path='/admin/dashboard' element={<Dashboard />} />
+                  <Route
+                    path='/admin/dashboard/editTournaments'
+                    element={<EditTournaments />}
+                  />
+                  <Route
+                    path='/admin/dashboard/editTeam'
+                    element={<EditTeam />}
+                  />
 
-                <Route path='/exit' element={<Exit />} />
-                <Route path='/temp' element={<Temp />} />
-              </Routes>
+                  <Route path='/exit' element={<Exit />} />
+                  <Route path='/temp' element={<Temp />} />
+                </Routes>
+
+                <ChatBot />
+                <Navbar />
+                <ToastNotification />
+              </ToastProvider>
             </CoachProvider>
           </TournamentsProvider>
         </PlayersProvider>
       </ModalProvider>
-
-      <ChatBot />
-      <Navbar />
     </BrowserRouter>
   </StrictMode>
 )
