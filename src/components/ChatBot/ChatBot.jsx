@@ -1,43 +1,43 @@
-import React, { useState } from "react";
-import ChatBotButton from "./ChatBotButton";
-import ChatBox from "./Chatbox";
+import React, { useState } from 'react'
+import ChatBotButton from './ChatBotButton'
+import ChatBox from './Chatbox'
 
 const ChatBot = () => {
-  const [screen, setScreen] = useState("floatingIcon");
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
+  const [screen, setScreen] = useState('floatingIcon')
+  const [messages, setMessages] = useState([])
+  const [input, setInput] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
 
   const sendMessage = () => {
-    if (!input.trim()) return;
+    if (!input.trim()) return
 
-    if (screen === "greeting") {
-      setScreen("chat");
+    if (screen === 'greeting') {
+      setScreen('chat')
     }
 
-    const userMessage = { sender: "user", text: input };
-    setMessages([...messages, userMessage]);
-    setInput("");
-    setIsTyping(true);
+    const userMessage = { sender: 'user', text: input }
+    setMessages([...messages, userMessage])
+    setInput('')
+    setIsTyping(true)
 
     setTimeout(() => {
       const botResponse = {
-        sender: "bot",
+        sender: 'bot',
         text:
-          input.toLowerCase() === "what is mpc?"
-            ? "Based on the provided test, the full form of MPC is **Members of Parliament Corner**."
+          input.toLowerCase() === 'what is mpc?'
+            ? 'Based on the provided test, the full form of MPC is **Members of Parliament Corner**.'
             : "I'm sorry, I don't have an answer for that.",
-      };
-      setMessages((prev) => [...prev, botResponse]);
-      setIsTyping(false);
-    }, 1000);
-  };
+      }
+      setMessages((prev) => [...prev, botResponse])
+      setIsTyping(false)
+    }, 1000)
+  }
 
   return (
-    <div className="h-fit w-fit fixed left-6 bottom-6">
-      {screen === "floatingIcon" && <ChatBotButton setScreen={setScreen} />}
+    <div className='h-fit w-fit fixed right-6 bottom-6'>
+      {screen === 'floatingIcon' && <ChatBotButton setScreen={setScreen} />}
 
-      {screen !== "floatingIcon" && (
+      {screen !== 'floatingIcon' && (
         <ChatBox
           messages={messages}
           isTyping={isTyping}
@@ -48,7 +48,7 @@ const ChatBot = () => {
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ChatBot;
+export default ChatBot

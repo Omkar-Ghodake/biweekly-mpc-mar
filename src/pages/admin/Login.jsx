@@ -4,6 +4,7 @@ import Modal from '../../layouts/Modal/Modal'
 import React, { useContext, useState } from 'react'
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
 import Button from '../../components/Button'
+import { CoachContext } from '../../context/CoachProvider'
 
 const Login = () => {
   const [domain, setDomain] = useState('')
@@ -13,6 +14,7 @@ const Login = () => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
   const { openModal, closeModal } = useContext(ModalContext)
+  const { login } = useContext(CoachContext)
 
   const handleEmailChange = (e) => {
     setDomain(e.target.value)
@@ -58,14 +60,13 @@ const Login = () => {
       )
 
       const json = await response.json()
-      console.log('json:', json)
 
       // if (domain.length <= 8) {
       //   setError('Enter valid domain')
       //   return
       // }
       if (response.ok) {
-        localStorage.setItem('token', json.data)
+        login(json.data.token, json.data.coach)
       } else {
         setError(json.message || 'Invalid domain or password')
       }
