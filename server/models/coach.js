@@ -14,14 +14,13 @@ const CoachSchema = new Schema({
     trim: true,
   },
   emp_id: {
-    type: mongoose.Types.Long,
+    type: Number,
     required: true,
     unique: true,
   },
   password: {
     type: String,
     required: true,
-    trim: true,
   },
   image: {
     type: String,
@@ -33,7 +32,7 @@ const CoachSchema = new Schema({
   },
   gender: {
     type: String,
-    enum: ['Male', 'Female'],
+    enum: ['male', 'female'],
     required: true,
   },
   otp: String,
