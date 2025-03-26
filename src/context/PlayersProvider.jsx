@@ -19,12 +19,10 @@ const PlayersProvider = ({ children }) => {
         throw new Error("Couldn't fetch players")
       }
 
-      const data = await response.json() // Extract JSON data
-      const fetchedPlayers = data.data // Assuming response has { data: [...] }
+      const json = await response.json()
+      const data = json.data
 
-      setPlayers(fetchedPlayers) // ✅ Correct way to update state with an array
-
-      // ✅ Log the updated state after React updates it
+      setPlayers(data)
     } catch (error) {
       console.error('Error fetching players:', error)
       alert('Failed to fetch players. Please try again.')
@@ -43,3 +41,4 @@ const PlayersProvider = ({ children }) => {
 }
 
 export default PlayersProvider
+export { PlayersContext }

@@ -1,8 +1,8 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 
 const TournamentsContext = createContext()
 
-const TournamentsProvider = () => {
+const TournamentsProvider = ({ children }) => {
   const [tournaments, setTournaments] = useState([])
 
   const fetchTournaments = async () => {
@@ -17,12 +17,17 @@ const TournamentsProvider = () => {
       if (!response.ok) {
         throw new Error('Failed to fetch tournaments')
       }
-      const data = await response.json()
-      setTournaments(data)
+
+      const json = await response.json()
+      setTournaments(json.data)
     } catch (error) {
       console.error('Error fetching tournaments:', error)
     }
   }
+
+  useEffect(() => {
+    fetchTournaments()
+  }, [])
 
   return (
     <TournamentsContext.Provider value={{ tournaments, fetchTournaments }}>
@@ -32,3 +37,4 @@ const TournamentsProvider = () => {
 }
 
 export default TournamentsProvider
+export { TournamentsContext }

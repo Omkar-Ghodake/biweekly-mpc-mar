@@ -21,14 +21,14 @@ const Navbar = () => {
             Landing
           </Link>
         </li>
-        <li className='navitem hover:underline text-blue-700'>
+        {/* <li className='navitem hover:underline text-blue-700'>
           <Link
             to='/background'
             className={`navlink ${pathname === '/background' && 'underline'}`}
           >
             StadiumBackground
           </Link>
-        </li>
+        </li> */}
         <li className='navitem hover:underline text-blue-700'>
           <Link
             to='/team'
