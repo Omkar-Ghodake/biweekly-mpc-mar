@@ -6,13 +6,16 @@ exports.addPlayer = async (req, res) => {
   try {
     const {
       domain_name,
+      name,
       emp_id,
       pre_score,
-      severity_count,
+      severity_count = {},  // Default to an empty object to prevent errors
       total_score,
+      total_issues,
       courses,
       gender,
       role,
+
     } = req.body;
 
     // Check if domain_name already exists
@@ -27,27 +30,29 @@ exports.addPlayer = async (req, res) => {
       return ErrorResponse(res, 403, 'Employee ID already exists');
     }
 
-
     // Check if image is uploaded
     const playerImagePath = req.file?.path;
-
+    console.log(playerImagePath);
+    
     if (!playerImagePath) {
       return ErrorResponse(res, 404, "Player's Image is required");
     }
 
     // Upload image to Cloudinary
     const playerImage = await uploadOnCloudinary(playerImagePath);
-
     if (!playerImage) {
       return ErrorResponse(res, 500, "Internal Cloudinary Error");
     }
 
+
     // Create player in DB
     const player = await Player.create({
       domain_name,
+      name,
       emp_id,
       pre_score,
       severity_count,
+      total_issues,  // ✅ Add total issues
       total_score,
       courses,
       gender,
@@ -55,13 +60,12 @@ exports.addPlayer = async (req, res) => {
       image: playerImage.url
     });
 
-    SuccessResponse({...res,emp_id: emp_id.toString()}, 201, 'Player Created Successfully.', player);
+    SuccessResponse(res, 201, 'Player Created Successfully.', player);
   } catch (error) {
     console.error("Error:", error);
     ErrorResponse(res, 500, 'Internal Server Error!', error);
   }
 };
-
 
 exports.getPlayer = async (req, res) => {
   try {
@@ -81,17 +85,19 @@ exports.getPlayer = async (req, res) => {
 
 exports.getAllPlayers = async (req, res) => {
   try {
-    const player = await Player.find()
+    const players = await Player.find();
 
-    if (!player) {
-      return ErrorResponse(res, 404, 'Player not found')
+    if (!players || players.length === 0) {
+      return ErrorResponse(res, 404, 'Players not found');
     }
 
-    return SuccessResponse(res, 200, '', player)
+
+    return SuccessResponse(res, 200, 'Players retrieved successfully', players);
   } catch (error) {
-    ErrorResponse(res, 500, 'Internal Server Error!', error)
+    console.error("Error:", error);
+    ErrorResponse(res, 500, 'Internal Server Error!', error);
   }
-}
+};
 
 exports.updatePlayer = async (req, res) => {
   try {

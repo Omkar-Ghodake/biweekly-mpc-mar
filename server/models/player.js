@@ -8,6 +8,11 @@ const PlayerSchema = new Schema({
     unique: true,
     trim: true,
   },
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
   emp_id: {
     type: Number,
     required: true,
@@ -25,6 +30,10 @@ const PlayerSchema = new Schema({
     minor: { type: Number, default: 0 },
   },
   total_score: {
+    type: Number,
+    default: 0,
+  },
+  total_issues: {
     type: Number,
     default: 0,
   },

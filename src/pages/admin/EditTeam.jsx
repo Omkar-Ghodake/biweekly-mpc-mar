@@ -5,82 +5,100 @@ import Modal from "../../layouts/Modal/Modal";
 import { ModalContext } from "../../context/ModalProvider";
 import ModalHead from "../../layouts/Modal/ModalHead";
 import ModalBody from "../../layouts/Modal/ModalBody";
-import ball from "../../assets/ball.jpg";
 import background from "../../assets/background5.jpg";
 import { IoMdAdd } from "react-icons/io";
 import { MdDeleteOutline } from "react-icons/md";
 import img from "../../glb/Blank Profile pic.png";
-import Button from "../../components/Button";
+import { BsTrash3 } from "react-icons/bs";
+import axios from "axios";
 
 const EditTeam = () => {
-  const arr = [
-    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
-  ];
   const [players, setPlayers] = useState([]);
   const { openModal, closeModal } = useContext(ModalContext);
   const [playerEdit, setPlayerEdit] = useState(false);
   const [playerCreate, setPlayerCreate] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const formRef = useRef(null);
-  const [totalIssues, setTotalIssues] = useState(0);
-  const [totalScore, setTotalScore] = useState(0);
 
+  const [image, setImage] = useState(img || ""); // Default to provided image
   const [formData, setFormData] = useState({
+    courses: [],
+    domain_name: "",
     name: "",
-    domainId: null,
-    empId: null,
-    blocker: 0,
-    critical: 0,
-    major: 0,
-    normal: 0,
-    minor: 0,
-    previous_score: 0,
+    emp_id: null, // Keep it null for consistency
+    gender: "",
     image: img,
-    courses: [], // Start with one empty course field
+    pre_score: 0,
+    role: "",
+    severity_count: { blocker: 0, critical: 0, major: 0, normal: 0, minor: 0 },
+    total_issues: 0,
+    total_score: 0,
   });
-  const [image, setImage] = useState(formData.image || "");
 
   const fetchPlayers = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:5500/api/v1/players/get-all-players",
-        {
-          method: "GET",
-          credentials: "include", // Ensures authentication cookies are sent
-        }
+      const response = await axios.get(
+        "http://localhost:5500/api/v1/players/get-all-players"
       );
 
-      if (!response.ok) {
+      console.log("API Response:", response.data);
+
+      // ✅ Check if response status is OK
+      if (response.status !== 200) {
         throw new Error("Couldn't fetch players");
       }
 
-      const data = await response.json(); // Extract JSON data
-      const fetchedPlayers = data.data; // Assuming response has { data: [...] }
+      // ✅ Ensure we get an array
+      const fetchedPlayers = response.data.data;
+      console.log("fetchedPlayers", fetchedPlayers);
 
-      setPlayers(fetchedPlayers); // ✅ Correct way to update state with an array
+      setPlayers(fetchedPlayers); // ✅ Update state with an array
 
-      // ✅ Log the updated state after React updates it
+      console.log("Updated Players State:", fetchedPlayers);
     } catch (error) {
       console.error("Error fetching players:", error);
-      alert("Failed to fetch players. Please try again.");
     }
   };
-
-  console.log("formData", formData);
 
   useEffect(() => {
     fetchPlayers();
   }, []);
+
+  console.log("formData", formData);
+
+  const convertBase64ToFile = (base64String, fileName) => {
+    let arr = base64String.split(",");
+    let mime = arr[0].match(/:(.*?);/)[1]; // Extract MIME type
+    let bstr = atob(arr[1]); // Decode Base64
+    let n = bstr.length;
+    let u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    const file = new File([u8arr], fileName, { type: mime });
+
+    setFormData((prevData) => ({
+      ...prevData,
+      image: file, // ✅ Store file in formData
+    }));
+  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result);
-        setFormData({ ...formData, img: reader.result });
+        setImage(reader.result); // ✅ Store Base64 for preview
+        convertBase64ToFile(reader.result, file.name); // ✅ Convert and set in formData
       };
       reader.readAsDataURL(file);
+
+      setFormData((prevData) => ({
+        ...prevData,
+        image: file, // ✅ Store file for submission
+      }));
     }
   };
 
@@ -104,21 +122,42 @@ const EditTeam = () => {
       courses: prevData.courses.filter((_, i) => i !== index), // Creates a new array safely
     }));
   };
+  console.log("image", image);
 
   const createPlayer = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await fetch(
+      const playerData = new FormData();
+      Object.keys(formData).forEach((key) => {
+        if (key === "severity_count") {
+          playerData.append(key, JSON.stringify(formData[key]));
+        } else if (key === "image") {
+          if (formData.image) {
+            playerData.append("image", formData.image);
+          }
+        } else if (key === "emp_id") {
+          // ✅ Ensure emp_id is a number or empty string (not "null")
+          if (formData.emp_id !== null && formData.emp_id !== "") {
+            playerData.append("emp_id", Number(formData.emp_id)); // Convert to number
+          }
+        } else {
+          playerData.append(key, formData[key]);
+        }
+      });
+
+      const response = await axios.post(
         "http://localhost:5500/api/v1/players/add-player",
+        playerData,
         {
-          method: "POST",
-          credentials: "include",
-          body: formData,
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
         }
       );
-      console.log(response);
 
-      if (response.ok) {
+      console.log(response);
+      if (response.status === 200) {
         alert("Player added successfully!");
       } else {
         alert(`Error: ${response.statusText}`);
@@ -128,49 +167,145 @@ const EditTeam = () => {
       alert("Failed to add player. Please try again.");
     } finally {
       closeModal();
+      setImage(null);
       setPlayerCreate(false);
       setFormData({
+        courses: [],
+        domain_name: "",
         name: "",
-        domainId: "",
-        empId: null,
-        blocker: 0,
-        critical: 0,
-        major: 0,
-        normal: 0,
-        minor: 0,
-        previous_score: 0,
-        image: null,
-        courses: [], // Start with one empty course field
+        emp_id: null, // Reset correctly
+        gender: "",
+        image: img,
+        pre_score: 0,
+        role: "",
+        severity_count: {
+          blocker: 0,
+          critical: 0,
+          major: 0,
+          normal: 0,
+          minor: 0,
+        },
+        total_issues: 0,
+        total_score: 0,
       });
+      fetchPlayers();
     }
   };
-  const updateDetails = (e) => {
+
+  const updateDetails = async (e) => {
     e.preventDefault();
-    setIsEditing(false);
-    console.log("Updated Data:", formData);
+
+    try {
+      const id = formData._id;
+      const playerData = new FormData();
+      Object.keys(formData).forEach((key) => {
+        if (key === "severity_count") {
+          playerData.append(key, JSON.stringify(formData[key]));
+        } else if (key === "image") {
+          if (formData.image) {
+            playerData.append("image", formData.image);
+          }
+        } else if (key === "emp_id") {
+          // ✅ Ensure emp_id is a number or empty string (not "null")
+          if (formData.emp_id !== null && formData.emp_id !== "") {
+            playerData.append("emp_id", Number(formData.emp_id));
+          }
+        } else {
+          playerData.append(key, formData[key]);
+        }
+      });
+
+      const response = await axios.put(
+        `http://localhost:5500/api/v1/players/update-player/${id}`,
+        playerData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      console.log(response);
+      if (response.status === 200) {
+        alert("Player updated successfully!");
+        closeModal();
+        setImage(null);
+        setPlayerEdit(false);
+        setIsEditing(false);
+        setFormData({
+          courses: [],
+          domain_name: "",
+          name: "",
+          emp_id: null, // Reset correctly
+          gender: "",
+          image: img,
+          pre_score: 0,
+          role: "",
+          severity_count: {
+            blocker: 0,
+            critical: 0,
+            major: 0,
+            normal: 0,
+            minor: 0,
+          },
+          total_issues: 0,
+          total_score: 0,
+        });
+      } else {
+        alert(`Error: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error("Error updating player:", error);
+      alert("Failed to update player. Please try again.");
+    } finally {
+      fetchPlayers();
+    }
   };
 
-  // Calculate Total Issues & Score
+  const deleteTournament = async () => {
+    try {
+      const id = formData._id;
+      console.log(id);
 
-  const calculateTotalIssues = (formData) => {
-    return (
-      formData.severity_count.blocker +
-      formData.severity_count.critical +
-      formData.severity_count.major +
-      formData.severity_count.normal +
-      formData.severity_count.minor
-    );
-  };
-
-  // Function to calculate total score
-  const calculateTotalScore = (formData) => {
-    return (
-      (formData.severity_count.blocker || 0) * 10 +
-      (formData.severity_count.critical || 0) * 8 +
-      (formData.severity_count.major || 0) * 5 +
-      (formData.severity_count.normal || 0) * 3 +
-      (formData.severity_count.minor || 0) * 1
-    );
+      const response = await fetch(
+        `http://localhost:5500/api/v1/players/delete-player/${id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+      if (response.ok) {
+        alert("Player deleted successfully!");
+      } else {
+        alert(`Error: ${response.statusText}`);
+      }
+    } catch (error) {
+      console.error("Error deleting player:", error);
+      alert("Failed to delete player. Please try again.");
+    } finally {
+      closeModal();
+      setPlayerEdit(false);
+      setFormData({
+        courses: [],
+        domain_name: "",
+        name: "",
+        emp_id: null,
+        gender: "",
+        image: img,
+        pre_score: 0,
+        role: "",
+        severity_count: {
+          blocker: 0,
+          critical: 0,
+          major: 0,
+          normal: 0,
+          minor: 0,
+        },
+        total_issues: 0,
+        total_score: 0,
+      });
+      fetchPlayers();
+    }
   };
 
   return (
@@ -198,6 +333,25 @@ const EditTeam = () => {
             onClick={() => {
               openModal();
               setPlayerCreate(true);
+              setFormData({
+                courses: [],
+                domain_name: "",
+                name: "",
+                emp_id: null,
+                gender: "",
+                image: img,
+                pre_score: 0,
+                role: "",
+                severity_count: {
+                  blocker: 0,
+                  critical: 0,
+                  major: 0,
+                  normal: 0,
+                  minor: 0,
+                },
+                total_issues: 0,
+                total_score: 0,
+              });
             }}
           >
             <div className="flex justify-center items-center ">
@@ -231,35 +385,58 @@ const EditTeam = () => {
               openModal();
               setFormData({
                 ...item,
-                courses: Array.isArray(item.courses)
-                  ? item.courses
-                  : item.courses.replace(/\[|\]/g, "").split(","), // Convert string to array
+                courses: item.courses[0]
+                  .split(",")
+                  .map((course) => course.trim()),
               });
-              setTotalIssues(calculateTotalIssues(formData));
-              setTotalScore(calculateTotalScore(formData));
+              // calculateTotalIssues(formData)
               setPlayerEdit(true);
             }}
           >
-            <Pointlist item={item} issueCount={totalIssues} index={index} />
+            <Pointlist item={item} index={index} />
           </div>
         ))}
       </motion.div>
       {playerEdit && (
         <Modal
-          className="h-[84vh] text-md "
-          afterClosing={() => setIsEditing(false)}
+          className="h-[84vh] text-md"
+          afterClosing={() => {
+            setIsEditing(false);
+            setPlayerEdit(false);
+            setFormData({
+              courses: [],
+              domain_name: "",
+              name: "",
+              emp_id: null,
+              gender: "",
+              image: img,
+              pre_score: 0,
+              role: "",
+              severity_count: {
+                blocker: 0,
+                critical: 0,
+                major: 0,
+                normal: 0,
+                minor: 0,
+              },
+              total_issues: 0,
+              total_score: 0,
+            });
+          }}
         >
           <ModalHead className="w-1/3 ">
             <div className="w-full flex px-4 justify-between text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3">
-              {formData.domain_name ? (
-                <span>{formData.domain_name}</span>
+              {formData.name ? (
+                <span>{formData.name}</span>
               ) : (
-                "Domain Name"
+                <span>Domain Name</span>
               )}
-              {formData ? (
-                <span className="font-bold ">Score: {totalScore}</span>
+              {formData.total_issues ? (
+                <span className="font-bold ">
+                  Score: {formData.total_score}
+                </span>
               ) : (
-                "Score"
+                "Score : 0"
               )}
             </div>
           </ModalHead>
@@ -268,7 +445,7 @@ const EditTeam = () => {
               <form onSubmit={updateDetails} className="space-y-6 ">
                 {/* Profile Image and Name Input */}
                 <div className="flex flex-col md:flex-row items-center space-y-5 md:space-y-0 md:space-x-1 ">
-                  <div className="flex flex-col w-full space-y-4 ">
+                  <div className="flex flex-col w-full space-y-3 ">
                     {/* Name Input Field */}
                     <div className="flex items-center w-full ml-2">
                       <label htmlFor="name" className="font-medium">
@@ -279,27 +456,32 @@ const EditTeam = () => {
                         type="text"
                         placeholder="Enter your name"
                         required
-                        value={formData.domain_name}
+                        value={formData.name}
                         onChange={(e) =>
                           setFormData({ ...formData, name: e.target.value })
                         }
-                        className="ml-9 mr-5 w-full p-2 rounded-3xl border focus:outline-blue-500 transition-all duration-200"
+                        className={`ml-9 mr-5 mx-5 w-full p-2 rounded-3xl transition-all duration-200 ${
+                          isEditing
+                            ? "border focus:outline-blue-500"
+                            : "bg-gray-100 cursor-default"
+                        }`}
+                        readOnly={!isEditing}
                       />
                     </div>
                     <div className="flex items-center w-full ml-2">
                       <div className="flex items-center w-1/2">
-                        <label htmlFor="domainId" className="font-medium">
-                          Domain Id
+                        <label htmlFor="domain_name" className="font-medium">
+                          Domain Name
                         </label>
                         <input
-                          id="domainId"
-                          placeholder="Enter Domain Id"
+                          id="domain_name"
+                          placeholder="Enter Domain name"
                           type="text"
                           value={formData.domain_name}
                           onChange={(e) =>
                             setFormData({
                               ...formData,
-                              domainId: e.target.value,
+                              domain_name: e.target.value,
                             })
                           }
                           className={`mx-5 w-full p-2 rounded-3xl transition-all duration-200 ${
@@ -321,12 +503,8 @@ const EditTeam = () => {
                           onChange={(e) =>
                             setFormData({ ...formData, empId: e.target.value })
                           }
-                          className={`mx-5 p-2 w-full rounded-3xl transition-all duration-200 [&::-webkit-inner-spin-button]:appearance-none 
-         [&::-webkit-outer-spin-button]:appearance-none ${
-           isEditing
-             ? "border focus:outline-blue-500"
-             : "bg-gray-100 cursor-default"
-         }`}
+                          className="mx-5 w-full p-2 rounded-3xl transition-all duration-200 bg-gray-100 cursor-not-allowed appearance-none 
+          [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                           readOnly={!isEditing}
                         />
                       </div>
@@ -361,14 +539,12 @@ const EditTeam = () => {
                         </label>
                         <select
                           id="role"
-                          value={
-                            formData.role
-                              ? formData.role.charAt(0).toUpperCase() +
-                                formData.role.slice(1).toLowerCase()
-                              : ""
-                          }
+                          value={formData.role || "player"}
                           onChange={(e) =>
-                            setFormData({ ...formData, role: e.target.value })
+                            setFormData({
+                              ...formData,
+                              role: e.target.value.toLowerCase(),
+                            })
                           }
                           className={`mx-5 w-full p-2 rounded-3xl transition-all duration-200 ${
                             isEditing
@@ -378,8 +554,8 @@ const EditTeam = () => {
                           disabled={!isEditing}
                         >
                           <option value="">Select Role</option>
-                          <option value="Captain">Captain</option>
-                          <option value="Player">Player</option>
+                          <option value="captain">Captain</option>
+                          <option value="player">Player</option>
                         </select>
                       </div>
                     </div>
@@ -407,20 +583,52 @@ const EditTeam = () => {
                               type="number"
                               value={
                                 key === "pre_score"
-                                  ? formData.pre_score
-                                  : formData.severity_count[key] || 0
+                                  ? formData?.pre_score ?? 0
+                                  : formData?.severity_count?.[key] ?? 0
                               }
-                              onChange={(e) =>
-                                setFormData({
-                                  ...formData,
-                                  [key === "pre_score"
-                                    ? "pre_score"
-                                    : "severity_count"]: {
-                                    ...formData.severity_count,
-                                    [key]: Number(e.target.value) || 0,
-                                  },
-                                })
-                              }
+                              onChange={(e) => {
+                                const newValue = Number(e.target.value) || 0;
+
+                                setFormData((prev) => {
+                                  // Update severity count or pre_score
+                                  const updatedData = {
+                                    ...prev,
+                                    pre_score:
+                                      key === "pre_score"
+                                        ? newValue
+                                        : prev.pre_score,
+                                    severity_count:
+                                      key !== "pre_score"
+                                        ? {
+                                            ...prev.severity_count,
+                                            [key]: newValue,
+                                          }
+                                        : prev.severity_count,
+                                  };
+
+                                  // Calculate total_issues
+                                  const totalIssues =
+                                    updatedData.severity_count.blocker +
+                                    updatedData.severity_count.critical +
+                                    updatedData.severity_count.major +
+                                    updatedData.severity_count.normal +
+                                    updatedData.severity_count.minor;
+
+                                  // Calculate total_score (EXCLUDES `pre_score` from weightings)
+                                  const totalScore =
+                                    updatedData.severity_count.blocker * 10 +
+                                    updatedData.severity_count.critical * 8 +
+                                    updatedData.severity_count.major * 5 +
+                                    updatedData.severity_count.normal * 3 +
+                                    updatedData.severity_count.minor * 1;
+
+                                  return {
+                                    ...updatedData,
+                                    total_issues: totalIssues,
+                                    total_score: totalScore,
+                                  };
+                                });
+                              }}
                               className={`p-2 rounded-3xl w-full transition-all duration-200 appearance-none 
           [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none
           ${
@@ -438,14 +646,17 @@ const EditTeam = () => {
                       <div>
                         <div className="flex items-center justify-between">
                           <label className="font-medium">Courses</label>
-                          {isEditing && (
-                            <button
-                              onClick={addCourseField}
-                              className="mr-5 px-2 py-1 bg-sky-700 text-white rounded-md hover:bg-sky-600 transition w-fit"
-                            >
-                              <IoMdAdd className="text-2xl font-bold" />
-                            </button>
-                          )}
+                          {isEditing &&
+                            formData.courses.every(
+                              (course) => course.trim() !== ""
+                            ) && (
+                              <button
+                                onClick={addCourseField}
+                                className="mr-5 px-2 py-1 bg-sky-700 text-white rounded-md hover:bg-sky-600 transition w-fit"
+                              >
+                                <IoMdAdd className="text-2xl font-bold" />
+                              </button>
+                            )}
                         </div>
 
                         <div className="bg-gray-200 w-[17.5rem] p-2 rounded-lg mt-3">
@@ -504,14 +715,14 @@ const EditTeam = () => {
                     <div className="flex space-x-3 items-center justify-center w-1/2">
                       <span className="font-medium">Total Issues</span>
                       <span className="bg-gray-200 px-16 rounded-3xl py-2 ">
-                        {totalIssues}
+                        {formData?.total_issues}
                       </span>
                     </div>
                   </div>
                   <div className="flex flex-col justify-center items-center h-[55vh] w-1/3">
                     {/* Display the existing or uploaded image */}
                     <img
-                      src={image || formData.image || "/default-avatar.png"} // Fallback image
+                      src={formData.image || img} // Fallback image
                       alt="Profile"
                       className="w-auto h-72 object-contain"
                     />
@@ -528,7 +739,7 @@ const EditTeam = () => {
                     {/* Upload Button */}
                     <label
                       htmlFor="imageUpload"
-                      className="px-4 py-2 mt-3 bg-sky-700 text-white rounded-lg shadow-md w-fit cursor-pointer 
+                      className="px-4 py-2   bg-sky-700 text-white rounded-lg shadow-md w-fit cursor-pointer 
     hover:bg-sky-800 hover:shadow-xl hover:scale-105 transition-transform duration-200"
                     >
                       Change
@@ -553,10 +764,29 @@ const EditTeam = () => {
 
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700 hover:cursor-pointer"
+                    className={`px-4 py-2  text-white rounded-lg shadow-md  ${
+                      !isEditing
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-green-600 hover:bg-green-700 hover:cursor-pointer"
+                    }`}
+                    disabled={!isEditing}
                   >
                     Save
                   </button>
+                  {isEditing && (
+                    <button
+                      type="button"
+                      className={`px-3 py-2 text-white rounded-lg shadow-md ${
+                        formData && formData.name === null
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-red-600 hover:bg-red-700"
+                      }`}
+                      onClick={deleteTournament}
+                      disabled={formData && formData.name === null}
+                    >
+                      <BsTrash3 />
+                    </button>
+                  )}
                 </div>
               </form>
             </div>
@@ -564,11 +794,45 @@ const EditTeam = () => {
         </Modal>
       )}
       {playerCreate && (
-        <Modal className="h-[84vh] text-md ">
+        <Modal
+          className="h-[84vh] text-md "
+          afterClosing={() => {
+            setPlayerCreate(false);
+            setFormData({
+              courses: [],
+              domain_name: "",
+              name: "",
+              emp_id: null,
+              gender: "",
+              image: img,
+              pre_score: 0,
+              role: "",
+              severity_count: {
+                blocker: 0,
+                critical: 0,
+                major: 0,
+                normal: 0,
+                minor: 0,
+              },
+              total_issues: 0,
+              total_score: 0,
+            });
+          }}
+        >
           <ModalHead className="w-1/3 ">
             <div className="w-full flex px-4 justify-between text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3">
-              {formData.name ? <span>{formData.name}</span> : "Domain Name"}
-              <span className="font-bold">Score: {totalScore}</span>
+              {formData.name ? (
+                <span>{formData.name}</span>
+              ) : (
+                <span>Domain Name</span>
+              )}
+              {formData.total_issues ? (
+                <span className="font-bold ">
+                  Score: {formData.total_score}
+                </span>
+              ) : (
+                <span className="font-bold ">Score: 0</span>
+              )}
             </div>
           </ModalHead>
           <ModalBody>
@@ -603,34 +867,34 @@ const EditTeam = () => {
                     {/* Domain & Employee ID */}
                     <div className="flex items-center w-full ml-2">
                       <div className="flex items-center w-1/2">
-                        <label htmlFor="domainId" className="font-medium">
-                          Domain Id
+                        <label htmlFor="domain_name" className="font-medium">
+                          Domain Name
                         </label>
                         <input
-                          id="domainId"
-                          placeholder="Enter Domain Id"
+                          id="domain_name"
+                          placeholder="Enter Domain Name"
                           type="text"
-                          value={formData.domainId}
+                          value={formData.domain_name}
                           onChange={(e) =>
                             setFormData({
                               ...formData,
-                              domainId: e.target.value,
+                              domain_name: e.target.value,
                             })
                           }
                           className="mx-5 w-full p-2 rounded-3xl border focus:outline-blue-500 transition-all duration-200"
                         />
                       </div>
                       <div className="flex items-center w-1/2">
-                        <label htmlFor="empId" className="font-medium">
+                        <label htmlFor="emp_id" className="font-medium">
                           Employee Id
                         </label>
                         <input
-                          id="empId"
+                          id="emp_id"
                           type="number"
                           placeholder="Enter Employee Id"
-                          value={formData.empId}
+                          value={formData.emp_id}
                           onChange={(e) =>
-                            setFormData({ ...formData, empId: e.target.value })
+                            setFormData({ ...formData, emp_id: e.target.value })
                           }
                           className="mx-5 p-2 w-full rounded-3xl border focus:outline-blue-500 transition-all duration-200 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                         />
@@ -670,8 +934,8 @@ const EditTeam = () => {
                           className="mx-5 w-full p-2 rounded-3xl border focus:outline-blue-500 transition-all duration-200"
                         >
                           <option value="">Select Role</option>
-                          <option value="Captain">Captain</option>
-                          <option value="Player">Player</option>
+                          <option value="captain">Captain</option>
+                          <option value="player">Player</option>
                         </select>
                       </div>
                     </div>
@@ -688,7 +952,8 @@ const EditTeam = () => {
                           "Minor",
                           "Previous Score",
                         ].map((label) => {
-                          const key = label.toLowerCase().replace(" ", "_");
+                          const key = label.toLowerCase().replace(" ", "_"); // Convert label to object key
+
                           return (
                             <div
                               key={key}
@@ -700,13 +965,54 @@ const EditTeam = () => {
                               <input
                                 id={key}
                                 type="number"
-                                value={formData[key]}
-                                onChange={(e) =>
-                                  setFormData({
-                                    ...formData,
-                                    [key]: Number(e.target.value) || 0,
-                                  })
+                                value={
+                                  key === "pre_score"
+                                    ? formData?.pre_score ?? 0
+                                    : formData?.severity_count?.[key] ?? 0
                                 }
+                                onChange={(e) => {
+                                  const newValue = Number(e.target.value) || 0;
+
+                                  setFormData((prevData) => {
+                                    // Update severity count or pre_score
+                                    const updatedData = {
+                                      ...prevData,
+                                      pre_score:
+                                        key === "pre_score"
+                                          ? newValue
+                                          : prevData.pre_score,
+                                      severity_count:
+                                        key !== "pre_score"
+                                          ? {
+                                              ...prevData.severity_count,
+                                              [key]: newValue,
+                                            }
+                                          : prevData.severity_count,
+                                    };
+
+                                    // Calculate total_issues (EXCLUDES `pre_score`)
+                                    const totalIssues =
+                                      updatedData.severity_count.blocker +
+                                      updatedData.severity_count.critical +
+                                      updatedData.severity_count.major +
+                                      updatedData.severity_count.normal +
+                                      updatedData.severity_count.minor;
+
+                                    // Calculate total_score (EXCLUDES `pre_score` from weightings)
+                                    const totalScore =
+                                      updatedData.severity_count.blocker * 10 +
+                                      updatedData.severity_count.critical * 8 +
+                                      updatedData.severity_count.major * 5 +
+                                      updatedData.severity_count.normal * 3 +
+                                      updatedData.severity_count.minor * 1;
+
+                                    return {
+                                      ...updatedData,
+                                      total_issues: totalIssues, // ✅ Excludes `pre_score`
+                                      total_score: totalScore, // ✅ Excludes `pre_score`
+                                    };
+                                  });
+                                }}
                                 className="p-2 rounded-3xl w-full border focus:outline-blue-500 transition-all duration-200 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
                               />
                             </div>
@@ -763,7 +1069,7 @@ const EditTeam = () => {
                     <div className="flex space-x-3 items-center justify-center w-1/2">
                       <span className="font-medium">Total Issues</span>
                       <span className="bg-gray-200 px-16 rounded-3xl py-2">
-                        {totalIssues}
+                        {formData?.total_issues || 0}
                       </span>
                     </div>
                   </div>

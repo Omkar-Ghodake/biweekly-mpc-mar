@@ -316,16 +316,7 @@ const EditTournaments = () => {
                     >
                       Save
                     </button>
-                    <Button variant='danger'  size='sm' className={`shadow-md ${
-                        currentTournament && currentTournament.id === null
-                          ? "bg-gray-400 cursor-not-allowed"
-                          : "bg-red-600 hover:bg-red-700"
-                      }`} onClick={deleteTournament}
-                      disabled={
-                        currentTournament && currentTournament.id === null
-                      }>
-                    <BsTrash3 />
-                    </Button>
+                    
                     <button
                       type="button"
                       className={`px-3 py-2 text-white rounded-lg shadow-md ${
