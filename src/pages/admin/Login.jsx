@@ -80,7 +80,7 @@ const Login = () => {
   };
 
   return (
-    <div className='bg-sky-500 h-screen flex justify-center items-center'>
+    <div className="h-screen w-full overflow-auto bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col justify-center items-center py-10 px-6">
       <div className='bg-white w-full max-w-sm mx-auto px-8 py-12 rounded-3xl  shadow-lg'>
         <h1 className='text-3xl font-semibold text-center text-black mb-6'>Sign In</h1>
         

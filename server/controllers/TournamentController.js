@@ -73,7 +73,7 @@ exports.deleteTournament = async (req, res, next) => {
     const deleted = await TournamentModel.deleteOne({
       _id: req.params.id,
     });
-    
+
     if (!deleted.deletedCount) {
       console.log("No Tournament Found!");
       return ErrorResponse(
@@ -99,16 +99,16 @@ exports.deleteTournament = async (req, res, next) => {
   }
 };
 
-exports.deleteAllTournament = async (req, res, next) => {
+exports.deleteManyTournament = async (req, res, next) => {
   try {
-    const tournamentIds = await req.body;
+    const tournamentIds = await req.body.ids;
 
     if (!tournamentIds) {
       console.log("No Tournament Id recieved!");
       return ErrorResponse(res, 400, "No Tournament Id Recieved!");
     }
     const deleted = await TournamentModel.deleteMany({
-      _id: { $in: tournamentIds.map((id) => new mongoose.Schema.ObjectId(id)) },
+      _id: { $in: tournamentIds },
     });
 
     if (!deleted.deletedCount) {
@@ -120,7 +120,7 @@ exports.deleteAllTournament = async (req, res, next) => {
       res,
       201,
       `Tournament Deleted: Affected ${deleted.deletedCount} tournament.`,
-      deletedCount
+      deleted
     );
   } catch (error) {
     console.log("Error: ", error);

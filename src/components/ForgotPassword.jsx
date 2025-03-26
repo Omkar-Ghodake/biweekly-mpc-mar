@@ -23,10 +23,15 @@ const ForgotPassword = ({ closeModal }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
   const [error, setError] = useState('');
+  const [error1, setError1] = useState('');
+  const [error2, setError2] = useState('');
 
   const handleEmailSubmit = () => {
     const otpGenerated = Math.floor(100000 + Math.random() * 900000).toString(); // Generate OTP
     setActualOTP(otpGenerated);
+    if(!email){
+      return setError2('Enter Valid Email');
+    }
     if (sendOTP(email)) {
       setOtpSent(true);
       setIsBlurred(true);
@@ -36,6 +41,9 @@ const ForgotPassword = ({ closeModal }) => {
 
 
   const handleOTPSubmit = () => {
+    if(!otp){
+      return setError1('Enter Valid OTP');
+    }
     // if (verifyOTP(otp, actualOTP)) {
     setStep(3); // Move to password reset step
     // } else {
@@ -73,14 +81,14 @@ const ForgotPassword = ({ closeModal }) => {
   const handlePasswordSubmit = () => {
 
     if (!newPassword || !confirmPassword) {
-      return setError('Enter all fields');
+      return setError('Enter All Fields');
     }
     if (newPassword !== confirmPassword) {
-      setError('Passwords do not match');
+      setError('Passwords Do Not Match');
       return;
     }
     setError('');
-    alert('Password reset successfully!');
+    alert('Password Reset Successfully!');
     closeModal()
   };
 
@@ -112,6 +120,7 @@ const ForgotPassword = ({ closeModal }) => {
             {/* <button onClick={handleEmailSubmit} className='w-full py-2 mt-7 bg-gradient-to-r bg-blue-500 text-white font-bold rounded-3xl shadow-md hover:shadow-lg focus:outline-none focus:ring-2 transform transition-all hover:scale-101 '>
               Send OTP
             </button>  */}
+            {error2 && <div className='text-red-500 text-sm  mt-1 mx-2'>{error2}</div>}
             {<Button onClick={handleEmailSubmit} className={'w-full my-2'} >
               Send OTP
             </Button>}
@@ -145,7 +154,7 @@ const ForgotPassword = ({ closeModal }) => {
                   />
                 ))}
               </div>
-
+              {error1 && <div className='text-red-500 text-sm  mt-1 mx-9'>{error1}</div>}
               {<Button onClick={handleOTPSubmit} className={'w-full my-2'} >
                 Verify OTP
               </Button>}
@@ -180,7 +189,7 @@ const ForgotPassword = ({ closeModal }) => {
                     {isConfirmPasswordVisible ? <AiFillEyeInvisible size={20} /> : <AiFillEye size={20} />}
                   </button>}
                 </div>
-                {error && <div className='text-red-500 text-sm  mt-1'>{error}</div>}
+                {error && <div className='text-red-500 text-sm  mt-1 mx-2'>{error}</div>}
                 {/* <button onClick={handlePasswordSubmit} className='w-full py-2 mt-6 bg-gradient-to-r bg-blue-500 text-white font-bold rounded-3xl shadow-md hover:shadow-lg focus:outline-none focus:ring-1 transform transition-all hover:scale-101 '>
               Reset Password
             </button> */}
