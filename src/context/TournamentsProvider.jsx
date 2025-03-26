@@ -1,3 +1,4 @@
+import axios from 'axios'
 import React, { createContext, useEffect, useState } from 'react'
 
 const TournamentsContext = createContext()
@@ -7,19 +8,14 @@ const TournamentsProvider = ({ children }) => {
 
   const fetchTournaments = async () => {
     try {
-      const response = await fetch(
-        'http://localhost:5500/api/v1/tournaments/get-all-tournaments',
-        {
-          method: 'GET',
-          credentials: 'include', // Ensures authentication cookies are sent
-        }
+      const response = await axios(
+        'http://localhost:5500/api/v1/tournaments/get-all-tournaments'
       )
-      if (!response.ok) {
+      if (!response) {
         throw new Error('Failed to fetch tournaments')
       }
-
-      const json = await response.json()
-      setTournaments(json.data)
+      
+      setTournaments(response.data.data) 
     } catch (error) {
       console.error('Error fetching tournaments:', error)
     }
@@ -28,6 +24,7 @@ const TournamentsProvider = ({ children }) => {
   useEffect(() => {
     fetchTournaments()
   }, [])
+  
 
   return (
     <TournamentsContext.Provider value={{ tournaments, fetchTournaments }}>

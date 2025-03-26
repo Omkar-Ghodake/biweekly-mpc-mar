@@ -56,7 +56,7 @@ const EditTeam = () => {
 
       console.log("Updated Players State:", fetchedPlayers);
     } catch (error) {
-      console.error("Error fetching players:", error);
+      alert(`${error.response.data.message}`);
     }
   };
 
@@ -157,37 +157,37 @@ const EditTeam = () => {
       );
 
       console.log(response);
-      if (response.status === 200) {
+      if (response.status) {
+        closeModal();
         alert("Player added successfully!");
+        setImage(null);
+        setPlayerCreate(false);
+        setFormData({
+          courses: [],
+          domain_name: "",
+          name: "",
+          emp_id: null, // Reset correctly
+          gender: "",
+          image: img,
+          pre_score: 0,
+          role: "",
+          severity_count: {
+            blocker: 0,
+            critical: 0,
+            major: 0,
+            normal: 0,
+            minor: 0,
+          },
+          total_issues: 0,
+          total_score: 0,
+        });
       } else {
         alert(`Error: ${response.statusText}`);
       }
     } catch (error) {
       console.error("Error adding player:", error);
-      alert("Failed to add player. Please try again.");
+      alert(`${error.response.data.message}`);
     } finally {
-      closeModal();
-      setImage(null);
-      setPlayerCreate(false);
-      setFormData({
-        courses: [],
-        domain_name: "",
-        name: "",
-        emp_id: null, // Reset correctly
-        gender: "",
-        image: img,
-        pre_score: 0,
-        role: "",
-        severity_count: {
-          blocker: 0,
-          critical: 0,
-          major: 0,
-          normal: 0,
-          minor: 0,
-        },
-        total_issues: 0,
-        total_score: 0,
-      });
       fetchPlayers();
     }
   };
@@ -255,8 +255,7 @@ const EditTeam = () => {
         alert(`Error: ${response.statusText}`);
       }
     } catch (error) {
-      console.error("Error updating player:", error);
-      alert("Failed to update player. Please try again.");
+      alert(`${error.response.data.message}`);
     } finally {
       fetchPlayers();
     }
@@ -281,7 +280,7 @@ const EditTeam = () => {
       }
     } catch (error) {
       console.error("Error deleting player:", error);
-      alert("Failed to delete player. Please try again.");
+      alert(`${error.response.data.message}`);
     } finally {
       closeModal();
       setPlayerEdit(false);
@@ -646,17 +645,14 @@ const EditTeam = () => {
                       <div>
                         <div className="flex items-center justify-between">
                           <label className="font-medium">Courses</label>
-                          {isEditing &&
-                            formData.courses.every(
-                              (course) => course.trim() !== ""
-                            ) && (
-                              <button
-                                onClick={addCourseField}
-                                className="mr-5 px-2 py-1 bg-sky-700 text-white rounded-md hover:bg-sky-600 transition w-fit"
-                              >
-                                <IoMdAdd className="text-2xl font-bold" />
-                              </button>
-                            )}
+                          {isEditing && ( // ✅ Show Add button only if isEditing is true
+                            <button
+                              onClick={addCourseField}
+                              className="mr-5 px-2 py-1 bg-sky-700 text-white rounded-md hover:bg-sky-600 transition w-fit"
+                            >
+                              <IoMdAdd className="text-2xl font-bold" />
+                            </button>
+                          )}
                         </div>
 
                         <div className="bg-gray-200 w-[17.5rem] p-2 rounded-lg mt-3">

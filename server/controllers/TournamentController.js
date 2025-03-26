@@ -9,7 +9,8 @@ exports.createTournament = async (req, res) => {
     const { title, description, totalScore, issueCount } = req.body
 
     const logoLocalPath = req.file?.path
-
+    console.log(logoLocalPath);
+    
     if (!logoLocalPath) {
       throw new Error('Logo is required')
     }
@@ -66,7 +67,8 @@ exports.updateTournament = async (req, res) => {
 
       updatedData.image = uploadedImage.url
     }
-
+    console.log(updatedData);
+    
     tournament = await Tournament.findByIdAndUpdate(id, updatedData, {
       new: true,
     })
@@ -96,16 +98,11 @@ exports.deleteTournament = async (req, res) => {
         new Error('Could not find Tournament with the given ID!')
       )
     }
-
-    res.status(200).json({
-      success: true,
-      message: `Tournament Deleted: Affected ${deleted.deletedCount} tournament`,
-    })
     SuccessResponse(
       res,
       201,
-      `Tournament Deleted: Affected ${deleted} tournament.`,
-      deleted
+      `Tournament Deleted: Affected ${result.deletedCount} tournament.`,
+      result
     )
   } catch (error) {
     console.log('Error: ', error)

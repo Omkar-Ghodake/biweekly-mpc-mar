@@ -11,125 +11,176 @@ import { BsTrash3 } from "react-icons/bs";
 
 import ball from "../../assets/ball.jpg";
 import Button from "../../components/Button";
+import { TournamentsContext } from "../../context/TournamentsProvider";
+import axios from "axios";
 
 const EditTournaments = () => {
-  // Context for opening and closing the modal
-  const { openModal, closeModal } = useContext(ModalContext);
-
-  // State to store the list of tournaments
   const [tournaments, setTournaments] = useState([]);
+  const { openModal, closeModal } = useContext(ModalContext);
+  const tournamentsContext = useContext(TournamentsContext);
+  const tournamentsArray = tournamentsContext.tournaments;
+  const [image, setImage] = useState(ball || ""); // Default to provided image
 
   // State to track if the form is in editing mode
   const [isEditing, setIsEditing] = useState(false);
 
   // State to store the currently selected tournament
   const [currentTournament, setCurrentTournament] = useState(null);
+  const [createNew, setCreateNew] = useState(false);
 
   // Reference for the file input field
   const fileInputRef = useRef(null);
 
   // Fetch tournaments data on component mount
   useEffect(() => {
-    const fetchTournaments = async () => {
-      try {
-        // Mock data for tournaments
-        const mockData = [
-          {
-            id: 1,
-            name: "Tournament 1",
-            description: "Description 1",
-            image: ball,
-            totalScore: 100,
-            issueCount: 2,
-          },
-          {
-            id: 2,
-            name: "Tournament 2",
-            description: "Description 2",
-            image: ball,
-            totalScore: 150,
-            issueCount: 1,
-          },
-          {
-            id: 3,
-            name: "Tournament 3",
-            description: "Description 3",
-            image: ball,
-            totalScore: 200,
-            issueCount: 0,
-          },
-        ];
-        setTournaments(mockData);
-      } catch (error) {
-        console.error("Error fetching tournaments:", error);
-      }
-    };
+    setTournaments(tournamentsArray);
+  }, [tournamentsArray]);
 
-    fetchTournaments();
-  }, []);
+  console.log("tournaments", tournaments);
+  console.log("currentTournament", currentTournament);
 
   // Handle input changes for the tournament form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCurrentTournament({ ...currentTournament, [name]: value });
   };
+  const convertBase64ToFile = (base64String, fileName) => {
+    let arr = base64String.split(",");
+    let mime = arr[0].match(/:(.*?);/)[1]; // Extract MIME type
+    let bstr = atob(arr[1]); // Decode Base64
+    let n = bstr.length;
+    let u8arr = new Uint8Array(n);
 
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    const file = new File([u8arr], fileName, { type: mime });
+
+    setFormData((prevData) => ({
+      ...prevData,
+      image: file, // ✅ Store file in formData
+    }));
+  };
   // Handle image upload for the tournament
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setCurrentTournament({ ...currentTournament, image: reader.result });
+        setImage(reader.result); // ✅ Store Base64 for preview
+        convertBase64ToFile(reader.result, file.name); // ✅ Convert and set in formData
       };
       reader.readAsDataURL(file);
+
+      setCurrentTournament((prevData) => ({
+        ...prevData,
+        logo: file, // ✅ Store file for submission
+      }));
+    }
+  };
+
+  const addTournament = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post(
+        "http://localhost:5500/api/v1/tournaments/add-tournament",
+        currentTournament,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status !== 201) {
+        alert("Failed to add tournament. Please try again.");
+        return;
+      }
+
+      alert("Tournament added successfully!");
+
+      // Refresh tournament list
+      tournamentsContext.fetchTournaments();
+
+      // Close modal and reset state
+      closeModal();
+      setCurrentTournament(null);
+      setCreateNew(false);
+    } catch (error) {
+      alert(
+        error.response?.data?.message || "An error occurred. Please try again."
+      );
     }
   };
 
   // Handle tournament deletion
-  const deleteTournament = () => {
-    setTournaments((prevTournaments) => {
-      const updatedTournaments = prevTournaments.filter(
-        (tournament) => tournament.id !== currentTournament.id
+  const deleteTournament = async () => {
+    const id = currentTournament._id;
+    try {
+      const response = await axios.delete(
+        `http://localhost:5500/api/v1/tournaments/delete-tournament/${id}`
       );
-      return updatedTournaments;
-    });
-    alert("Tournament deleted successfully!");
-    setCurrentTournament(null);
-    closeModal();
-  };
-
-  // Handle form submission to add or update tournament details
-  const updateDetails = (e) => {
-    e.preventDefault();
-    if (currentTournament.id === null) {
-      // Add a new tournament
-      setTournaments([
-        ...tournaments,
-        { ...currentTournament, id: Date.now() },
-      ]);
-      alert("Tournament details added successfully!");
-    } else {
-      // Update an existing tournament
-      setTournaments((prevTournaments) => {
-        const updatedTournaments = prevTournaments.map((tournament) =>
-          tournament.id === currentTournament.id
-            ? currentTournament
-            : tournament
-        );
-        return updatedTournaments;
-      });
-      alert("Tournament details updated successfully!");
+      if (response.status === 201) {
+        alert("Tournament deleted successfully");
+      }
+    } catch (error) {
+      alert(error.response.message);
     }
     setCurrentTournament(null);
     closeModal();
+    setIsEditing(false);
+    tournamentsContext.fetchTournaments();
+  };
+
+  // Handle form submission to add or update tournament details
+  const updateDetails = async (e) => {
+    e.preventDefault();
+    console.log("Updating");
+    
+    const id = currentTournament._id;
+    try {
+      const response = await axios.patch(
+        `http://localhost:5500/api/v1/tournaments/update-tournament/${id}`,
+        currentTournament,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response.data);
+      
+      if (response.status === 200) {
+        alert("Tournament updated successfully");
+        setIsEditing(false);
+        tournamentsContext.fetchTournaments();
+      }
+    } catch (error) {
+      alert(error.response.message);
+    }
   };
 
   // Start editing a tournament
   const startEditing = (tournament) => {
     setCurrentTournament(tournament);
-    setIsEditing(tournament.id === null);
     openModal();
+  };
+
+  const startCreating = (e) => {
+    e.preventDefault();
+    setCurrentTournament({
+      id: null, // New tournament, so no ID yet
+      title: "",
+      description: "",
+      totalScore: 0,
+      issueCount: 0,
+      logo: "",
+    });
+
+    setIsEditing(true); // Enable form fields
+    setCreateNew(true); // Mark as new entry
+    openModal(); // Open the modal
   };
 
   return (
@@ -158,16 +209,7 @@ const EditTournaments = () => {
               {/* Add tournament button */}
               <button
                 className="text-xl font-bold px-4 py-1 text-white bg-sky-700 rounded-lg shadow-md w-fit cursor-pointer hover:bg-sky-800 hover:shadow-xl hover:scale-102 mr-6"
-                onClick={() =>
-                  startEditing({
-                    id: null,
-                    name: "",
-                    description: "",
-                    image: "",
-                    totalScore: 0,
-                    issueCount: 0,
-                  })
-                }
+                onClick={startCreating} // ✅ Use `startCreating` instead of `openModal()`
               >
                 <div className="flex justify-center items-center">
                   <IoMdAdd />
@@ -191,10 +233,16 @@ const EditTournaments = () => {
       </div>
       {/* Modal for editing or adding tournaments */}
       {currentTournament && (
-        <Modal afterClosing={() => {}}>
+        <Modal
+          afterClosing={() => {
+            setIsEditing(false);
+            setCurrentTournament(null);
+            setCreateNew(false);
+          }}
+        >
           <ModalHead className="w-1/3">
             <div className="w-full text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3 flex justify-between items-center">
-              <span>{currentTournament.name || "New Tournament"}</span>
+              <span>{currentTournament.title || "New Tournament"}</span>
               {isEditing ? (
                 <input
                   id="totalScore"
@@ -216,18 +264,24 @@ const EditTournaments = () => {
             <div className="p-2 flex flex-row items-start">
               {/* Form for editing tournament details */}
               <div className="w-2/3">
-                <form onSubmit={updateDetails} className="space-y-6">
+                <form
+                  onSubmit={createNew ? addTournament : updateDetails}
+                  className="space-y-6"
+                >
                   <div className="flex flex-col space-y-4">
                     {/* Tournament Name */}
                     <div className="flex items-center">
-                      <label htmlFor="name" className="font-medium w-1/3 text-left pr-4">
+                      <label
+                        htmlFor="title"
+                        className="font-medium w-1/3 text-left pr-4"
+                      >
                         Tournament Name
                       </label>
                       <input
-                        id="name"
-                        name="name"
+                        id="title"
+                        name="title"
                         type="text"
-                        value={currentTournament.name}
+                        value={currentTournament.title}
                         onChange={handleInputChange}
                         className={`w-2/3 p-2 rounded-3xl transition-all duration-200 ${
                           isEditing
@@ -240,7 +294,10 @@ const EditTournaments = () => {
                     </div>
                     {/* Tournament Description */}
                     <div className="flex items-center">
-                      <label htmlFor="description" className="font-medium w-1/3 text-left pr-4">
+                      <label
+                        htmlFor="description"
+                        className="font-medium w-1/3 text-left pr-4"
+                      >
                         Tournament Description
                       </label>
                       <textarea
@@ -261,7 +318,10 @@ const EditTournaments = () => {
                     {/* Total Score */}
                     {isEditing && (
                       <div className="flex items-center">
-                        <label htmlFor="totalScore" className="font-medium w-1/3 text-left pr-4">
+                        <label
+                          htmlFor="totalScore"
+                          className="font-medium w-1/3 text-left pr-4"
+                        >
                           Total Score
                         </label>
                         <input
@@ -277,7 +337,10 @@ const EditTournaments = () => {
                     )}
                     {/* Issue Count */}
                     <div className="flex items-center">
-                      <label htmlFor="issueCount" className="font-medium w-1/3 text-left pr-4">
+                      <label
+                        htmlFor="issueCount"
+                        className="font-medium w-1/3 text-left pr-4"
+                      >
                         Issue Count
                       </label>
                       <input
@@ -298,46 +361,54 @@ const EditTournaments = () => {
                   </div>
                   {/* Action buttons */}
                   <div className="w-full p-4 bg-white border-t flex justify-center space-x-4 rounded-b-2xl">
-                    <button
-                      type="button"
-                      className={`px-4 py-2 text-white rounded-lg shadow-md ${
-                        isEditing
-                          ? "bg-gray-400 cursor-not-allowed"
-                          : "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
-                      }`}
-                      onClick={() => setIsEditing((prev) => !prev)}
-                      disabled={isEditing}
-                    >
-                      Edit
-                    </button>
+                    {!createNew && (
+                      <button
+                        type="button"
+                        className={`px-4 py-2 text-white rounded-lg shadow-md ${
+                          isEditing
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
+                        }`}
+                        onClick={() => setIsEditing((prev) => !prev)}
+                        disabled={isEditing}
+                      >
+                        Edit
+                      </button>
+                    )}
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700"
+                      className={`px-4 py-2  text-white rounded-lg shadow-md ${
+                        !isEditing
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-green-600 hover:bg-green-700 hover:cursor-pointer"
+                      } `}
                     >
                       Save
                     </button>
-                    
-                    <button
-                      type="button"
-                      className={`px-3 py-2 text-white rounded-lg shadow-md ${
-                        currentTournament && currentTournament.id === null
-                          ? "bg-gray-400 cursor-not-allowed"
-                          : "bg-red-600 hover:bg-red-700"
-                      }`}
-                      onClick={deleteTournament}
-                      disabled={
-                        currentTournament && currentTournament.id === null
-                      }
-                    >
-                      <BsTrash3 />
-                    </button>
+
+                    {isEditing && !createNew && (
+                      <button
+                        type="button"
+                        className={`px-3 py-2 text-white rounded-lg shadow-md ${
+                          currentTournament && currentTournament.id === null
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "bg-red-600 hover:bg-red-700"
+                        }`}
+                        onClick={deleteTournament}
+                        disabled={
+                          currentTournament && currentTournament.id === null
+                        }
+                      >
+                        <BsTrash3 />
+                      </button>
+                    )}
                   </div>
                 </form>
               </div>
               {/* Image and Upload Button */}
               <div className="w-1/3 flex flex-col items-center space-y-4">
                 <img
-                  src={currentTournament.image || ball}
+                  src={image || ball}
                   alt="Tournament"
                   className="w-52 h-52 rounded-full object-cover"
                 />

@@ -25,7 +25,6 @@ const PlayersProvider = ({ children }) => {
       setPlayers(data)
     } catch (error) {
       console.error('Error fetching players:', error)
-      alert('Failed to fetch players. Please try again.')
     }
   }
 
