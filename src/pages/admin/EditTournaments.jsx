@@ -23,33 +23,33 @@ const EditTournaments = () => {
   useEffect(() => {
     const fetchTournaments = async () => {
       try {
-        // Mock data for temporary display
         const mockData = [
           {
             id: 1,
             name: "Tournament 1",
             description: "Description 1",
             image: ball,
+            totalScore: 100,
+            issueCount: 2,
           },
           {
             id: 2,
             name: "Tournament 2",
             description: "Description 2",
             image: ball,
+            totalScore: 150,
+            issueCount: 1,
           },
           {
             id: 3,
             name: "Tournament 3",
             description: "Description 3",
             image: ball,
+            totalScore: 200,
+            issueCount: 0,
           },
         ];
         setTournaments(mockData);
-
-        // Uncomment the following lines to fetch data from an API
-        // const response = await fetch("/api/tournaments"); // Replace with your API endpoint
-        // const data = await response.json();
-        // setTournaments(data);
       } catch (error) {
         console.error("Error fetching tournaments:", error);
       }
@@ -111,12 +111,8 @@ const EditTournaments = () => {
       });
       alert("Tournament details updated successfully!");
     }
-    !isEditing && setCurrentTournament(null);
-    console.log("Updated Data:", currentTournament);
-    // Add backend API call here to save the data
-
-    // Close the modal after saving
-    //closeModal();
+    setCurrentTournament(null);
+    closeModal();
   };
 
   // Start editing a tournament
@@ -154,6 +150,8 @@ const EditTournaments = () => {
                     name: "",
                     description: "",
                     image: "",
+                    totalScore: 0,
+                    issueCount: 0,
                   })
                 }
               >
@@ -179,17 +177,32 @@ const EditTournaments = () => {
       {currentTournament && (
         <Modal afterClosing={() => {}}>
           <ModalHead className="w-1/3">
-            <div className="w-full text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3">
+            <div className="w-full text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3 flex justify-between items-center">
               <span>{currentTournament.name || "New Tournament"}</span>
+              {isEditing ? (
+                <input
+                  id="totalScore"
+                  name="totalScore"
+                  type="number"
+                  value={currentTournament.totalScore}
+                  onChange={handleInputChange}
+                  className="text-sm bg-white text-sky-800 px-3 py-1 rounded-full shadow-md border focus:outline-blue-500"
+                  required
+                />
+              ) : (
+                <span className="text-sm bg-white text-sky-800 px-3 py-1 rounded-full shadow-md">
+                  Total Score: {currentTournament.totalScore}
+                </span>
+              )}
             </div>
           </ModalHead>
           <ModalBody>
-            <div className="p-2 flex flex-row items-center">
+            <div className="p-2 flex flex-row items-start">
               <div className="w-2/3">
                 <form onSubmit={updateDetails} className="space-y-6">
                   <div className="flex flex-col space-y-4">
-                    <div className="flex items-center ">
-                      <label htmlFor="name" className="font-medium">
+                    <div className="flex items-center">
+                      <label htmlFor="name" className="font-medium w-1/3 text-left pr-4">
                         Tournament Name
                       </label>
                       <input
@@ -198,7 +211,7 @@ const EditTournaments = () => {
                         type="text"
                         value={currentTournament.name}
                         onChange={handleInputChange}
-                        className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
+                        className={`w-2/3 p-2 rounded-3xl transition-all duration-200 ${
                           isEditing
                             ? "border focus:outline-blue-500"
                             : "bg-gray-100 cursor-default"
@@ -208,7 +221,7 @@ const EditTournaments = () => {
                       />
                     </div>
                     <div className="flex items-center">
-                      <label htmlFor="description" className="font-medium">
+                      <label htmlFor="description" className="font-medium w-1/3 text-left pr-4">
                         Tournament Description
                       </label>
                       <textarea
@@ -216,43 +229,53 @@ const EditTournaments = () => {
                         name="description"
                         value={currentTournament.description}
                         onChange={handleInputChange}
-                        className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 resize-none ${
+                        className={`w-2/3 p-2 rounded-3xl transition-all duration-200 resize-none ${
                           isEditing
                             ? "border focus:outline-blue-500"
                             : "bg-gray-100 cursor-default"
                         }`}
                         readOnly={!isEditing}
-                        style={{ height: "150px", width: "300px" }}
+                        style={{ height: "150px" }}
                         required
                       />
                     </div>
+                    {isEditing && (
+                      <div className="flex items-center">
+                        <label htmlFor="totalScore" className="font-medium w-1/3 text-left pr-4">
+                          Total Score
+                        </label>
+                        <input
+                          id="totalScore"
+                          name="totalScore"
+                          type="number"
+                          value={currentTournament.totalScore}
+                          onChange={handleInputChange}
+                          className="w-2/3 p-2 rounded-3xl border focus:outline-blue-500"
+                          required
+                        />
+                      </div>
+                    )}
                     <div className="flex items-center">
+                      <label htmlFor="issueCount" className="font-medium w-1/3 text-left pr-4">
+                        Issue Count
+                      </label>
                       <input
-                        id="image"
-                        name="image"
-                        type="file"
-                        accept="image/*"
-                        ref={fileInputRef}
-                        className={`mx-5 w-1/2 p-2 rounded-3xl transition-all duration-200 ${
+                        id="issueCount"
+                        name="issueCount"
+                        type="number"
+                        value={currentTournament.issueCount}
+                        onChange={handleInputChange}
+                        className={`w-2/3 p-2 rounded-3xl transition-all duration-200 ${
                           isEditing
                             ? "border focus:outline-blue-500"
                             : "bg-gray-100 cursor-default"
                         }`}
-                        disabled={!isEditing}
-                        style={{ display: "none" }}
-                        onChange={handleImageUpload}
+                        readOnly={!isEditing}
+                        required
                       />
-                      <button
-                        type="button"
-                        className="px-4 py-2 mt-7 bg-sky-700 text-white rounded-lg shadow-md w-fit cursor-pointer 
-                          hover:bg-sky-800 hover:shadow-xl hover:scale-105 transition-transform duration-200 absolute top-80 right-30"
-                        onClick={() => fileInputRef.current.click()}
-                      >
-                        Upload
-                      </button>
                     </div>
                   </div>
-                  <div className="w-full p-4 bg-white border-t flex justify-center space-x-4 rounded-b-2xl absolute bottom-0 left-0">
+                  <div className="w-full p-4 bg-white border-t flex justify-center space-x-4 rounded-b-2xl">
                     <button
                       type="button"
                       className={`px-4 py-2 text-white rounded-lg shadow-md ${
@@ -298,11 +321,32 @@ const EditTournaments = () => {
                   </div>
                 </form>
               </div>
-              <div className="w-1/3 flex justify-center">
+              <div className="w-1/3 flex flex-col items-center space-y-4">
                 <img
                   src={currentTournament.image || ball}
                   alt="Tournament"
                   className="w-52 h-52 rounded-full object-cover"
+                />
+                <button
+                  type="button"
+                  className={`px-4 py-2 text-white rounded-lg shadow-md ${
+                    isEditing
+                      ? "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
+                      : "bg-gray-400 cursor-not-allowed"
+                  }`}
+                  onClick={() => fileInputRef.current.click()}
+                  disabled={!isEditing}
+                >
+                  Upload
+                </button>
+                <input
+                  id="image"
+                  name="image"
+                  type="file"
+                  accept="image/*"
+                  ref={fileInputRef}
+                  className="hidden"
+                  onChange={handleImageUpload}
                 />
               </div>
             </div>

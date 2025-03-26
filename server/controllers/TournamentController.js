@@ -1,22 +1,23 @@
 const Tournament = require("../models/tournament");
-const {uploadOnCloudinary} = require ("../utils/cloudinary")
+const { uploadOnCloudinary } = require("../utils/cloudinary");
 const TournamentModel = require("../models/tournament");
 const { SuccessResponse, ErrorResponse } = require("../utils/response");
+const { default: mongoose } = require("mongoose");
 
 exports.createTournament = async (req, res) => {
   try {
     const { title, description, totalScore, issueCount } = req.body;
 
     const logoLocalPath = req.file?.path;
-    
+
     if (!logoLocalPath) {
       throw new Error("Logo is required");
     }
-  
+
     const logo = await uploadOnCloudinary(logoLocalPath);
-    
+
     if (!logo) {
-      throw new Error(400, "Unable to fetch logo from cloudinary")
+      throw new Error(400, "Unable to fetch logo from cloudinary");
     }
 
     const tournament = await Tournament.create({
@@ -24,13 +25,13 @@ exports.createTournament = async (req, res) => {
       description,
       totalScore,
       issueCount,
-      logo : logo.url,
+      logo: logo.url,
     });
 
     SuccessResponse(res, 201, "Tournament Created Successfully.", tournament);
   } catch (error) {
     console.log("Error: ", error);
-    ErrorResponse(res, 500, "Internal Server Error!", error);
+    return ErrorResponse(res, 500, "Internal Server Error!", error);
   }
 };
 
@@ -42,6 +43,7 @@ exports.updateTournament = async (req, res) => {
 
     if (!tournament) {
       console.log("No Tournament Data found!");
+      return ErrorResponse(
       return ErrorResponse(
         res,
         404,
@@ -87,6 +89,7 @@ exports.deleteTournament = async (req, res) => {
     if (result.deletedCount === 0) {
       console.log("No Tournament Found!");
       return ErrorResponse(
+      return ErrorResponse(
         res,
         404,
         "No Tournament Data Found!",
@@ -94,11 +97,44 @@ exports.deleteTournament = async (req, res) => {
       );
     }
 
-    return SuccessResponse(
+    res.status(200).json({
+      success: true,
+      message: `Tournament Deleted: Affected ${deleted.deletedCount} tournament`,
+    });
+    SuccessResponse(
       res,
-      200,
-      `Tournament Deleted: ${result.deletedCount} record(s) affected.`,
-      result
+      201,
+      `Tournament Deleted: Affected ${deleted} tournament.`,
+      deleted
+    );
+  } catch (error) {
+    console.log("Error: ", error);
+    ErrorResponse(res, 500, "Internal Server Error", error);
+  }
+};
+
+exports.deleteManyTournament = async (req, res, next) => {
+  try {
+    const tournamentIds = await req.body.ids;
+
+    if (!tournamentIds) {
+      console.log("No Tournament Id recieved!");
+      return ErrorResponse(res, 400, "No Tournament Id Recieved!");
+    }
+    const deleted = await TournamentModel.deleteMany({
+      _id: { $in: tournamentIds },
+    });
+
+    if (!deleted.deletedCount) {
+      console.log("No Tournament with given Id");
+      return ErrorResponse(res, 400, "No Tournament with given Id!");
+    }
+
+    SuccessResponse(
+      res,
+      201,
+      `Tournament Deleted: Affected ${deleted.deletedCount} tournament.`,
+      deleted
     );
   } catch (error) {
     console.error("Error:", error);
@@ -113,12 +149,7 @@ exports.getAllTournament = async (req, res) => {
     //No data found!
     if (!tournaments) {
       console.log("No Tournament Data found!");
-      ErrorResponse(
-        res,
-        404,
-        "No Tournament Data Found!",
-        new Error("No Data in Tournament Collection")
-      );
+      return ErrorResponse(res, 404, "No Tournament Data Found!");
     }
 
     //If data is found
@@ -141,11 +172,10 @@ exports.getOneTournament = async (req, res) => {
     //No data found!
     if (!tournament) {
       console.log("No Tournament Data found!");
-      ErrorResponse(
+      return ErrorResponse(
         res,
         404,
-        "No Tournament Data Found!",
-        new Error("Could not find Tournament with the given id!")
+        `Tournament with id: ${req.params.id} Not Found `
       );
     }
 

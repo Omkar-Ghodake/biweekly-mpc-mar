@@ -1,0 +1,56 @@
+/* to handle the landing page  */
+.entry_content{
+    font-weight: bold;
+    animation: entry 2.1s ease-in;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.entry_content h1{
+    font-size: 10vw;
+}
+
+.entry_content h2{
+    font-size: 4vw;
+}
+
+.entry_content img{
+  width: 30vw;
+  height: auto;
+}
+
+/* to handle the exit page  */
+.exit_content{
+    font-weight: bold;
+    animation: exit 2.1s ease-out forwards;
+}
+
+.exit_content h1{
+    font-size: 10vw;
+}
+
+
+
+
+
+
+
+@keyframes entry {
+    from {
+        opacity: 0;
+      }
+      to {
+        opacity: 0.8;
+      }
+}
+
+@keyframes exit {
+    from {
+        opacity: 0.8;
+      }
+      to {
+        opacity: 0;
+      }
+}
+
