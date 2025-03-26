@@ -5,9 +5,12 @@ import { ModalContext } from "../../context/ModalProvider";
 import ModalHead from "../../layouts/Modal/ModalHead";
 import ModalBody from "../../layouts/Modal/ModalBody";
 import Modal from "../../layouts/Modal/Modal";
-import background from "../../assets/background.jpg";
+import background from "../../assets/background5.jpg";
 import { IoMdAdd } from "react-icons/io";
+import { BsTrash3 } from "react-icons/bs";
+
 import ball from "../../assets/ball.jpg";
+import Button from "../../components/Button";
 
 const EditTournaments = () => {
   const { openModal, closeModal } = useContext(ModalContext);
@@ -291,9 +294,19 @@ const EditTournaments = () => {
                     >
                       Save
                     </button>
+                    <Button variant='danger'  size='sm' className={`shadow-md ${
+                        currentTournament && currentTournament.id === null
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-red-600 hover:bg-red-700"
+                      }`} onClick={deleteTournament}
+                      disabled={
+                        currentTournament && currentTournament.id === null
+                      }>
+                    <BsTrash3 />
+                    </Button>
                     <button
                       type="button"
-                      className={`px-4 py-2 text-white rounded-lg shadow-md ${
+                      className={`px-3 py-2 text-white rounded-lg shadow-md ${
                         currentTournament && currentTournament.id === null
                           ? "bg-gray-400 cursor-not-allowed"
                           : "bg-red-600 hover:bg-red-700"
@@ -303,7 +316,7 @@ const EditTournaments = () => {
                         currentTournament && currentTournament.id === null
                       }
                     >
-                      Delete
+                      <BsTrash3 />
                     </button>
                   </div>
                 </form>
