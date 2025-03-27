@@ -9,6 +9,7 @@ import { IoMdHome } from 'react-icons/io'
 import { FiActivity } from 'react-icons/fi'
 import { MdSportsScore } from 'react-icons/md'
 import { IoExitOutline } from 'react-icons/io5'
+import Button from '../components/Button'
 
 const Navbar = () => {
   const { pathname } = useLocation()
@@ -19,10 +20,10 @@ const Navbar = () => {
   useEffect(() => {}, [logout])
 
   return (
-    <div className='h-fit w-fit fixed left-6 bottom-6 cursor-pointer overflow-hidden'>
+    <div className='h-fit w-fit fixed left-6 bottom-6 cursor-pointer overflow-hidden z-40'>
       <div className='flex flex-col h-[16rem] w-[16rem]'>
         <motion.div
-          initial={{ y: '2.5rem' }}
+          initial={{ y: '16rem' }}
           animate={{ y: isNavbarOpen ? '2.5rem' : '16rem' }}
           // transition={{ bounce: false }}
           className='flex flex-col space-y-2 z-40 w-fit'
@@ -60,7 +61,7 @@ const Navbar = () => {
         />
 
         <motion.div
-          initial={{ x: '3.5rem' }}
+          initial={{ x: '-10.5rem' }}
           animate={{ x: isNavbarOpen ? '3.5rem' : '-10.5rem' }}
           className='flex space-x-2 z-40 absolute left-0 bottom-0'
         >
@@ -87,6 +88,7 @@ const Navbar = () => {
           </Link>
         </motion.div>
       </div>
+
       {/* <ul className='navlist list-disc'>
         <li className='navitem hover:underline text-blue-700'>
           <Link to='/' className={`navlink ${pathname === '/' && 'underline'}`}>

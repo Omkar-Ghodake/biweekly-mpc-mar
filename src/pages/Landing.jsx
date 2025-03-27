@@ -5,6 +5,8 @@ import ModalHead from '../layouts/Modal/ModalHead'
 import ModalBody from '../layouts/Modal/ModalBody'
 import '../Styles/Landing_Exit.css'
 import { useScroll } from '@react-three/drei'
+import Button from '../components/Button'
+import { Link } from 'react-router'
 
 const Landing = () => {
   const { openModal } = useContext(ModalContext)
@@ -68,6 +70,15 @@ const Landing = () => {
             <h3>Enter Stadium</h3>
             </div> */}
             {/* <h2>Bi-weekly</h2> */}
+
+            <div className='absolute right-10 bottom-[20vh] flex flex-col space-y-5'>
+              <Link to={'/team'}>
+                <Button>I'm a Player</Button>
+              </Link>
+              <Link to={'/login'}>
+                <Button variant='secondary'>I'm a Coach</Button>
+              </Link>
+            </div>
           </div>
         </div>
       )}
