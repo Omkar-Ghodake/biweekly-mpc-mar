@@ -1,11 +1,12 @@
 import ForgotPassword from '../../components/ForgotPassword'
 import { ModalContext } from '../../context/ModalProvider'
 import Modal from '../../layouts/Modal/Modal'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
 import Button from '../../components/Button'
 import { CoachContext } from '../../context/CoachProvider'
 import { ToastContext } from '../../context/ToastProvider'
+import { useNavigate } from 'react-router'
 
 const Login = () => {
   const [domain, setDomain] = useState('')
@@ -17,6 +18,9 @@ const Login = () => {
   const { openModal, closeModal } = useContext(ModalContext)
   const { login } = useContext(CoachContext)
   const { showToast } = useContext(ToastContext)
+  const { isCoachAuthenticated } = useContext(CoachContext)
+
+  const navigate = useNavigate()
 
   const handleEmailChange = (e) => {
     setDomain(e.target.value)
@@ -64,13 +68,8 @@ const Login = () => {
 
       const json = await response.json()
 
-      // {message: '', data: []}
-
-      // if (domain.length <= 8) {
-      //   setError('Enter valid domain')
-      //   return
-      // }
       if (response.ok) {
+        showToast(`Welcome coach ${json.data.coach.domain_name}`)
         login(json.data.token, json.data.coach)
       } else {
         setError(json.message || 'Invalid domain or password')
@@ -82,6 +81,12 @@ const Login = () => {
       setLoading(false)
     }
   }
+
+  useEffect(() => {
+    if (isCoachAuthenticated) {
+      navigate('/admin/dashboard')
+    }
+  }, [isCoachAuthenticated, navigate])
 
   return (
     <div className="h-screen w-full overflow-auto bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col justify-center items-center py-10 px-6">

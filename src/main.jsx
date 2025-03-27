@@ -22,6 +22,10 @@ import TournamentsProvider from './context/TournamentsProvider.jsx'
 import PlayersProvider from './context/PlayersProvider.jsx'
 import ToastNotification from './layouts/ToastNotification.jsx'
 import ToastProvider from './context/ToastProvider.jsx'
+import EditCommon from './pages/admin/EditCommon.jsx'
+import Profile from './pages/admin/Profile.jsx'
+import Loader from './layouts/Loader.jsx'
+import LoadingProvider from './context/LoadingProvider.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -31,38 +35,46 @@ createRoot(document.getElementById('root')).render(
           <TournamentsProvider>
             <CoachProvider>
               <ToastProvider>
-                <Routes>
-                  <Route path='/' element={<App />} />
-                  <Route path='/background' element={<StadiumBack />} />
-                  <Route path='/landing' element={<Landing />} />
-                  <Route path='/team' element={<Team />} />
-                  <Route path='/tournaments' element={<Tournaments />} />
-                  <Route
-                    path='/scores'
-                    element={
-                      <Suspense fallback={null}>
-                        <Scores />
-                      </Suspense>
-                    }
-                  />
-                  <Route path='/login' element={<Login />} />
+                <LoadingProvider>
+                  <Routes>
+                    <Route path='/' element={<App />} />
+                    {/* <Route path='/background' element={<StadiumBack />} /> */}
+                    <Route path='/landing' element={<Landing />} />
+                    <Route path='/team' element={<Team />} />
+                    <Route path='/tournaments' element={<Tournaments />} />
+                    <Route
+                      path='/scores'
+                      element={
+                        <Suspense fallback={null}>
+                          <Scores />
+                        </Suspense>
+                      }
+                    />
+                    <Route path='/login' element={<Login />} />
 
-                  <Route path='/admin/dashboard' element={<Dashboard />} />
-                  <Route
-                    path='/admin/dashboard/editTournaments'
-                    element={<EditTournaments />}
-                  />
-                  <Route
-                    path='/admin/dashboard/editTeam'
-                    element={<EditTeam />}
-                  />
+                    <Route path='/admin/dashboard' element={<Dashboard />} />
+                    <Route
+                      path='/admin/dashboard/editTournaments'
+                      element={<EditTournaments />}
+                    />
+                    <Route
+                      path='/admin/dashboard/editPlayers'
+                      element={<EditTeam />}
+                    />
+                    <Route
+                      path='/admin/dashboard/editTeam'
+                      element={<EditCommon />}
+                    />
+                    <Route path='/admin/profile' element={<Profile />} />
 
-                  <Route path='/exit' element={<Exit />} />
-                  <Route path='/temp' element={<Temp />} />
-                </Routes>
+                    <Route path='/exit' element={<Exit />} />
+                    <Route path='/temp' element={<Temp />} />
+                  </Routes>
 
-                <ChatBot />
-                <Navbar />
+                  <Loader />
+                  <ChatBot />
+                  <Navbar />
+                </LoadingProvider>
                 <ToastNotification />
               </ToastProvider>
             </CoachProvider>

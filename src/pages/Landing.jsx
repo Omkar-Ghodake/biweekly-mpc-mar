@@ -5,7 +5,6 @@ import ModalHead from '../layouts/Modal/ModalHead'
 import ModalBody from '../layouts/Modal/ModalBody'
 import '../Styles/Landing_Exit.css'
 import { useScroll } from '@react-three/drei'
-import ballButton from '../assets/Landingpage/BallButton.gif'
 
 const Landing = () => {
   const { openModal } = useContext(ModalContext)

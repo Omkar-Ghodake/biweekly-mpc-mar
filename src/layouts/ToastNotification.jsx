@@ -11,7 +11,7 @@ const ToastNotification = () => {
       initial={{ x: '150%' }}
       animate={{ x: toastState?.display ? 0 : '150%' }}
       // transition={{ duration: 1, ease: 'easeInOut' }}
-      className='fixed top-5 right-0 bg-white w-fit h-10 shadow-inner shadow-gray-500/80 flex items-center pl-5'
+      className='z-50 fixed top-5 right-0 bg-white w-fit h-10 shadow-inner shadow-gray-500/80 flex items-center pl-5'
     >
       <img
         src={ball}
