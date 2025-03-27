@@ -11,6 +11,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import img from "../../glb/Blank Profile pic.png";
 import { BsTrash3 } from "react-icons/bs";
 import axios from "axios";
+import { ToastContext } from "../../context/ToastProvider";
 
 const EditTeam = () => {
   const [players, setPlayers] = useState([]);
@@ -19,6 +20,7 @@ const EditTeam = () => {
   const [playerCreate, setPlayerCreate] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const formRef = useRef(null);
+  const toast = useContext(ToastContext);
 
   const [image, setImage] = useState(img || ""); // Default to provided image
   const [formData, setFormData] = useState({
@@ -56,7 +58,7 @@ const EditTeam = () => {
 
       console.log("Updated Players State:", fetchedPlayers);
     } catch (error) {
-      alert(`${error.response.data.message}`);
+      toast.showToast(`${error.response.data.message}`,"error");
     }
   };
 
@@ -159,7 +161,7 @@ const EditTeam = () => {
       console.log(response);
       if (response.status) {
         closeModal();
-        alert("Player added successfully!");
+        toast.showToast("Player added successfully!");
         setImage(null);
         setPlayerCreate(false);
         setFormData({
@@ -182,11 +184,11 @@ const EditTeam = () => {
           total_score: 0,
         });
       } else {
-        alert(`Error: ${response.statusText}`);
+        toast.showToast(`Error: ${response.statusText}`,"error");
       }
     } catch (error) {
       console.error("Error adding player:", error);
-      alert(`${error.response.data.message}`);
+      toast.showToast(`${error.response.data.message}`,"error");
     } finally {
       fetchPlayers();
     }
@@ -227,7 +229,7 @@ const EditTeam = () => {
 
       console.log(response);
       if (response.status === 200) {
-        alert("Player updated successfully!");
+        toast.showToast("Player updated successfully!");
         closeModal();
         setImage(null);
         setPlayerEdit(false);
@@ -252,10 +254,10 @@ const EditTeam = () => {
           total_score: 0,
         });
       } else {
-        alert(`Error: ${response.statusText}`);
+        toast.showToast(`Error: ${response.statusText}`,"error");
       }
     } catch (error) {
-      alert(`${error.response.data.message}`);
+      toast.showToast(`${error.response.data.message}`,"error");
     } finally {
       fetchPlayers();
     }
@@ -274,16 +276,17 @@ const EditTeam = () => {
         }
       );
       if (response.ok) {
-        alert("Player deleted successfully!");
+        toast.showToast("Player deleted successfully!");
       } else {
-        alert(`Error: ${response.statusText}`);
+        toast.showToast(`Error: ${response.statusText}`,"error");
       }
     } catch (error) {
       console.error("Error deleting player:", error);
-      alert(`${error.response.data.message}`);
+      toast.showToast(`${error.response.data.message}`,error);
     } finally {
       closeModal();
       setPlayerEdit(false);
+      setIsEditing(false)
       setFormData({
         courses: [],
         domain_name: "",
