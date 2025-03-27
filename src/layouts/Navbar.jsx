@@ -5,7 +5,7 @@ const Navbar = () => {
   const { pathname } = useLocation()
 
   return (
-    <div className='absolute right-0 bottom-0 '>
+    <div className='absolute left-6 bottom-6'>
       <ul className='navlist list-disc'>
         <li className='navitem hover:underline text-blue-700'>
           <Link to='/' className={`navlink ${pathname === '/' && 'underline'}`}>
@@ -21,14 +21,14 @@ const Navbar = () => {
             Landing
           </Link>
         </li>
-        <li className='navitem hover:underline text-blue-700'>
+        {/* <li className='navitem hover:underline text-blue-700'>
           <Link
             to='/background'
             className={`navlink ${pathname === '/background' && 'underline'}`}
           >
             StadiumBackground
           </Link>
-        </li>
+        </li> */}
         <li className='navitem hover:underline text-blue-700'>
           <Link
             to='/team'

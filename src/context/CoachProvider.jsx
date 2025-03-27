@@ -1,13 +1,38 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 
 const CoachContext = createContext()
 
 const CoachProvider = ({ children }) => {
   const [isCoachAuthenticated, setIsCoachAuthenticated] = useState(false)
+  const [coach, setCoach] = useState(undefined)
+
+  const login = (token, coachData) => {
+    localStorage.setItem('token', token)
+    if (coachData?.domain_name) {
+      setIsCoachAuthenticated(true)
+    }
+
+    setCoach(coachData)
+  }
+
+  const logout = () => {
+    setIsCoachAuthenticated(false)
+    setCoach(undefined)
+    localStorage.removeItem('token')
+  }
+
+  useEffect(() => {
+    login()
+  }, [])
 
   return (
     <CoachContext.Provider
-      value={{ isCoachAuthenticated, setIsCoachAuthenticated }}
+      value={{
+        coach,
+        isCoachAuthenticated,
+        login,
+        logout,
+      }}
     >
       {children}
     </CoachContext.Provider>

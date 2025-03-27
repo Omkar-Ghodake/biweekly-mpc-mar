@@ -3,12 +3,7 @@ import { motion } from "framer-motion";
 
 const Pointlist = ({ item, index }) => {
   const employeeId = item.emp_id.toString();
-  const totalIssues =
-    item.severity_count.blocker +
-    item.severity_count.critical +
-    item.severity_count.major +
-    item.severity_count.normal +
-    item.severity_count.minor;
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -23,7 +18,7 @@ const Pointlist = ({ item, index }) => {
         {item.domain_name}
       </span>
       <span className="p-1 col-span-1  border-r-1 border-gray-400">
-        {totalIssues}
+        {item.total_issues}
       </span>
       <span className="p-1 col-span-1">{item.total_score}</span>
     </motion.div>

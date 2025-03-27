@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express')
 const {
   createTournament,
   getOneTournament,
@@ -6,15 +6,15 @@ const {
   updateTournament,
   deleteTournament,
   deleteManyTournament,
-} = require("../controllers/TournamentController.js");
-const router = express.Router();
-const upload = require("../middleware/multer.middleware.js");
+} = require('../controllers/TournamentController.js')
+const router = express.Router()
+const upload = require('../middleware/multer.middleware.js')
 
-router.route("/addTournament").post(upload.single("logo"), createTournament);
-router.route("/getTournament/:id").get(getOneTournament);
-router.route("/getAllTournament").get(getAllTournament);
-router.route("/updateTournament/:id").patch(updateTournament);
-router.route("/deleteTournament/:id").delete(deleteTournament);
-router.route("/deleteManyTournament/").delete(deleteManyTournament);
+router.route('/add-tournament').post(upload.single('logo'), createTournament)
+router.route('/get-tournament/:id').get(getOneTournament)
+router.route('/get-all-tournaments').get(getAllTournament)
+router.route('/update-tournament/:id').patch(upload.single('logo'), updateTournament)
+router.route('/delete-tournament/:id').delete(deleteTournament)
+router.route('/delete-many-tournaments').delete(deleteManyTournament)
 
-module.exports = router;
+module.exports = router

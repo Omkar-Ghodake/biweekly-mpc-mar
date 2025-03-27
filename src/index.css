@@ -1,5 +1,5 @@
-@import 'tailwindcss';
 @import url('https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&display=swap');
+@import 'tailwindcss';
 
 @theme {
   --color-primary: 0, 132, 209;
@@ -82,4 +82,17 @@
 .btn-lg {
   padding: 16px 48px;
   font-size: 1.2rem;
+}
+
+/* toast notification animation */
+@keyframes spin-reverse {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(-360deg);
+  }
+}
+.animate-spin-reverse {
+  animation: spin-reverse 1s linear forwards;
 }

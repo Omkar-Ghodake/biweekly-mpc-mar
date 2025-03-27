@@ -1,78 +1,16 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Button from '../components/Button'
+import { TournamentsContext } from '../context/TournamentsProvider'
+import { PlayersContext } from '../context/PlayersProvider'
 
 const Temp = () => {
+  const { players } = useContext(PlayersContext)
+
   return (
-    <div className='h-screen w-screen flex flex-col space-y-20 items-center justify-center'>
-      <div className='flex space-x-10'>
-        {/* <Button>Submit</Button> */}
-        <div className='flex flex-col items-center justify-center space-y-5'>
-          <Button size='sm'>Submit</Button>
-          <Button>Submit</Button>
-          <Button size='lg'>Submit</Button>
-        </div>
-
-        <div className='flex flex-col items-center justify-center space-y-5'>
-          <Button variant='secondary' size='sm'>
-            Submit
-          </Button>
-          <Button variant='secondary' size='md'>
-            Submit
-          </Button>
-          <Button variant='secondary' size='lg'>
-            Submit
-          </Button>
-        </div>
-
-        <div className='flex flex-col items-center justify-center space-y-5'>
-          <Button variant='danger' size='sm'>
-            Submit
-          </Button>
-          <Button variant='danger' size='md'>
-            Submit
-          </Button>
-          <Button variant='danger' size='lg'>
-            Submit
-          </Button>
-        </div>
-      </div>
-
-      <div className='flex space-x-10'>
-        {/* <Button>Submit</Button> */}
-        <div className='flex flex-col items-center justify-center space-y-5'>
-          <Button type='outline' size='sm'>
-            Submit
-          </Button>
-          <Button type='outline'>Submit</Button>
-          <Button type='outline' size='lg'>
-            Submit
-          </Button>
-        </div>
-
-        <div className='flex flex-col items-center justify-center space-y-5'>
-          <Button variant='secondary' type='outline' size='sm'>
-            Submit
-          </Button>
-          <Button variant='secondary' type='outline' size='md'>
-            Submit
-          </Button>
-          <Button variant='secondary' type='outline' size='lg'>
-            Submit
-          </Button>
-        </div>
-
-        <div className='flex flex-col items-center justify-center space-y-5'>
-          <Button variant='danger' type='outline' size='sm'>
-            Submit
-          </Button>
-          <Button variant='danger' type='outline' size='md'>
-            Submit
-          </Button>
-          <Button variant='danger' type='outline' size='lg'>
-            Submit
-          </Button>
-        </div>
-      </div>
+    <div className='h-screen w-screen flex space-x-5  items-center justify-center'>
+      {players?.map((elem) => (
+        <div>{elem?.domain_name}</div>
+      ))}
     </div>
   )
 }
