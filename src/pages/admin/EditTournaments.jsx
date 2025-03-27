@@ -11,35 +11,35 @@ import { BsTrash3 } from "react-icons/bs";
 import Button from "../../components/Button";
 import { TournamentsContext } from "../../context/TournamentsProvider";
 import axios from "axios";
+import ball from "../../assets/ball.jpg";
 
 const EditTournaments = () => {
   const [tournaments, setTournaments] = useState([]);
   const { openModal, closeModal } = useContext(ModalContext);
   const tournamentsContext = useContext(TournamentsContext);
   const tournamentsArray = tournamentsContext.tournaments;
-  const [image, setImage] = useState(ball || ""); // Default to provided image
-
-  // State to track if the form is in editing mode
+  const [image, setImage] = useState(ball); // Default to the `ball` image
   const [isEditing, setIsEditing] = useState(false);
-  const [currentTournament, setCurrentTournament] = useState(null);
+  const [currentTournament, setCurrentTournament] = useState({
+    id: null,
+    title: "",
+    description: "",
+    totalScore: 0,
+    issueCount: 0,
+    logo: "",
+  });
   const [createNew, setCreateNew] = useState(false);
-
-  // Reference for the file input field
   const fileInputRef = useRef(null);
 
-  // Fetch tournaments from the back-end
   useEffect(() => {
     setTournaments(tournamentsArray);
   }, [tournamentsArray]);
 
-  console.log("tournaments", tournaments);
-  console.log("currentTournament", currentTournament);
-
-  // Handle input changes for the tournament form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCurrentTournament({ ...currentTournament, [name]: value });
   };
+
   const convertBase64ToFile = (base64String, fileName) => {
     let arr = base64String.split(",");
     let mime = arr[0].match(/:(.*?);/)[1]; // Extract MIME type
@@ -53,19 +53,20 @@ const EditTournaments = () => {
 
     const file = new File([u8arr], fileName, { type: mime });
 
-    setFormData((prevData) => ({
+    // Update the current tournament with the file
+    setCurrentTournament((prevData) => ({
       ...prevData,
-      image: file, // ✅ Store file in formData
+      logo: file, // ✅ Store the file in the current tournament
     }));
   };
-  // Handle image upload for the tournament
+
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImage(reader.result); // ✅ Store Base64 for preview
-        convertBase64ToFile(reader.result, file.name); // ✅ Convert and set in formData
+        convertBase64ToFile(reader.result, file.name); // ✅ Convert and set in currentTournament
       };
       reader.readAsDataURL(file);
 
@@ -78,10 +79,20 @@ const EditTournaments = () => {
 
   const addTournament = async (e) => {
     e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("title", currentTournament.title);
+    formData.append("description", currentTournament.description);
+    formData.append("totalScore", currentTournament.totalScore);
+    formData.append("issueCount", currentTournament.issueCount);
+    if (currentTournament.logo instanceof File) {
+      formData.append("logo", currentTournament.logo);
+    }
+
     try {
       const response = await axios.post(
         "http://localhost:5500/api/v1/tournaments/add-tournament",
-        currentTournament,
+        formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -95,22 +106,55 @@ const EditTournaments = () => {
       }
 
       alert("Tournament added successfully!");
-
-      // Refresh tournament list
       tournamentsContext.fetchTournaments();
-
-      // Close modal and reset state
       closeModal();
       setCurrentTournament(null);
       setCreateNew(false);
     } catch (error) {
+      console.error("Error adding tournament:", error.response?.data || error);
       alert(
         error.response?.data?.message || "An error occurred. Please try again."
       );
     }
   };
 
-  // Handle tournament deletion
+  const updateDetails = async (e) => {
+    e.preventDefault();
+
+    const id = currentTournament._id;
+    const formData = new FormData();
+    formData.append("title", currentTournament.title);
+    formData.append("description", currentTournament.description);
+    formData.append("totalScore", currentTournament.totalScore);
+    formData.append("issueCount", currentTournament.issueCount);
+    if (currentTournament.logo instanceof File) {
+      formData.append("logo", currentTournament.logo);
+    }
+
+    try {
+      const response = await axios.patch(
+        `http://localhost:5500/api/v1/tournaments/update-tournament/${id}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        alert("Tournament updated successfully");
+        setIsEditing(false);
+        tournamentsContext.fetchTournaments();
+      }
+    } catch (error) {
+      console.error("Error updating tournament:", error.response?.data || error);
+      alert(
+        error.response?.data?.message || "An error occurred. Please try again."
+      );
+    }
+  };
+
   const deleteTournament = async () => {
     const id = currentTournament._id;
     try {
@@ -121,7 +165,10 @@ const EditTournaments = () => {
         alert("Tournament deleted successfully");
       }
     } catch (error) {
-      alert(error.response.message);
+      console.error("Error deleting tournament:", error.response?.data || error);
+      alert(
+        error.response?.data?.message || "An error occurred. Please try again."
+      );
     }
     setCurrentTournament(null);
     closeModal();
@@ -129,35 +176,6 @@ const EditTournaments = () => {
     tournamentsContext.fetchTournaments();
   };
 
-  // Handle form submission to add or update tournament details
-  const updateDetails = async (e) => {
-    e.preventDefault();
-    console.log("Updating");
-    
-    const id = currentTournament._id;
-    try {
-      const response = await axios.patch(
-        `http://localhost:5500/api/v1/tournaments/update-tournament/${id}`,
-        currentTournament,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log(response.data);
-      
-      if (response.status === 200) {
-        alert("Tournament updated successfully");
-        setIsEditing(false);
-        tournamentsContext.fetchTournaments();
-      }
-    } catch (error) {
-      alert(error.response.message);
-    }
-  };
-
-  // Start editing a tournament
   const startEditing = (tournament) => {
     setCurrentTournament(tournament);
     openModal();
@@ -166,7 +184,7 @@ const EditTournaments = () => {
   const startCreating = (e) => {
     e.preventDefault();
     setCurrentTournament({
-      id: null, // New tournament, so no ID yet
+      id: null,
       title: "",
       description: "",
       totalScore: 0,
@@ -174,9 +192,9 @@ const EditTournaments = () => {
       logo: "",
     });
 
-    setIsEditing(true); // Enable form fields
-    setCreateNew(true); // Mark as new entry
-    openModal(); // Open the modal
+    setIsEditing(true);
+    setCreateNew(true);
+    openModal();
   };
 
   return (
