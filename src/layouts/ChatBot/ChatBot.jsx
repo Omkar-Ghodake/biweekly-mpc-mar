@@ -42,6 +42,7 @@ const ChatBot = () => {
     - format the response using line breaks and in paragraph form 
     - Extend the response by taking reference of query to make it humanly if required 
     - consider synonyms of the words also while parsing the query 
+    - don't add that whether a team member is lead or not in the response
     `;
 
     // const final_prompt = `print the data identically : ${ChatBotData}`

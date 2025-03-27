@@ -10,7 +10,7 @@ export const ChatBotData =
      "Home Town": "Mumbai",
      "Release interest": "UI\/UX",
      "Current Team": "MPC",
-     "Designation": "Team Lead"
+     "isTeamLead": "True"
     },
     {
      "Domain Name": "Anushree1.Shukla",
@@ -21,7 +21,7 @@ export const ChatBotData =
      "Home Town": "Jabalpur",
      "Release interest": "Data Analytics",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Avinash10.Gupta",
@@ -32,7 +32,7 @@ export const ChatBotData =
      "Home Town": "Nanded",
      "Release interest": "Backend Development",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Bhavya.Momaya",
@@ -43,7 +43,7 @@ export const ChatBotData =
      "Home Town": "Mumbai",
      "Release interest": "Web Development",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Devraj3.Singh",
@@ -55,7 +55,7 @@ export const ChatBotData =
      "Home Town": "Kanpur Nagar",
      "Release interest": "Backend Development",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Dhiraj.Kunder",
@@ -66,7 +66,7 @@ export const ChatBotData =
      "Home Town": "Mumbai",
      "Release interest": "Web Development",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Jaypal.Koli",
@@ -78,7 +78,7 @@ export const ChatBotData =
      "Home Town": "Malpur",
      "Release interest": "Web Development",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Manoj.Inbarajan",
@@ -90,7 +90,7 @@ export const ChatBotData =
      "Home Town": "Tirunelveli",
      "Release interest": "Product Management",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Mridul.Upadhya",
@@ -102,7 +102,7 @@ export const ChatBotData =
      "Home Town": "Udhampur",
      "Release interest": "Product Management",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Nikita.Sonawane",
@@ -114,7 +114,7 @@ export const ChatBotData =
      "Home Town": "Chopda",
      "Release interest": "Backend Development",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Nikita.Suhane",
@@ -126,7 +126,7 @@ export const ChatBotData =
      "Home Town": "Jabalpur",
      "Release interest": "Cybersecurity",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Omkar.Ghodake",
@@ -138,7 +138,7 @@ export const ChatBotData =
      "Home Town": "Ahilyanagar",
      "Release interest": "Development",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Rishabh.Kanaujiya",
@@ -150,7 +150,7 @@ export const ChatBotData =
      "Home Town": "Kanpur Nagar",
      "Release interest": "Full Stack Development",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Sakshi1.Rai",
@@ -162,7 +162,7 @@ export const ChatBotData =
      "Home Town": "Gorakhpur",
      "Release interest": "Data Science",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Sanjeev2.Prajapati",
@@ -174,7 +174,7 @@ export const ChatBotData =
      "Home Town": "Rudrapur Uttarakhand",
      "Release interest": "Data Science",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Shubham2.Joshi",
@@ -186,7 +186,7 @@ export const ChatBotData =
      "Home Town": "Ch. Sambhajinagar",
      "Release interest": "Full Stack Development",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Umakant.Patil",
@@ -198,7 +198,7 @@ export const ChatBotData =
      "Home Town": "Shirpur",
      "Release interest": "Full Stack Development",
      "Current Team": "MPC",
-     "Designation": "Team member"
+     "isTeamLead": "False"
     },
     {
      "Domain Name": "Vishnu1.Menon",
@@ -209,7 +209,7 @@ export const ChatBotData =
      "Home Town": "Thrissur",
      "Release interest": "Backend Development",
      "Current Team": "MPC",
-     "Designation": "Team Lead"
+     "isTeamLead": "True"
     }
    ]
 
