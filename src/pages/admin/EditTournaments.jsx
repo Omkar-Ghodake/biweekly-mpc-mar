@@ -9,17 +9,19 @@ import background from "../../assets/background5.jpg";
 import { IoMdAdd } from "react-icons/io";
 import { BsTrash3 } from "react-icons/bs";
 
-import ball from "../../assets/ball.jpg";
+import logo_default from "../../assets/logo_default.png";
 import Button from "../../components/Button";
 import { TournamentsContext } from "../../context/TournamentsProvider";
 import axios from "axios";
+import { ToastContext } from "../../context/ToastProvider";
 
 const EditTournaments = () => {
   const [tournaments, setTournaments] = useState([]);
   const { openModal, closeModal } = useContext(ModalContext);
   const tournamentsContext = useContext(TournamentsContext);
+  const toast = useContext(ToastContext);
   const tournamentsArray = tournamentsContext.tournaments;
-  const [image, setImage] = useState(ball || ""); // Default to provided image
+  const [image, setImage] = useState(logo_default || ""); // Default to provided image
 
   // State to track if the form is in editing mode
   const [isEditing, setIsEditing] = useState(false);
@@ -75,7 +77,7 @@ const EditTournaments = () => {
 
       setCurrentTournament((prevData) => ({
         ...prevData,
-        logo: file, // ✅ Store file for submission
+        logo: file || logo_default, // ✅ Store file for submission
       }));
     }
   };
@@ -97,8 +99,8 @@ const EditTournaments = () => {
         alert("Failed to add tournament. Please try again.");
         return;
       }
-
-      alert("Tournament added successfully!");
+      toast.showToast("Tournament added successfully!");
+      // alert("Tournament added successfully!");
 
       // Refresh tournament list
       tournamentsContext.fetchTournaments();
@@ -107,10 +109,10 @@ const EditTournaments = () => {
       closeModal();
       setCurrentTournament(null);
       setCreateNew(false);
+      setImage(null);
     } catch (error) {
-      alert(
-        error.response?.data?.message || "An error occurred. Please try again."
-      );
+      toast.showToast(error.response?.data?.message, error);
+      
     }
   };
 
@@ -137,7 +139,7 @@ const EditTournaments = () => {
   const updateDetails = async (e) => {
     e.preventDefault();
     console.log("Updating");
-    
+
     const id = currentTournament._id;
     try {
       const response = await axios.patch(
@@ -150,7 +152,7 @@ const EditTournaments = () => {
         }
       );
       console.log(response.data);
-      
+
       if (response.status === 200) {
         alert("Tournament updated successfully");
         setIsEditing(false);
