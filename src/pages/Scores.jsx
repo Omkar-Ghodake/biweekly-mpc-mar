@@ -407,9 +407,15 @@ const Scores = () => {
                       <ul className="list-disc pl-5 max-h-23 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
                         {selectedPlayer.courses &&
                         Array.isArray(selectedPlayer.courses) ? (
-                          selectedPlayer.courses.map((course, index) => (
-                            <li key={index}>{course}</li>
-                          ))
+                          selectedPlayer.courses.flatMap((course, index) =>
+                            course
+                              .split(";")
+                              .map((subCourse, subIndex) => (
+                                <li key={`${index}-${subIndex}`}>
+                                  {subCourse.trim()}
+                                </li>
+                              ))
+                          )
                         ) : (
                           <li>N/A</li>
                         )}
