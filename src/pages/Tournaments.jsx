@@ -1,28 +1,41 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { ModalContext } from "../context/ModalProvider";
 import Modal from "../layouts/Modal/Modal";
 import { FaTrophy } from "react-icons/fa";
-
-const tournaments = [
-  { id: 1, name: "MPC", logo: "/Tournaments/MPCTournamentLogo.png" },
-  { id: 2, name: "Namo AI", logo: "/Tournaments/NamoAILogo.png" },
-  { id: 3, name: "NM APP Revamp", logo: "/Tournaments/AppRevamp3.png" },
-  {
-    id: 4,
-    name: "Test case Regression",
-    logo: "/Tournaments/TestCaseLogo.png",
-  },
-  {
-    id: 5,
-    name: "Personal Project",
-    logo: "/Tournaments/PersonalProjects.png",
-  },
-];
+import axios from "axios";
+import { TournamentsContext } from "../context/TournamentsProvider";
 
 const Tournaments = () => {
   const { openModal } = useContext(ModalContext);
   const [isEditing, setIsEditing] = useState(true);
   const [id, setId] = useState(1);
+  const [tournament, setTournaments] = useState([]);
+
+  // useEffect(() => {
+  //   const fetchTournaments = async () => {
+  //     try {
+  //       const response = await axios.get("/get-all-tournaments");
+  //       setTournaments(response.data);
+  //     } catch (error) {
+  //       console.error("Error fetching tournaments:", error);
+  //     }
+  //   };
+  //   fetchTournaments();
+  // }, []);
+
+  // useEffect(() => {
+  //   axios
+  //     .get('"/get-all-tournaments"')
+  //     .then((res) => res.json())
+  //     .then((res) => setTournaments(res))
+  //     .catch((error) => console.log("Error fetching Data: ${error}"));
+  // });
+
+  const { tournaments, fetchTournaments } = useContext(TournamentsContext);
+
+  useEffect(() => {
+    fetchTournaments();
+  }, [fetchTournaments]);
 
   return (
     <div className="h-screen w-full  overflow-auto bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col items-center py-10 px-6">
@@ -61,8 +74,8 @@ const Tournaments = () => {
 
           {/* Inner Light Gray Box */}
           <div className="absolute left-[6.18%] right-[19.53%] top-[23.38%] bottom-[29.52%] bg-[#d6d6d6] rounded-[20px] p-2 ">
-          <FaTrophy className="text-black-500 inline mx-4 " />
-          <span className="mt-4">Demo Description </span>
+            <FaTrophy className="text-black-500 inline mx-4 " />
+            <span className="mt-4">Demo Description </span>
           </div>
 
           <div className="absolute bottom-6 w-full h-[100px] flex justify-center items-end">
@@ -107,7 +120,6 @@ const Tournaments = () => {
               />
             </div>
           </div>
-
         </div>
         {/* </div> */}
       </Modal>

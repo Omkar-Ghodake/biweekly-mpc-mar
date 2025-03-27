@@ -6,9 +6,11 @@ const TournamentCard = ({ item, index }) => {
   return (
     <>
       <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{delay: 0.08 * index}} className="flex flex-row items-center space-x-4 h-40 min-w-[22rem] max-w-[24rem] bg-slate-200 hover:bg-slate-300 rounded-3xl p-4 shadow-lg cursor-pointer hover:scale-102 hover:shadow-2xl transition-all ease-in-out duration-300">
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.08 * index }}
+        className="flex flex-row items-center space-x-4 h-30 min-w-[20rem] max-w-[20rem] bg-slate-200 hover:bg-slate-300 rounded-3xl p-4 shadow-lg cursor-pointer hover:scale-102 hover:shadow-2xl transition-all ease-in-out duration-300"
+      >
         <img
           src={item.logo}
           alt="Profile"

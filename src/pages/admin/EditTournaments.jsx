@@ -79,7 +79,7 @@ const EditTournaments = () => {
 
   const addTournament = async (e) => {
     e.preventDefault();
-  
+
     // Validate required fields
     if (
       !currentTournament.title ||
@@ -90,26 +90,26 @@ const EditTournaments = () => {
       alert("Please fill in all required fields");
       return;
     }
-  
+
     const formData = new FormData();
     formData.append("title", currentTournament.title);
     formData.append("description", currentTournament.description);
     formData.append("totalScore", currentTournament.totalScore);
     formData.append("issueCount", currentTournament.issueCount);
-  
+
     // Append logo if it's a valid File object
     if (currentTournament.logo instanceof File) {
       formData.append("logo", currentTournament.logo);
     } else {
       console.warn("Logo is not a valid File object");
     }
-  
+
     // Debugging: Log FormData contents
     console.log("FormData contents:");
     for (let [key, value] of formData.entries()) {
       console.log(`${key}:`, value);
     }
-  
+
     try {
       const response = await axios.post(
         "http://localhost:5500/api/v1/tournaments/add-tournament",
@@ -120,12 +120,12 @@ const EditTournaments = () => {
           },
         }
       );
-  
+
       if (response.status !== 201) {
         alert("Failed to add tournament. Please try again.");
         return;
       }
-  
+
       alert("Tournament added successfully!");
       tournamentsContext.fetchTournaments(); // Refresh the tournaments list
       closeModal(); // Close the modal
@@ -169,7 +169,10 @@ const EditTournaments = () => {
         tournamentsContext.fetchTournaments();
       }
     } catch (error) {
-      console.error("Error updating tournament:", error.response?.data || error);
+      console.error(
+        "Error updating tournament:",
+        error.response?.data || error
+      );
       alert(
         error.response?.data?.message || "An error occurred. Please try again."
       );
@@ -186,7 +189,10 @@ const EditTournaments = () => {
         alert("Tournament deleted successfully");
       }
     } catch (error) {
-      console.error("Error deleting tournament:", error.response?.data || error);
+      console.error(
+        "Error deleting tournament:",
+        error.response?.data || error
+      );
       alert(
         error.response?.data?.message || "An error occurred. Please try again."
       );
@@ -248,7 +254,7 @@ const EditTournaments = () => {
                 </div>
               </button>
             </div>
-            <div className="flex flex-row flex-wrap space-x-5 space-y-7 mt-5 ml-3">
+            <div className="grid grid-cols-3 md:grid-cols-3 gap-7 mt-5 ml-3">
               {tournaments.map((tournament) => (
                 <div
                   key={tournament._id}

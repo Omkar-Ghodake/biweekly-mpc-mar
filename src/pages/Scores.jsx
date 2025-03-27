@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 // import background from "../assets/background.jpg";
 // import background from "../assets/background1.avif";
 import { motion } from "framer-motion";
@@ -8,7 +8,8 @@ import ModalHead from "../layouts/Modal/ModalHead";
 import ModalBody from "../layouts/Modal/ModalBody";
 import { PiSelectionBackgroundDuotone } from "react-icons/pi";
 import StadiumBack from "./StadiumBack";
-
+import { PlayersContext } from "../context/PlayersProvider";
+import { FaChevronUp, FaChevronDown } from "react-icons/fa";
 const Scores = () => {
   const gridItemVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -20,163 +21,178 @@ const Scores = () => {
   };
   const { openModal } = useContext(ModalContext);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
+  const { players, fetchPlayers } = useContext(PlayersContext);
+  const [isCoursesOpen, setIsCoursesOpen] = useState(false);
+  const [isProjectOpen, setIsProjectOpen] = useState(false);
 
-  const players = [
-    {
-      id: 1,
-      name: "Vishnu Menon",
-      image: "src/glb/Members_Photos_Final/Vishnu.png",
-      role: "Captain",
-      currentScore: 31,
-      previousScore: 0,
-      courses: ["C++", "Java", "Backend with Database and springboot"],
-    },
-    {
-      id: 2,
-      name: "Anagha Shinde",
-      image: "src/glb/Members_Photos_Final/Anagha.png",
-      role: "Captain",
-      currentScore: 18,
-      previousScore: 0,
-      courses: ["Python", "JavaScript"],
-    },
-    {
-      id: 3,
-      name: "Anshree Shukla",
-      image: "src/glb/Members_Photos_Final/Anushree.png",
-      currentScore: 13,
-      previousScore: 0,
-      courses: ["React", "Node.js"],
-    },
-    {
-      id: 4,
-      name: "Avinash Gupta",
-      image: "src/glb/Members_Photos_Final/Avinash.png",
-      currentScore: 3,
-      previousScore: 0,
-      courses: ["C#", "ASP.NET"],
-    },
-    {
-      id: 5,
-      name: "Bhavya Momaya",
-      image: "src/glb/Members_Photos_Final/Bhavya.png",
-      currentScore: 10,
-      previousScore: 0,
-      courses: ["Data Science", "Machine Learning"],
-    },
-    {
-      id: 6,
-      name: "Devraj Singh",
-      image: "src/glb/Members_Photos_Final/Devraj.png",
-      currentScore: 5,
-      previousScore: 0,
-      courses: ["Cybersecurity", "Blockchain"],
-    },
-    {
-      id: 7,
-      name: "Dhiraj Kunder",
-      image: "src/glb/Members_Photos_Final/Dhiraj.png",
-      currentScore: 6,
-      previousScore: 0,
-      courses: ["Swift", "iOS Development"],
-    },
-    {
-      id: 8,
-      name: "Jaypal Koli",
-      image: "src/glb/Members_Photos_Final/Jaipal.png",
-      currentScore: 3,
-      previousScore: 0,
-      courses: ["Kotlin", "Android Development"],
-    },
-    {
-      id: 9,
-      name: "Manoj Inbarajan",
-      image: "src/glb/Members_Photos_Final/Manoj.png",
-      currentScore: 6,
-      previousScore: 0,
-      courses: ["PHP", "Laravel"],
-    },
-    {
-      id: 10,
-      name: "Mridual Upadhya",
-      image: "src/glb/Members_Photos_Final/Mridul.png",
-      currentScore: 3,
-      previousScore: 0,
-      courses: ["Go", "Rust"],
-    },
-    {
-      id: 11,
-      name: "Nikita Sonawane",
-      image: "src/glb/Members_Photos_Final/Nikita_Sonawane.png",
-      currentScore: 4,
-      previousScore: 0,
-      courses: ["UI/UX", "Graphic Design"],
-    },
-    {
-      id: 12,
-      name: "Nikita Suhane",
-      image: "src/glb/Members_Photos_Final/Nikita_Suhane.png",
-      currentScore: 5,
-      previousScore: 0,
-      courses: ["AWS", "Cloud Computing"],
-    },
-    {
-      id: 13,
-      name: "Omkar Ghodake",
-      image: "src/glb/Members_Photos_Final/Omkar.png",
-      currentScore: 8,
-      previousScore: 0,
-      courses: ["SQL", "Database Management"],
-    },
-    {
-      id: 14,
-      name: "Prithwikumar Selukar",
-      image: "src/glb/Members_Photos_Final/Prithwi.png",
-      currentScore: 0,
-      previousScore: 0,
-      courses: ["Ethical Hacking", "Cybersecurity"],
-    },
-    {
-      id: 15,
-      name: "Rishabh Kanojiya",
-      image: "src/glb/Members_Photos_Final/Rishabh.png",
-      currentScore: 8,
-      previousScore: 0,
-      courses: ["Python", "AI"],
-    },
-    {
-      id: 16,
-      name: "Sakshi Rai",
-      image: "src/glb/Members_Photos_Final/Sakshi.png",
-      currentScore: 14,
-      previousScore: 0,
-      courses: ["JavaScript", "TypeScript"],
-    },
-    {
-      id: 17,
-      name: "Sanjeev Prajapati",
-      image: "src/glb/Members_Photos_Final/Sanjeev.png",
-      currentScore: 4,
-      previousScore: 0,
-      courses: ["C", "Embedded Systems"],
-    },
-    {
-      id: 18,
-      name: "Shubham Joshi",
-      image: "src/glb/Members_Photos_Final/Shubham.png",
-      currentScore: 8,
-      previousScore: 0,
-      courses: ["C++", "Java"],
-    },
-    {
-      id: 19,
-      name: "Umakant Patil",
-      image: "src/glb/Members_Photos_Final/Umakant.png",
-      currentScore: 9,
-      previousScore: 0,
-      courses: ["Big Data", "Hadoop"],
-    },
-  ];
+  useEffect(() => {
+    fetchPlayers();
+  }, [fetchPlayers]);
+
+  const toggleCourses = () => {
+    setIsCoursesOpen(!isCoursesOpen);
+    setIsProjectOpen(false);
+  };
+  const toggleProjects = () => {
+    setIsProjectOpen(!isProjectOpen);
+    setIsCoursesOpen(false);
+  };
+  // const players = [
+  //   {
+  //     id: 1,
+  //     name: "Vishnu Menon",
+  //     image: "src/glb/Members_Photos_Final/Vishnu.png",
+  //     role: "Captain",
+  //     currentScore: 31,
+  //     previousScore: 0,
+  //     courses: ["C++", "Java", "Backend with Database and springboot"],
+  //   },
+  //   {
+  //     id: 2,
+  //     name: "Anagha Shinde",
+  //     image: "src/glb/Members_Photos_Final/Anagha.png",
+  //     role: "Captain",
+  //     currentScore: 18,
+  //     previousScore: 0,
+  //     courses: ["Python", "JavaScript"],
+  //   },
+  //   {
+  //     id: 3,
+  //     name: "Anshree Shukla",
+  //     image: "src/glb/Members_Photos_Final/Anushree.png",
+  //     currentScore: 13,
+  //     previousScore: 0,
+  //     courses: ["React", "Node.js"],
+  //   },
+  //   {
+  //     id: 4,
+  //     name: "Avinash Gupta",
+  //     image: "src/glb/Members_Photos_Final/Avinash.png",
+  //     currentScore: 3,
+  //     previousScore: 0,
+  //     courses: ["C#", "ASP.NET"],
+  //   },
+  //   {
+  //     id: 5,
+  //     name: "Bhavya Momaya",
+  //     image: "src/glb/Members_Photos_Final/Bhavya.png",
+  //     currentScore: 10,
+  //     previousScore: 0,
+  //     courses: ["Data Science", "Machine Learning"],
+  //   },
+  //   {
+  //     id: 6,
+  //     name: "Devraj Singh",
+  //     image: "src/glb/Members_Photos_Final/Devraj.png",
+  //     currentScore: 5,
+  //     previousScore: 0,
+  //     courses: ["Cybersecurity", "Blockchain"],
+  //   },
+  //   {
+  //     id: 7,
+  //     name: "Dhiraj Kunder",
+  //     image: "src/glb/Members_Photos_Final/Dhiraj.png",
+  //     currentScore: 6,
+  //     previousScore: 0,
+  //     courses: ["Swift", "iOS Development"],
+  //   },
+  //   {
+  //     id: 8,
+  //     name: "Jaypal Koli",
+  //     image: "src/glb/Members_Photos_Final/Jaipal.png",
+  //     currentScore: 3,
+  //     previousScore: 0,
+  //     courses: ["Kotlin", "Android Development"],
+  //   },
+  //   {
+  //     id: 9,
+  //     name: "Manoj Inbarajan",
+  //     image: "src/glb/Members_Photos_Final/Manoj.png",
+  //     currentScore: 6,
+  //     previousScore: 0,
+  //     courses: ["PHP", "Laravel"],
+  //   },
+  //   {
+  //     id: 10,
+  //     name: "Mridual Upadhya",
+  //     image: "src/glb/Members_Photos_Final/Mridul.png",
+  //     currentScore: 3,
+  //     previousScore: 0,
+  //     courses: ["Go", "Rust"],
+  //   },
+  //   {
+  //     id: 11,
+  //     name: "Nikita Sonawane",
+  //     image: "src/glb/Members_Photos_Final/Nikita_Sonawane.png",
+  //     currentScore: 4,
+  //     previousScore: 0,
+  //     courses: ["UI/UX", "Graphic Design"],
+  //   },
+  //   {
+  //     id: 12,
+  //     name: "Nikita Suhane",
+  //     image: "src/glb/Members_Photos_Final/Nikita_Suhane.png",
+  //     currentScore: 5,
+  //     previousScore: 0,
+  //     courses: ["AWS", "Cloud Computing"],
+  //   },
+  //   {
+  //     id: 13,
+  //     name: "Omkar Ghodake",
+  //     image: "src/glb/Members_Photos_Final/Omkar.png",
+  //     currentScore: 8,
+  //     previousScore: 0,
+  //     courses: ["SQL", "Database Management"],
+  //   },
+  //   {
+  //     id: 14,
+  //     name: "Prithwikumar Selukar",
+  //     image: "src/glb/Members_Photos_Final/Prithwi.png",
+  //     currentScore: 0,
+  //     previousScore: 0,
+  //     courses: ["Ethical Hacking", "Cybersecurity"],
+  //   },
+  //   {
+  //     id: 15,
+  //     name: "Rishabh Kanojiya",
+  //     image: "src/glb/Members_Photos_Final/Rishabh.png",
+  //     currentScore: 8,
+  //     previousScore: 0,
+  //     courses: ["Python", "AI"],
+  //   },
+  //   {
+  //     id: 16,
+  //     name: "Sakshi Rai",
+  //     image: "src/glb/Members_Photos_Final/Sakshi.png",
+  //     currentScore: 14,
+  //     previousScore: 0,
+  //     courses: ["JavaScript", "TypeScript"],
+  //   },
+  //   {
+  //     id: 17,
+  //     name: "Sanjeev Prajapati",
+  //     image: "src/glb/Members_Photos_Final/Sanjeev.png",
+  //     currentScore: 4,
+  //     previousScore: 0,
+  //     courses: ["C", "Embedded Systems"],
+  //   },
+  //   {
+  //     id: 18,
+  //     name: "Shubham Joshi",
+  //     image: "src/glb/Members_Photos_Final/Shubham.png",
+  //     currentScore: 8,
+  //     previousScore: 0,
+  //     courses: ["C++", "Java"],
+  //   },
+  //   {
+  //     id: 19,
+  //     name: "Umakant Patil",
+  //     image: "src/glb/Members_Photos_Final/Umakant.png",
+  //     currentScore: 9,
+  //     previousScore: 0,
+  //     courses: ["Big Data", "Hadoop"],
+  //   },
+  // ];
 
   const handleCardClick = (player) => {
     setSelectedPlayer(player);
@@ -359,19 +375,46 @@ const Scores = () => {
                 {/* Right Side: Number of Courses */}
                 <div className="col-span-1 flex flex-col gap-4 w-full md:w-44 -mx-13">
                   <div className="bg-gray-900/50 p-2 rounded-lg flex flex-col w-full">
-                    <span className="text-lg font-bold  flex justify-center items-center">
-                      Courses
-                    </span>
-                    <ul className="list-disc pl-5 max-h-23 my-2  overflow-y-scroll [&::-webkit-scrollbar]:hidden">
-                      {selectedPlayer.courses &&
-                      Array.isArray(selectedPlayer.courses) ? (
-                        selectedPlayer.courses.map((course, index) => (
-                          <li key={index}>{course}</li>
-                        ))
-                      ) : (
-                        <li>N/A</li>
-                      )}
-                    </ul>
+                    <div
+                      className="flex justify-between items-center cursor-pointer"
+                      onClick={toggleCourses}
+                    >
+                      <span className="text-lg font-bold">Courses</span>
+                      {isCoursesOpen ? <FaChevronUp /> : <FaChevronDown />}
+                    </div>
+                    {isCoursesOpen && (
+                      <ul className="list-disc pl-5 max-h-23 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                        {selectedPlayer.courses &&
+                        Array.isArray(selectedPlayer.courses) ? (
+                          selectedPlayer.courses.map((course, index) => (
+                            <li key={index}>{course}</li>
+                          ))
+                        ) : (
+                          <li>N/A</li>
+                        )}
+                      </ul>
+                    )}
+                  </div>
+                  <div className="bg-gray-900/50 p-2 rounded-lg flex flex-col w-full">
+                    <div
+                      className="flex justify-between items-center cursor-pointer"
+                      onClick={toggleProjects}
+                    >
+                      <span className="text-lg font-bold">Projects</span>
+                      {isProjectOpen ? <FaChevronUp /> : <FaChevronDown />}
+                    </div>
+                    {isProjectOpen && (
+                      <ul className="list-disc pl-5 max-h-23 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                        {selectedPlayer.courses &&
+                        Array.isArray(selectedPlayer.courses) ? (
+                          selectedPlayer.courses.map((course, index) => (
+                            <li key={index}>{course}</li>
+                          ))
+                        ) : (
+                          <li>N/A</li>
+                        )}
+                      </ul>
+                    )}
                   </div>
                 </div>
               </div>
