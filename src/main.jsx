@@ -22,6 +22,7 @@ import TournamentsProvider from './context/TournamentsProvider.jsx'
 import PlayersProvider from './context/PlayersProvider.jsx'
 import ToastNotification from './layouts/ToastNotification.jsx'
 import ToastProvider from './context/ToastProvider.jsx'
+import EditCoach from './pages/admin/EditCoach.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -55,6 +56,10 @@ createRoot(document.getElementById('root')).render(
                   <Route
                     path='/admin/dashboard/editTeam'
                     element={<EditTeam />}
+                  />
+                  <Route
+                    path='/admin/dashboard/editCoach'
+                    element={<EditCoach />}
                   />
 
                   <Route path='/exit' element={<Exit />} />
