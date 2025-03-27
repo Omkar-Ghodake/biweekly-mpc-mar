@@ -91,16 +91,16 @@ const Tournaments = () => {
             </div>
           </div>
 
-          <div className="absolute w-[35%] h-[55%]  left-[69.49%] -right-10 top-[18%] bottom-[23.38%] drop-shadow-lg">
+          <div className="absolute left-[69.49%] top-[18%] drop-shadow-lg w-[150px] h-[150px] md:w-[200px] md:h-[200px] lg:w-[250px] lg:h-[250px] flex items-center justify-center">
             {/* Outer Dark Blue Circle */}
-            <div className="w-full h-full bg-[#03104A] rounded-full flex items-center justify-center">
+            <div className="w-full h-full bg-[#03104A] rounded-full flex items-center justify-center relative">
               {/* Inner White Circle with Dynamic Image */}
-              <div className="absolute left-[4.91%] right-[3.91%] top-[4.24%] bottom-[4.24%] bg-amber-50 rounded-full overflow-hidden flex items-center justify-center">
+              <div className="absolute w-[90%] h-[90%] bg-amber-50 rounded-full overflow-hidden flex items-center justify-center">
                 <img
                   src={tournaments[id - 1]?.logo || "/default-logo.png"}
                   alt={tournaments[id - 1]?.name || "Tournament Logo"}
-                  className="w-[60%] h-full object-contain rounded-full"
-                  style={{ filter: "drop-shadow(2px 6px 4px rgba(0,0,0,0.5))" }}
+                  className="w-[60%] h-[100%] object-contain rounded-full"
+                  style={{ filter: "drop-shadow(2px 6px 4px rgba(0,0,0,0.9))" }}
                 />
               </div>
             </div>
