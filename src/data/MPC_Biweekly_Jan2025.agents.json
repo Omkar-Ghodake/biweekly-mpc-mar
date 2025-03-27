@@ -1,0 +1,411 @@
+[{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05bae"
+  },
+  "domain_name": "Nikita.Suhane",
+  "emp_id": 55093276,
+  "image": "",
+  "pre_score": 0,
+  "total_score": 19,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 1,
+    "major": 1,
+    "normal": 1,
+    "minor": 3
+  },
+  "interest": "Cybersecurity",
+  "courses": "Introduction to Cybersecurity Essentials;Google Cybersecurity Certificate;Incident Response and Digital Forensics",
+  "role": "agent",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05b9d"
+  },
+  "domain_name": "Vishnu1.Menon",
+  "emp_id": 55093251,
+  "image": "",
+  "pre_score": 72,
+  "total_score": 23,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 1,
+    "major": 3,
+    "normal": 0,
+    "minor": 0
+  },
+  "interest": "",
+  "courses": "Robot Framework",
+  "role": "captain",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05ba4"
+  },
+  "domain_name": "Mridul.Upadhya",
+  "emp_id": 55099238,
+  "image": "",
+  "pre_score": 19,
+  "total_score": 11,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 0,
+    "major": 1,
+    "normal": 2,
+    "minor": 0
+  },
+  "interest": "",
+  "courses": "IBM Product Manager; MERN; Python for ML",
+  "role": "agent",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05baf"
+  },
+  "domain_name": "Shriyash.Thorat",
+  "emp_id": 55093464,
+  "image": "",
+  "pre_score": 0,
+  "total_score": 0,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 0,
+    "major": 0,
+    "normal": 0,
+    "minor": 0
+  },
+  "interest": "Software Development",
+  "courses": "Robot Framework;Master Spring Boot 3 & Spring Framework 6 with Java;ReactJS",
+  "role": "agent",
+  "resigned": true
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05ba0"
+  },
+  "domain_name": "Dhiraj.Kunder",
+  "emp_id": 55087655,
+  "image": "",
+  "pre_score": 39,
+  "total_score": 24,
+  "severity_count": {
+    "blocker": 1,
+    "critical": 1,
+    "major": 1,
+    "normal": 0,
+    "minor": 1
+  },
+  "interest": "Software Development",
+  "courses": "Robot Framework;Java OOPs;SQL",
+  "role": "agent",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05ba3"
+  },
+  "domain_name": "Umakant.Patil",
+  "emp_id": 55099147,
+  "image": "",
+  "pre_score": 28,
+  "total_score": 16,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 1,
+    "major": 1,
+    "normal": 1,
+    "minor": 0
+  },
+  "interest": "Software Development",
+  "courses": "Robot Framework;React Native Development;Data Structures & Backend with Java",
+  "role": "agent",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05ba7"
+  },
+  "domain_name": "Devraj3.Singh",
+  "emp_id": 55093428,
+  "image": "",
+  "pre_score": 3,
+  "total_score": 8,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 0,
+    "major": 1,
+    "normal": 1,
+    "minor": 0
+  },
+  "interest": "Software Development",
+  "courses": "Robot Framework;Master Spring Boot 3 & Spring Framework 6 with Java",
+  "role": "agent",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05b9e"
+  },
+  "domain_name": "Anushree1.Shukla",
+  "emp_id": 55093186,
+  "image": "",
+  "pre_score": 63,
+  "total_score": 27,
+  "severity_count": {
+    "blocker": 1,
+    "critical": 1,
+    "major": 1,
+    "normal": 1,
+    "minor": 1
+  },
+  "interest": "",
+  "courses": "Robot Framework",
+  "role": "agent",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677acdad70264a9418d86bc4"
+  },
+  "domain_name": "Sejal.Hatiskar",
+  "emp_id": 55052248,
+  "image": "",
+  "role": "chief",
+  "resigned": false,
+  "severity_count": {},
+  "total_score": 0
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05ba6"
+  },
+  "domain_name": "Shubham2.Joshi",
+  "emp_id": 55099006,
+  "image": "",
+  "pre_score": 5,
+  "total_score": 11,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 0,
+    "major": 1,
+    "normal": 2,
+    "minor": 0
+  },
+  "interest": "Software Development",
+  "courses": "Robot Framework;React Js;Node Js",
+  "role": "agent",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05bac"
+  },
+  "domain_name": "Nikita.Sonawane",
+  "emp_id": 55099135,
+  "image": "",
+  "pre_score": 0,
+  "total_score": 19,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 1,
+    "major": 1,
+    "normal": 2,
+    "minor": 0
+  },
+  "interest": "Software Development",
+  "courses": "Robot Framework;Java",
+  "role": "agent",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05ba5"
+  },
+  "domain_name": "Omkar.Ghodake",
+  "emp_id": 55099068,
+  "image": "",
+  "pre_score": 8,
+  "total_score": 14,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 0,
+    "major": 1,
+    "normal": 3,
+    "minor": 0
+  },
+  "interest": "",
+  "courses": "WEb3;Robot Framework",
+  "role": "agent",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05baa"
+  },
+  "domain_name": "Rishabh.Kanaujiya",
+  "emp_id": 55114802,
+  "image": "",
+  "pre_score": 0,
+  "total_score": 8,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 0,
+    "major": 1,
+    "normal": 1,
+    "minor": 0
+  },
+  "interest": "Software Development",
+  "courses": "Robot Framework;Tailwind Css",
+  "role": "agent",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05ba1"
+  },
+  "domain_name": "Bhavya.Momaya",
+  "emp_id": 55099194,
+  "image": "",
+  "pre_score": 34,
+  "total_score": 24,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 2,
+    "major": 1,
+    "normal": 1,
+    "minor": 0
+  },
+  "interest": "Software Development",
+  "courses": "Robot Framework;Devops Bootcamp;",
+  "role": "agent",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05bab"
+  },
+  "domain_name": "Prathwikumar.S",
+  "emp_id": 55093373,
+  "image": "",
+  "pre_score": 0,
+  "total_score": 11,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 0,
+    "major": 2,
+    "normal": 0,
+    "minor": 1
+  },
+  "interest": "Software Development",
+  "courses": "Robot Framework;React Native Development;node js",
+  "role": "agent",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05bad"
+  },
+  "domain_name": "Manoj.Inbarajan",
+  "emp_id": 55093439,
+  "image": "",
+  "pre_score": 0,
+  "total_score": 22,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 0,
+    "major": 3,
+    "normal": 1,
+    "minor": 4
+  },
+  "interest": "Product management",
+  "courses": "Microsoft Power BI Data Analyst;IBM Product Manager;Robot Framework",
+  "role": "agent",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05b9f"
+  },
+  "domain_name": "Anagha.Shinde",
+  "emp_id": 55093230,
+  "image": "",
+  "pre_score": 60,
+  "total_score": 37,
+  "severity_count": {
+    "blocker": 1,
+    "critical": 2,
+    "major": 1,
+    "normal": 2,
+    "minor": 0
+  },
+  "interest": "UI/UX, Product management",
+  "courses": "Visual Elements of User Interface Design;Web Design: Strategy and Information Architecture;Robot Framework",
+  "role": "captain",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05ba2"
+  },
+  "domain_name": "Avinash10.Gupta",
+  "emp_id": 55087478,
+  "image": "",
+  "pre_score": 36,
+  "total_score": 26,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 1,
+    "major": 3,
+    "normal": 1,
+    "minor": 0
+  },
+  "interest": "Software Development",
+  "courses": "Robot Framework;Java OOPs;SQL",
+  "role": "agent",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05ba8"
+  },
+  "domain_name": "Sanjeev2.Prajapati",
+  "emp_id": 55093222,
+  "image": "",
+  "pre_score": 3,
+  "total_score": 14,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 1,
+    "major": 0,
+    "normal": 2,
+    "minor": 0
+  },
+  "interest": "Data Science",
+  "courses": "Django;Python for Machine Learning;Machine Learning",
+  "role": "agent",
+  "resigned": false
+},
+{
+  "_id": {
+    "$oid": "677a7031bb012d3591c05ba9"
+  },
+  "domain_name": "Sakshi1.Rai",
+  "emp_id": 55087415,
+  "image": "",
+  "pre_score": 2,
+  "total_score": 9,
+  "severity_count": {
+    "blocker": 0,
+    "critical": 0,
+    "major": 1,
+    "normal": 1,
+    "minor": 1
+  },
+  "interest": "Data Science",
+  "courses": "Robot Framework; Big Data",
+  "role": "agent",
+  "resigned": false
+}]
