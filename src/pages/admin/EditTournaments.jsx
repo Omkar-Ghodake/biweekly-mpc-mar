@@ -79,16 +79,37 @@ const EditTournaments = () => {
 
   const addTournament = async (e) => {
     e.preventDefault();
-
+  
+    // Validate required fields
+    if (
+      !currentTournament.title ||
+      !currentTournament.description ||
+      !currentTournament.totalScore ||
+      !currentTournament.issueCount
+    ) {
+      alert("Please fill in all required fields");
+      return;
+    }
+  
     const formData = new FormData();
     formData.append("title", currentTournament.title);
     formData.append("description", currentTournament.description);
     formData.append("totalScore", currentTournament.totalScore);
     formData.append("issueCount", currentTournament.issueCount);
+  
+    // Append logo if it's a valid File object
     if (currentTournament.logo instanceof File) {
       formData.append("logo", currentTournament.logo);
+    } else {
+      console.warn("Logo is not a valid File object");
     }
-
+  
+    // Debugging: Log FormData contents
+    console.log("FormData contents:");
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
+    }
+  
     try {
       const response = await axios.post(
         "http://localhost:5500/api/v1/tournaments/add-tournament",
@@ -99,17 +120,17 @@ const EditTournaments = () => {
           },
         }
       );
-
+  
       if (response.status !== 201) {
         alert("Failed to add tournament. Please try again.");
         return;
       }
-
+  
       alert("Tournament added successfully!");
-      tournamentsContext.fetchTournaments();
-      closeModal();
-      setCurrentTournament(null);
-      setCreateNew(false);
+      tournamentsContext.fetchTournaments(); // Refresh the tournaments list
+      closeModal(); // Close the modal
+      setCurrentTournament(null); // Reset the current tournament state
+      setCreateNew(false); // Reset the createNew state
     } catch (error) {
       console.error("Error adding tournament:", error.response?.data || error);
       alert(
