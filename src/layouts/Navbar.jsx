@@ -3,6 +3,12 @@ import { Link, useLocation } from 'react-router'
 import { CoachContext } from '../context/CoachProvider'
 import ball from '../assets/BallLoader.png'
 import { motion } from 'framer-motion'
+import { HiOutlineLogin } from 'react-icons/hi'
+import { RiTeamFill } from 'react-icons/ri'
+import { IoMdHome } from 'react-icons/io'
+import { FiActivity } from 'react-icons/fi'
+import { MdSportsScore } from 'react-icons/md'
+import { IoExitOutline } from 'react-icons/io5'
 
 const Navbar = () => {
   const { pathname } = useLocation()
@@ -22,19 +28,28 @@ const Navbar = () => {
           className='flex flex-col space-y-2 z-40 w-fit'
         >
           <Link
-            to={''}
-            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
+            to={'/login'}
+            className='h-12 w-12 flex justify-center items-center text-2xl bg-white shadow-md border border-slate-300 rounded-full'
+            title='Login'
           >
-            1
+            <HiOutlineLogin />
           </Link>
+
           <Link
             to={'/team'}
-            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
-          ></Link>
+            className='h-12 w-12 flex justify-center items-center text-2xl bg-white shadow-md border border-slate-300 rounded-full'
+            title='Team'
+          >
+            <RiTeamFill />
+          </Link>
+
           <Link
             to={'/landing'}
-            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
-          ></Link>
+            className='h-12 w-12 flex justify-center items-center text-2xl bg-white shadow-md border border-slate-300 rounded-full'
+            title='Home'
+          >
+            <IoMdHome />
+          </Link>
         </motion.div>
 
         <img
@@ -51,18 +66,25 @@ const Navbar = () => {
         >
           <Link
             to={'/tournaments'}
-            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
+            className='h-12 w-12 flex justify-center items-center text-2xl bg-white shadow-md border border-slate-300 rounded-full'
+            title='Tournaments'
           >
-            1
+            <FiActivity />
           </Link>
           <Link
             to={'/scores'}
-            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
-          ></Link>
+            className='h-12 w-12 flex justify-center items-center text-2xl bg-white shadow-md border border-slate-300 rounded-full'
+            title='Scores'
+          >
+            <MdSportsScore />
+          </Link>
           <Link
             to={'/exit'}
-            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
-          ></Link>
+            className='h-12 w-12 flex justify-center items-center text-2xl bg-white shadow-md border border-slate-300 rounded-full'
+            title='Exit'
+          >
+            <IoExitOutline />
+          </Link>
         </motion.div>
       </div>
       {/* <ul className='navlist list-disc'>

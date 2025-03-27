@@ -27,6 +27,21 @@ import Profile from './pages/admin/Profile.jsx'
 import Loader from './layouts/Loader.jsx'
 import LoadingProvider from './context/LoadingProvider.jsx'
 import EditCoach from './pages/admin/EditCoach.jsx'
+import { PiDressFill } from 'react-icons/pi'
+
+{
+  /* 
+  
+  /
+  /landing
+  /team
+  /tournaments
+  /scores
+  /login
+  /admin/dashboard
+  /exit
+  */
+}
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -67,10 +82,10 @@ createRoot(document.getElementById('root')).render(
                       element={<EditCommon />}
                     />
                     <Route path='/admin/profile' element={<Profile />} />
-                  <Route
-                    path='/admin/dashboard/editCoach'
-                    element={<EditCoach />}
-                  />
+                    <Route
+                      path='/admin/dashboard/editCoach'
+                      element={<EditCoach />}
+                    />
 
                     <Route path='/exit' element={<Exit />} />
                     <Route path='/temp' element={<Temp />} />
