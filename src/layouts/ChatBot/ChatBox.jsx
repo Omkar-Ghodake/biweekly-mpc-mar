@@ -26,7 +26,8 @@ const ChatBox = ({
 
 
   return (
-    <div className="w-[30vw] h-[85vh] bg-gradient-to-b from-blue-900 to-blue-950 rounded-xl p-4 text-white shadow-lg flex flex-col relative">
+    <div className="w-[30vw] h-[85vh] bg-gradient-to-b from-blue-900 to-blue-950 rounded-xl p-4 text-white shadow-lg flex flex-col relative z-40
+    ">
       <RxCross2
         className="absolute top-5 right-5 cursor-pointer text-xl"
         onClick={() => setIsChatBoxOpen(false)}

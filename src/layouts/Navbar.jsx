@@ -3,6 +3,13 @@ import { Link, useLocation } from 'react-router'
 import { CoachContext } from '../context/CoachProvider'
 import ball from '../assets/BallLoader.png'
 import { motion } from 'framer-motion'
+import { HiOutlineLogin } from 'react-icons/hi'
+import { RiTeamFill } from 'react-icons/ri'
+import { IoMdHome } from 'react-icons/io'
+import { FiActivity } from 'react-icons/fi'
+import { MdSportsScore } from 'react-icons/md'
+import { IoExitOutline } from 'react-icons/io5'
+import Button from '../components/Button'
 
 const Navbar = () => {
   const { pathname } = useLocation()
@@ -13,28 +20,37 @@ const Navbar = () => {
   useEffect(() => {}, [logout])
 
   return (
-    <div className='h-fit w-fit fixed left-6 bottom-6 cursor-pointer overflow-hidden'>
+    <div className='h-fit w-fit fixed left-6 bottom-6 cursor-pointer overflow-hidden z-40'>
       <div className='flex flex-col h-[16rem] w-[16rem]'>
         <motion.div
-          initial={{ y: '2.5rem' }}
+          initial={{ y: '16rem' }}
           animate={{ y: isNavbarOpen ? '2.5rem' : '16rem' }}
           // transition={{ bounce: false }}
           className='flex flex-col space-y-2 z-40 w-fit'
         >
           <Link
-            to={''}
-            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
+            to={'/login'}
+            className='h-12 w-12 flex justify-center items-center text-2xl bg-white shadow-md border border-slate-300 rounded-full'
+            title='Login'
           >
-            1
+            <HiOutlineLogin />
           </Link>
+
           <Link
             to={'/team'}
-            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
-          ></Link>
+            className='h-12 w-12 flex justify-center items-center text-2xl bg-white shadow-md border border-slate-300 rounded-full'
+            title='Team'
+          >
+            <RiTeamFill />
+          </Link>
+
           <Link
             to={'/landing'}
-            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
-          ></Link>
+            className='h-12 w-12 flex justify-center items-center text-2xl bg-white shadow-md border border-slate-300 rounded-full'
+            title='Home'
+          >
+            <IoMdHome />
+          </Link>
         </motion.div>
 
         <img
@@ -45,26 +61,34 @@ const Navbar = () => {
         />
 
         <motion.div
-          initial={{ x: '3.5rem' }}
+          initial={{ x: '-10.5rem' }}
           animate={{ x: isNavbarOpen ? '3.5rem' : '-10.5rem' }}
           className='flex space-x-2 z-40 absolute left-0 bottom-0'
         >
           <Link
             to={'/tournaments'}
-            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
+            className='h-12 w-12 flex justify-center items-center text-2xl bg-white shadow-md border border-slate-300 rounded-full'
+            title='Tournaments'
           >
-            1
+            <FiActivity />
           </Link>
           <Link
             to={'/scores'}
-            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
-          ></Link>
+            className='h-12 w-12 flex justify-center items-center text-2xl bg-white shadow-md border border-slate-300 rounded-full'
+            title='Scores'
+          >
+            <MdSportsScore />
+          </Link>
           <Link
             to={'/exit'}
-            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
-          ></Link>
+            className='h-12 w-12 flex justify-center items-center text-2xl bg-white shadow-md border border-slate-300 rounded-full'
+            title='Exit'
+          >
+            <IoExitOutline />
+          </Link>
         </motion.div>
       </div>
+
       {/* <ul className='navlist list-disc'>
         <li className='navitem hover:underline text-blue-700'>
           <Link to='/' className={`navlink ${pathname === '/' && 'underline'}`}>

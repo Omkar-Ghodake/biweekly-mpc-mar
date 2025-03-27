@@ -20,18 +20,22 @@
 /* Button variants solid */
 .btn-primary.btn-solid {
   background-color: rgba(var(--color-primary));
+  border-color: rgba(var(--color-primary));
   color: white;
 }
 .btn-primary.btn-solid:hover {
   background-color: rgba(var(--color-primary-darken));
+  border-color: rgba(var(--color-primary-darken));
 }
 
 .btn-secondary.btn-solid {
   background-color: rgba(var(--color-secondary));
+  border-color: rgba(var(--color-secondary));
   color: white;
 }
 .btn-secondary.btn-solid:hover {
   background-color: rgba(var(--color-secondary-darken));
+  border-color: rgba(var(--color-secondary-darken));
 }
 
 .btn-danger.btn-solid {
