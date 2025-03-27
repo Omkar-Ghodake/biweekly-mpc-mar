@@ -13,9 +13,9 @@ const { verifyCoach } = require('../middleware/verifyJWT')
 
 router.post('/add-coach', verifyCoach, addCoach)
 
-router.get('/get-coach/:id', getCoach)
+router.post('/get-coach', verifyCoach, getCoach)
 
-router.get('/get-all-coaches', getAllCoaches)
+router.get('/get-all-coaches', verifyCoach, getAllCoaches)
 
 router.post('/update-coach', verifyCoach, updateCoach)
 

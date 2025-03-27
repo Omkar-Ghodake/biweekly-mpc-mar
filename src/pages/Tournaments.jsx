@@ -25,7 +25,7 @@ const Tournaments = () => {
   const [id, setId] = useState(1);
 
   return (
-    <div className="h-screen w-full  overflow-auto bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col items-center py-10 px-6">
+    <div className="h-dvh  overflow-auto bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col items-center py-10 px-6">
       {/* Header */}
       <h1 className="text-5xl md:text-6xl font-extrabold text-white drop-shadow-lg flex items-center mb-10 tracking-wide">
         Tournaments
@@ -61,8 +61,8 @@ const Tournaments = () => {
 
           {/* Inner Light Gray Box */}
           <div className="absolute left-[6.18%] right-[19.53%] top-[23.38%] bottom-[29.52%] bg-[#d6d6d6] rounded-[20px] p-2 ">
-          <FaTrophy className="text-black-500 inline mx-4 " />
-          <span className="mt-4">Demo Description </span>
+            <FaTrophy className="text-black-500 inline mx-4 " />
+            <span className="mt-4">Demo Description </span>
           </div>
 
           <div className="absolute bottom-6 w-full h-[100px] flex justify-center items-end">
@@ -91,23 +91,20 @@ const Tournaments = () => {
             </div>
           </div>
 
-          {/* Group 13 - Circular Element with Shadow */}
-          {/* Group 13 - Circular Element with Shadow */}
-          <div className="absolute left-[70.49%] -right-8 top-[13.48%] bottom-[23.38%] drop-shadow-lg">
+          <div className="absolute w-[35%] h-[55%]  left-[69.49%] -right-10 top-[18%] bottom-[23.38%] drop-shadow-lg">
             {/* Outer Dark Blue Circle */}
-            <div className="absolute inset-0 bg-[#03104A] rounded-full"></div>
-
-            {/* Inner White Circle with Dynamic Image */}
-            <div className=" absolute left-[4.91%] right-[3.91%] top-[4.24%] bottom-[4.24%] bg-amber-50 rounded-full overflow-hidden flex items-center justify-center">
-              <img
-                src={tournaments[id - 1]?.logo || "/default-logo.png"}
-                alt={tournaments[id - 1]?.name || "Tournament Logo"}
-                className="w-[60%] h-[100%] object-contain rounded-full"
-                style={{ filter: "drop-shadow(2px 6px 4px rgba(0,0,0,0.5))" }}
-              />
+            <div className="w-full h-full bg-[#03104A] rounded-full flex items-center justify-center">
+              {/* Inner White Circle with Dynamic Image */}
+              <div className="absolute left-[4.91%] right-[3.91%] top-[4.24%] bottom-[4.24%] bg-amber-50 rounded-full overflow-hidden flex items-center justify-center">
+                <img
+                  src={tournaments[id - 1]?.logo || "/default-logo.png"}
+                  alt={tournaments[id - 1]?.name || "Tournament Logo"}
+                  className="w-[60%] h-full object-contain rounded-full"
+                  style={{ filter: "drop-shadow(2px 6px 4px rgba(0,0,0,0.5))" }}
+                />
+              </div>
             </div>
           </div>
-
         </div>
         {/* </div> */}
       </Modal>

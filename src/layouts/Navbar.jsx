@@ -1,12 +1,71 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router'
+import { CoachContext } from '../context/CoachProvider'
+import ball from '../assets/BallLoader.png'
+import { motion } from 'framer-motion'
 
 const Navbar = () => {
   const { pathname } = useLocation()
 
+  const { isCoachAuthenticated, logout } = useContext(CoachContext)
+  const [isNavbarOpen, setIsNavbarOpen] = useState(false)
+
+  useEffect(() => {}, [logout])
+
   return (
-    <div className='absolute left-6 bottom-6'>
-      <ul className='navlist list-disc'>
+    <div className='h-fit w-fit fixed left-6 bottom-6 cursor-pointer overflow-hidden'>
+      <div className='flex flex-col h-[16rem] w-[16rem]'>
+        <motion.div
+          initial={{ y: '2.5rem' }}
+          animate={{ y: isNavbarOpen ? '2.5rem' : '16rem' }}
+          // transition={{ bounce: false }}
+          className='flex flex-col space-y-2 z-40 w-fit'
+        >
+          <Link
+            to={''}
+            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
+          >
+            1
+          </Link>
+          <Link
+            to={'/team'}
+            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
+          ></Link>
+          <Link
+            to={'/landing'}
+            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
+          ></Link>
+        </motion.div>
+
+        <img
+          src={ball}
+          alt=''
+          className='h-12 w-12 hover:drop-shadow-xl z-50 absolute bottom-0'
+          onClick={() => setIsNavbarOpen(!isNavbarOpen)}
+        />
+
+        <motion.div
+          initial={{ x: '3.5rem' }}
+          animate={{ x: isNavbarOpen ? '3.5rem' : '-10.5rem' }}
+          className='flex space-x-2 z-40 absolute left-0 bottom-0'
+        >
+          <Link
+            to={'/tournaments'}
+            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
+          >
+            1
+          </Link>
+          <Link
+            to={'/scores'}
+            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
+          ></Link>
+          <Link
+            to={'/exit'}
+            className='h-12 w-12 bg-white shadow-md border border-slate-300 rounded-full'
+          ></Link>
+        </motion.div>
+      </div>
+      {/* <ul className='navlist list-disc'>
         <li className='navitem hover:underline text-blue-700'>
           <Link to='/' className={`navlink ${pathname === '/' && 'underline'}`}>
             Black
@@ -21,14 +80,6 @@ const Navbar = () => {
             Landing
           </Link>
         </li>
-        {/* <li className='navitem hover:underline text-blue-700'>
-          <Link
-            to='/background'
-            className={`navlink ${pathname === '/background' && 'underline'}`}
-          >
-            StadiumBackground
-          </Link>
-        </li> */}
         <li className='navitem hover:underline text-blue-700'>
           <Link
             to='/team'
@@ -56,14 +107,6 @@ const Navbar = () => {
 
         <br />
 
-        <li className='navitem hover:underline text-blue-700'>
-          <Link
-            to='/login'
-            className={`navlink ${pathname === '/login' && 'underline'}`}
-          >
-            Login
-          </Link>
-        </li>
         <li className='navitem hover:underline text-blue-700'>
           <Link
             to='/admin/dashboard'
@@ -114,7 +157,27 @@ const Navbar = () => {
             Temp
           </Link>
         </li>
-      </ul>
+
+        <br />
+
+        {isCoachAuthenticated ? (
+          <li
+            className='navitem cursor-pointer hover:underline text-blue-700'
+            onClick={logout}
+          >
+            <span>Logout</span>
+          </li>
+        ) : (
+          <li className='navitem hover:underline text-blue-700'>
+            <Link
+              to='/login'
+              className={`navlink ${pathname === '/login' && 'underline'}`}
+            >
+              Login
+            </Link>
+          </li>
+        )}
+      </ul> */}
     </div>
   )
 }

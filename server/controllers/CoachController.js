@@ -49,7 +49,9 @@ exports.addCoach = async (req, res) => {
 
 exports.getCoach = async (req, res) => {
   try {
-    const { id } = req.params
+    const { id } = req.coach
+
+    if (!id) return ErrorResponse(res, 404, 'Coach not found')
 
     const coach = await Coach.findById(id)
 
