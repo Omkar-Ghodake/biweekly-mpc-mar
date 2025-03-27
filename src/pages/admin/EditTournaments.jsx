@@ -84,7 +84,7 @@ const EditTournaments = () => {
 
   const addTournament = async (e) => {
     e.preventDefault();
-  
+
     // Validate required fields
     if (
       !currentTournament.title ||
@@ -92,29 +92,29 @@ const EditTournaments = () => {
       !currentTournament.totalScore ||
       !currentTournament.issueCount
     ) {
-      alert("Please fill in all required fields");
+      toast.showToast("Please fill in all required fields", "error");
       return;
     }
-  
+
     const formData = new FormData();
     formData.append("title", currentTournament.title);
     formData.append("description", currentTournament.description);
     formData.append("totalScore", currentTournament.totalScore);
     formData.append("issueCount", currentTournament.issueCount);
-  
+
     // Append logo if it's a valid File object
     if (currentTournament.logo instanceof File) {
       formData.append("logo", currentTournament.logo);
     } else {
       console.warn("Logo is not a valid File object");
     }
-  
+
     // Debugging: Log FormData contents
     console.log("FormData contents:");
     for (let [key, value] of formData.entries()) {
       console.log(`${key}:`, value);
     }
-  
+
     try {
       const response = await axios.post(
         "http://localhost:5500/api/v1/tournaments/add-tournament",
@@ -125,25 +125,24 @@ const EditTournaments = () => {
           },
         }
       );
-  
+
       if (response.status !== 201) {
-        alert("Failed to add tournament. Please try again.");
+        toast.showToast("Failed to add tournament. Please try again.", "error");
         return;
       }
       toast.showToast("Tournament added successfully!");
-      // alert("Tournament added successfully!");
 
       // Refresh tournament list
       tournamentsContext.fetchTournaments();
 
       // Close modal and reset state
       closeModal();
+      setIsEditing(false);
       setCurrentTournament(null);
       setCreateNew(false);
       setImage(null);
     } catch (error) {
       toast.showToast(error.response?.data?.message, error);
-      
     }
   };
 
@@ -154,12 +153,16 @@ const EditTournaments = () => {
         `http://localhost:5500/api/v1/tournaments/delete-tournament/${id}`
       );
       if (response.status === 201) {
-        alert("Tournament deleted successfully");
+        toast.showToast("Tournament deleted successfully", "error");
       }
     } catch (error) {
-      console.error("Error deleting tournament:", error.response?.data || error);
-      alert(
-        error.response?.data?.message || "An error occurred. Please try again."
+      console.error(
+        "Error deleting tournament:",
+        error.response?.data || error
+      );
+      toast.showToast(
+        error.response?.data?.message || "An error occurred. Please try again.",
+        "error"
       );
     }
     setCurrentTournament(null);
@@ -187,12 +190,12 @@ const EditTournaments = () => {
       console.log(response.data);
 
       if (response.status === 200) {
-        alert("Tournament updated successfully");
+        toast.showToast("Tournament updated successfully");
         setIsEditing(false);
         tournamentsContext.fetchTournaments();
       }
     } catch (error) {
-      alert(error.response.message);
+      toast.showToast(error.response.message, "error");
     }
   };
 
@@ -248,7 +251,7 @@ const EditTournaments = () => {
                 </div>
               </button>
             </div>
-            <div className="flex flex-row flex-wrap space-x-5 space-y-7 mt-5 ml-3">
+            <div className="grid grid-cols-3 md:grid-cols-3 gap-7 mt-5 ml-3">
               {tournaments.map((tournament) => (
                 <div
                   key={tournament._id}
@@ -430,7 +433,7 @@ const EditTournaments = () => {
               </div>
               <div className="w-1/3 flex flex-col items-center space-y-4">
                 <img
-                  src={image || ball}
+                  src={image || logo_default}
                   alt="Tournament"
                   className="w-52 h-52 rounded-full object-cover"
                 />
