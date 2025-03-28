@@ -29,7 +29,7 @@ const Landing = () => {
       {/* this button is for skipping the video to the end  */}
       {!isVideoComplete && (
         <div className="absolute w-full flex justify-end top-5 right-5 z-20 ">
-          <Button variant="outline" className = "bg-black text-white border border-white-300 hover:bg-white hover:text-black" onClick={skipVideo}>
+          <Button variant="outline" className = " text-white border border-white-300 hover:bg-white hover:text-black" onClick={skipVideo}>
             <LuSkipForward/>
           </Button>
         </div>
