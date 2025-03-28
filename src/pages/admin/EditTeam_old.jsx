@@ -20,7 +20,7 @@ const EditTeam = () => {
   const [playerCreate, setPlayerCreate] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const formRef = useRef(null);
-    const toast = useContext(ToastContext);
+  const toast = useContext(ToastContext);
 
   const [image, setImage] = useState(img || ""); // Default to provided image
   const [formData, setFormData] = useState({
@@ -58,7 +58,7 @@ const EditTeam = () => {
 
       console.log("Updated Players State:", fetchedPlayers);
     } catch (error) {
-      toast.showToast(`${error.response.data.message}`,"error");
+      toast.showToast(`${error.response.data.message}`, "error");
     }
   };
 
@@ -184,11 +184,11 @@ const EditTeam = () => {
           total_score: 0,
         });
       } else {
-        toast.showToast(`Error: ${response.statusText}`,"error");
+        toast.showToast(`Error: ${response.statusText}`, "error");
       }
     } catch (error) {
       console.error("Error adding player:", error);
-      toast.showToast(`${error.response.data.message}`,"error");
+      toast.showToast(`${error.response.data.message}`, "error");
     } finally {
       fetchPlayers();
     }
@@ -254,10 +254,10 @@ const EditTeam = () => {
           total_score: 0,
         });
       } else {
-        toast.showToast(`Error: ${response.statusText}`,"error");
+        toast.showToast(`Error: ${response.statusText}`, "error");
       }
     } catch (error) {
-      toast.showToast(`${error.response.data.message}`,"error");
+      toast.showToast(`${error.response.data.message}`, "error");
     } finally {
       fetchPlayers();
     }
@@ -278,15 +278,15 @@ const EditTeam = () => {
       if (response.ok) {
         toast.showToast("Player deleted successfully!");
       } else {
-        toast.showToast(`Error: ${response.statusText}`,"error");
+        toast.showToast(`Error: ${response.statusText}`, "error");
       }
     } catch (error) {
       console.error("Error deleting player:", error);
-      toast.showToast(`${error.response.data.message}`,error);
+      toast.showToast(`${error.response.data.message}`, error);
     } finally {
       closeModal();
       setPlayerEdit(false);
-      setIsEditing(false)
+      setIsEditing(false);
       setFormData({
         courses: [],
         domain_name: "",
@@ -385,14 +385,15 @@ const EditTeam = () => {
             className="list flex flex-col space-y-3 cursor-pointer"
             onClick={() => {
               openModal();
-              setFormData(item
-              //   {
-              //   ...item,
-              //   courses: item.courses[0]
-              //     .split(",")
-              //     .map((course) => course.trim()),
-              // }
-            );
+              setFormData(
+                item
+                //   {
+                //   ...item,
+                //   courses: item.courses[0]
+                //     .split(",")
+                //     .map((course) => course.trim()),
+                // }
+              );
               // calculateTotalIssues(formData)
               setPlayerEdit(true);
             }}
