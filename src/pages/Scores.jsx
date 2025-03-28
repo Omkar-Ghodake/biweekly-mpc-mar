@@ -24,10 +24,13 @@ const Scores = () => {
   const { players, fetchPlayers } = useContext(PlayersContext);
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
   const [isProjectOpen, setIsProjectOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("courses"); // Default to Courses
 
   useEffect(() => {
     fetchPlayers();
-  }, [fetchPlayers]);
+  }, []);
+
+  // console.log(selectedPlayer.project);
 
   const toggleCourses = () => {
     setIsCoursesOpen(!isCoursesOpen);
@@ -278,7 +281,7 @@ const Scores = () => {
         </div>
       </div>
       {selectedPlayer && (
-        <Modal className="bg-transparent ">
+        <Modal className="bg-transparent w-1/3 flex justify-center">
           <div className="absolute w-[750px] h-[600px] flex  justify-center items-end mx-auto">
             {/* Player Rank (Top-Right Corner) */}
             <div
@@ -350,7 +353,7 @@ const Scores = () => {
                 clipPath: "polygon(0% 65%, 100% 20%, 100% 100%, 0% 100%)",
               }}
             >
-              <div className="relative grid grid-cols-1 md:grid-cols-3 py-72 p-7 gap-4">
+              <div className="relative grid grid-cols-1 md:grid-cols-3 py-70 p-5 gap-4">
                 {/* Left Side: Scores & Issues */}
                 <div className="col-span-2 w-3/4 flex flex-col gap-4">
                   {/* Current Score */}
@@ -372,49 +375,66 @@ const Scores = () => {
                   </div>
                 </div>
 
-                {/* Right Side: Number of Courses */}
-                <div className="col-span-1 flex flex-col gap-4 w-full md:w-44 -mx-13">
-                  <div className="bg-gray-900/50 p-2 rounded-lg flex flex-col w-full">
-                    <div
-                      className="flex justify-between items-center cursor-pointer"
-                      onClick={toggleCourses}
-                    >
-                      <span className="text-lg font-bold">Courses</span>
-                      {isCoursesOpen ? <FaChevronUp /> : <FaChevronDown />}
+                {/* Switch Imple. */}
+
+                <div className="col-span-1 flex flex-col w-full  md:w-49 -mx-16">
+                  <div className="flex justify-center my-0 ">
+                    <div className="relative w-full h-10 bg-gray-900/50 rounded-lg flex items-center p-1 shadow-md">
+                      <button
+                        className={`w-1/2 h-full flex items-center justify-center rounded-full transition-all duration-300 ${
+                          activeSection === "courses"
+                            ? "bg-gray-600 text-white"
+                            : "text-gray-300"
+                        }`}
+                        onClick={() => setActiveSection("courses")}
+                      >
+                        Courses
+                      </button>
+
+                      <button
+                        className={`w-1/2 h-full flex items-center justify-center rounded-full transition-all duration-300 ${
+                          activeSection === "projects"
+                            ? "bg-gray-600 text-white"
+                            : "text-gray-300"
+                        }`}
+                        onClick={() => setActiveSection("projects")}
+                      >
+                        Projects
+                      </button>
                     </div>
-                    {isCoursesOpen && (
-                      <ul className="list-disc pl-5 max-h-23 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                  </div>
+
+                  {/* Content Below Switch */}
+                  <div className="bg-gray-900/50 p-2 rounded-lg mt-1">
+                    {activeSection === "courses" && (
+                      <ul className="list-disc pl-5 max-h-19 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
                         {selectedPlayer.courses &&
                         Array.isArray(selectedPlayer.courses) ? (
-                          selectedPlayer.courses.map((course, index) => (
-                            <li key={index}>{course}</li>
-                          ))
+                          selectedPlayer.courses.flatMap((course, index) =>
+                            course.split(",").map((subCourse, subIndex) => (
+                              <li key={`${index}-${subIndex}`}>
+                                {subCourse.trim()}
+                                {console.log(selectedPlayer.courses)}
+                              </li>
+                            ))
+                          )
                         ) : (
                           <li>N/A</li>
                         )}
                       </ul>
                     )}
-                  </div>
-                  <div className="bg-gray-900/50 p-2 rounded-lg flex flex-col w-full">
-                    <div
-                      className="flex justify-between items-center cursor-pointer"
-                      onClick={toggleProjects}
-                    >
-                      <span className="text-lg font-bold">Projects</span>
-                      {isProjectOpen ? <FaChevronUp /> : <FaChevronDown />}
-                    </div>
-                    {isProjectOpen && (
-                      <ul className="list-disc pl-5 max-h-23 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+
+                    {activeSection === "projects" && (
+                      <ul className="list-disc pl-5 max-h-19 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
                         {selectedPlayer.courses &&
                         Array.isArray(selectedPlayer.courses) ? (
                           selectedPlayer.courses.flatMap((course, index) =>
-                            course
-                              .split(";")
-                              .map((subCourse, subIndex) => (
-                                <li key={`${index}-${subIndex}`}>
-                                  {subCourse.trim()}
-                                </li>
-                              ))
+                            course.split(",").map((subCourse, subIndex) => (
+                              <li key={`${index}-${subIndex}`}>
+                                {subCourse.trim()}
+                                {console.log(selectedPlayer.courses)}
+                              </li>
+                            ))
                           )
                         ) : (
                           <li>N/A</li>
@@ -426,7 +446,7 @@ const Scores = () => {
               </div>
             </div>
             {/* Triangle */}
-            <div className="absolute  border-l-[224px] border-r-[224px] border-t-[90px] top-110 border-l-transparent border-r-transparent border-t-[#1E4788] "></div>
+            <div className="absolute   border-l-[224px] border-r-[224px] border-t-[90px] top-110 border-l-transparent border-r-transparent border-t-[#1E4788] "></div>
           </div>
         </Modal>
       )}
