@@ -428,7 +428,7 @@ const EditTournaments = () => {
                   onClick={() => fileInputRef.current.click()}
                   disabled={!isEditing}
                 >
-                  {isEditing ? "Update" : "Upload"}
+                  {createNew && isEditing ? "Upload" : "Update"}
                 </button>
                 <input
                   id="image"
@@ -469,7 +469,8 @@ const EditTournaments = () => {
                 }`}
                 onClick={createNew ? addTournament : updateDetails}
               >
-                {isEditing ? "Update" : "Save"}
+                {/* {isEditing ? "Update" : "Save"} */}
+                {createNew && isEditing ? "Save" : "Update"}
               </button>
               {!createNew && (
                 <button
