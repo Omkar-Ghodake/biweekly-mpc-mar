@@ -71,28 +71,29 @@ const EditTournaments = () => {
 
   // Handle image upload and update state
   const handleImageUpload = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]; // Get the selected file
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const base64Image = reader.result;
+        const base64Image = reader.result; // Convert file to Base64 for preview
         setImage(base64Image); // Update image preview
-        setCurrentTournament((prevData) => ({
-          ...prevData,
-          logo: base64Image, // Store Base64 string for submission
-        }));
       };
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(file); // Read the file as a Base64 string
+
+      // Store the file directly for FormData
+      setCurrentTournament((prevData) => ({
+        ...prevData,
+        logo: file,
+      }));
     } else {
       // Reset to default image if no file is selected
       setImage(logo_default);
       setCurrentTournament((prevData) => ({
         ...prevData,
-        logo: logo_default,
+        logo: null, // Reset logo to null
       }));
     }
   };
-
   // Add a new tournament
   const addTournament = async (e) => {
     e.preventDefault();
@@ -114,9 +115,9 @@ const EditTournaments = () => {
     formData.append("totalScore", currentTournament.totalScore);
     formData.append("issueCount", currentTournament.issueCount);
 
-    // Append logo if it's a valid Base64 string
+    // Append logo if it exists
     if (currentTournament.logo) {
-      formData.append("logo", currentTournament.logo);
+      formData.append("logo", currentTournament.logo); // Append the file directly
     }
 
     try {
@@ -146,7 +147,11 @@ const EditTournaments = () => {
       setCreateNew(false);
       setImage(null);
     } catch (error) {
-      toast.showToast(error.response?.data?.message, error);
+      console.error("Error creating tournament:", error);
+      toast.showToast(
+        error.response?.data?.message || "Internal server error",
+        "error"
+      );
     }
   };
 
@@ -238,7 +243,6 @@ const EditTournaments = () => {
     setCreateNew(true);
     openModal();
   };
-
   return (
     <>
       <div
@@ -289,6 +293,7 @@ const EditTournaments = () => {
             setCurrentTournament(null);
             setCreateNew(false);
           }}
+          className="bg-[rgba(255,255,255,0.60)]"
         >
           <ModalHead className="w-1/3">
             <div className="w-full text-center text-white bg-[#1E4788] rounded-xl shadow-md p-3 flex justify-between items-center">
@@ -320,7 +325,7 @@ const EditTournaments = () => {
                         onChange={handleInputChange}
                         className={`w-2/4 p-2 shadow-2xl rounded-xl transition-all duration-200 ${
                           isEditing
-                            ? "border focus:outline-blue-500"
+                            ? "border focus:outline-blue-500 bg-gray-100 border-gray-400"
                             : "bg-gray-100 cursor-default"
                         }`}
                         readOnly={!isEditing}
@@ -342,9 +347,9 @@ const EditTournaments = () => {
                         value={currentTournament.description}
                         onChange={handleInputChange}
                         maxLength={200}
-                        className={`w-2/4 p-2 shadow-2xl rounded-xl transition-all duration-200 resize-none ${
+                        className={`w-2/4 p-2 shadow-2xl rounded-xl transition-all duration-200 resize-none border-gray-400 ${
                           isEditing
-                            ? "border focus:outline-blue-500"
+                            ? "border focus:outline-blue-500 bg-gray-100 border-gray-400"
                             : "bg-gray-100 cursor-default"
                         }`}
                         readOnly={!isEditing}
@@ -366,9 +371,9 @@ const EditTournaments = () => {
                         type="number"
                         value={currentTournament.issueCount}
                         onChange={handleInputChange}
-                        className={`w-2/4 p-2 shadow-2xl rounded-xl transition-all duration-200 "appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"${
+                        className={`w-2/4 p-2 shadow-2xl rounded-xl transition-all duration-200 resize-none border-gray-400 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
                           isEditing
-                            ? "border focus:outline-blue-500"
+                            ? "border focus:outline-blue-500 bg-gray-100"
                             : "bg-gray-100 cursor-default"
                         }`}
                         readOnly={!isEditing}
@@ -390,9 +395,9 @@ const EditTournaments = () => {
                           type="number"
                           value={currentTournament.totalScore}
                           onChange={handleInputChange}
-                          className={`w-2/4 p-2 shadow-2xl rounded-xl transition-all duration-200 "appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" ${
+                          className={`w-2/4 p-2 shadow-2xl rounded-xl transition-all duration-200 resize-none border-gray-400 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
                             isEditing
-                              ? "border focus:outline-blue-500"
+                              ? "border focus:outline-blue-500 bg-gray-100"
                               : "bg-gray-100 cursor-default"
                           }`}
                           readOnly={!isEditing}
@@ -423,7 +428,7 @@ const EditTournaments = () => {
                   onClick={() => fileInputRef.current.click()}
                   disabled={!isEditing}
                 >
-                  {isEditing ? "Update" : "Upload"}
+                  {createNew && isEditing ? "Upload" : "Update"}
                 </button>
                 <input
                   id="image"
@@ -437,7 +442,7 @@ const EditTournaments = () => {
               </div>
             </div>
             {/* Buttons Outside the Form */}
-            <div className="w-full p-4 bg-white flex justify-center space-x-4 rounded-b-2xl">
+            <div className="w-full p-4 bg-transparent  flex justify-center space-x-5 rounded-b-2xl">
               {!createNew && (
                 <button
                   type="button"
@@ -464,7 +469,8 @@ const EditTournaments = () => {
                 }`}
                 onClick={createNew ? addTournament : updateDetails}
               >
-                {isEditing ? "Update" : "Save"}
+                {/* {isEditing ? "Update" : "Save"} */}
+                {createNew && isEditing ? "Save" : "Update"}
               </button>
               {!createNew && (
                 <button

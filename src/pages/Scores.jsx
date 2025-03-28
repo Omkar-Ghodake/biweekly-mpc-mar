@@ -376,13 +376,14 @@ const Scores = () => {
                 </div>
 
                 {/* Switch Imple. */}
+
                 <div className="col-span-1 flex flex-col w-full  md:w-49 -mx-16">
-                  <div className="flex justify-center my-auto ">
-                    <div className="relative w-40 h-12 bg-gray-700 rounded-full flex items-center p-1 shadow-md">
+                  <div className="flex justify-center my-0 ">
+                    <div className="relative w-full h-10 bg-gray-900/50 rounded-lg flex items-center p-1 shadow-md">
                       <button
                         className={`w-1/2 h-full flex items-center justify-center rounded-full transition-all duration-300 ${
                           activeSection === "courses"
-                            ? "bg-blue-600 text-white"
+                            ? "bg-gray-600 text-white"
                             : "text-gray-300"
                         }`}
                         onClick={() => setActiveSection("courses")}
@@ -393,7 +394,7 @@ const Scores = () => {
                       <button
                         className={`w-1/2 h-full flex items-center justify-center rounded-full transition-all duration-300 ${
                           activeSection === "projects"
-                            ? "bg-blue-600 text-white"
+                            ? "bg-gray-600 text-white"
                             : "text-gray-300"
                         }`}
                         onClick={() => setActiveSection("projects")}
@@ -406,7 +407,7 @@ const Scores = () => {
                   {/* Content Below Switch */}
                   <div className="bg-gray-900/50 p-2 rounded-lg mt-1">
                     {activeSection === "courses" && (
-                      <ul className="list-disc pl-5 max-h-18 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                      <ul className="list-disc pl-5 max-h-19 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
                         {selectedPlayer.courses &&
                         Array.isArray(selectedPlayer.courses) ? (
                           selectedPlayer.courses.flatMap((course, index) =>
@@ -420,12 +421,11 @@ const Scores = () => {
                         ) : (
                           <li>N/A</li>
                         )}
-                        {/* <li>{selectedPlayer.courses}</li> */}
                       </ul>
                     )}
 
                     {activeSection === "projects" && (
-                      <ul className="list-disc pl-5 max-h-18 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                      <ul className="list-disc pl-5 max-h-19 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
                         {selectedPlayer.courses &&
                         Array.isArray(selectedPlayer.courses) ? (
                           selectedPlayer.courses.flatMap((course, index) =>
@@ -439,7 +439,6 @@ const Scores = () => {
                         ) : (
                           <li>N/A</li>
                         )}
-                        {/* <li>{selectedPlayer.courses}</li> */}
                       </ul>
                     )}
                   </div>

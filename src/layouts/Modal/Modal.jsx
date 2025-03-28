@@ -27,7 +27,7 @@ const Modal = ({ children, className, afterClosing }) => {
               closeModal();
               afterClosing && afterClosing();
             }}
-            className="cursor-pointer absolute -right-10 -top-5 text-2xl hover:text-black/50 duration-150"
+            className="cursor-pointer absolute -right-10 border border-white  text-white p-1 font-bold rounded-full -top-5 text-2xl hover:text-black/50 hover:bg-red-500 duration-150"
           />
         </div>
       </motion.div>
