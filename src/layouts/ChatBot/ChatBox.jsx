@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { LuSend } from "react-icons/lu";
 import { RxCross2 } from "react-icons/rx";
 import "../../Styles/ChatBox.css";
-import typingLoader from '../../assets/TypingLaoder.gif';
+import typingLoader from "../../assets/TypingLaoder.gif";
 
 const ChatBox = ({
   messages,
@@ -14,27 +14,24 @@ const ChatBox = ({
   displayGreeting,
   setIsChatBoxOpen,
 }) => {
-
-
-  // this code is for handling the scrolling of page as per the messages addition 
+  // this code is for handling the scrolling of page as per the messages addition
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-
-
   return (
-    <div className="w-[30vw] h-[85vh] bg-gradient-to-b from-blue-900 to-blue-950 rounded-xl p-4 text-white shadow-lg flex flex-col relative z-30
-    ">
+    <div
+      className="w-[30vw] h-[85vh] bg-gradient-to-b from-blue-900/60 to-blue-950/60 rounded-xl text-white shadow-lg flex flex-col relative z-30 backdrop-blur-xl border border-blue-900"
+    >
       <RxCross2
         className="absolute top-5 right-5 cursor-pointer text-xl z-40"
         onClick={() => setIsChatBoxOpen(false)}
       />
 
       {displayGreeting ? (
-        <div className="flex flex-col items-center justify-center flex-1 text-center space-y-1">
+        <div className="flex flex-col items-center justify-center flex-1 text-center space-y-1 h-[90%]">
           <div className="text-4xl">🤖</div>
           <div className="flex-1 flex flex-col items-center justify-center">
             <p className="text-lg font-semibold">Hello!</p>
@@ -42,51 +39,55 @@ const ChatBox = ({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col flex-1 overflow-y-auto pb-24 custom-scrollbar">
-          <div className="sticky top-0 bg-gradient-to-b from-blue-900 to-blue-900 text-center text-lg font-semibold pb-2 border-b border-gray-600 flex flex-col items-center z-30">
+        <div className="flex flex-col flex-1 overflow-y-auto custom-scrollbar h-[90%]">
+          <div className="bg-gradient-to-b bg-transparen text-center text-lg font-semibold border-b border-gray-600 flex flex-col items-center z-30 h-[18%] bg-red">
             <div className="text-2xl">🤖</div>
             <div className="text-2xl">MPC Chatbot</div>
           </div>
-          
 
-          <div className="flex-1 space-y-2 p-4">
-            {messages.map((msg, index) => (
-              <div
-                key={index}
-                className={`flex ${msg.sender === "user" ? "justify-end" : "justify-start"}`}
-              >
+          <div className="py-10 h-[82%] overflow-y-scroll">
+            <div className="flex-1 space-y-2 p-4">
+              {messages.map((msg, index) => (
                 <div
-                  className={`p-3 rounded-lg max-w-[85%] text-white relative ${
-                    msg.sender === "user" ? "bg-[#2A1A7E] bg-opacity-80 pr-12" : "bg-[#435bb4] bg-opacity-80 pl-10"
+                  key={index}
+                  className={`flex ${
+                    msg.sender === "user" ? "justify-end" : "justify-start"
                   }`}
                 >
-                  <span>{msg.text}</span>
-                  {msg.sender === "user" && (
-                    <div className="absolute bottom-1 right-1 w-5 h-5 bg-white text-black flex items-center justify-center rounded-md text-xs">
-                      👤
-                    </div>
-                  )}
-                  {msg.sender === "bot" && (
-                    <div className="absolute bottom-1 left-1 w-5 h-5 bg-white text-black flex items-center justify-center rounded-md text-xs">
-                      🤖
-                    </div>
-                  )}
+                  <div
+                    className={`p-3 rounded-lg max-w-[85%] text-white relative ${
+                      msg.sender === "user"
+                        ? "bg-[#2A1A7E] bg-opacity-80 pr-12"
+                        : "bg-[#435bb4] bg-opacity-80 pl-10"
+                    }`}
+                  >
+                    <span>{msg.text}</span>
+                    {msg.sender === "user" && (
+                      <div className="absolute bottom-1 right-1 w-5 h-5 bg-white text-black flex items-center justify-center rounded-md text-xs">
+                        👤
+                      </div>
+                    )}
+                    {msg.sender === "bot" && (
+                      <div className="absolute bottom-1 left-1 w-5 h-5 bg-white text-black flex items-center justify-center rounded-md text-xs">
+                        🤖
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            ))}
-            {isTyping && (
-              <div className="flex justify-start">
-
-                <img src={typingLoader} alt="typingLoader" className="w-9"/>
-              </div>
-            )}
-            {/* Empty div to maintain scroll position */}
-            <div ref={messagesEndRef} />
+              ))}
+              {isTyping && (
+                <div className="flex justify-start">
+                  <img src={typingLoader} alt="typingLoader" className="w-9" />
+                </div>
+              )}
+              {/* Empty div to maintain scroll position */}
+              <div ref={messagesEndRef} />
+            </div>
           </div>
         </div>
       )}
 
-      <div className="absolute bottom-0 left-0 w-full px-4 pb-4 bg-transparent">
+      <div className="absolute bottom-0 left-0 w-full px-4 pb-4 h-[10%]">
         <div className="w-full h-px bg-white bg-opacity-20 mb-2"></div>
         <div className="flex items-center space-x-1">
           <input
@@ -99,11 +100,12 @@ const ChatBox = ({
               if (e.key === "Enter" && input.trim() !== "") {
                 sendMessage();
                 setTimeout(() => {
-                  messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+                  messagesEndRef.current?.scrollIntoView({
+                    behavior: "smooth",
+                  });
                 }, 100);
               }
             }}
-
           />
           <button
             onClick={() => {
