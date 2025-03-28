@@ -7,8 +7,7 @@ import ModalBody from "../../layouts/Modal/ModalBody";
 import Modal from "../../layouts/Modal/Modal";
 import background from "../../assets/background5.jpg";
 import { IoMdAdd } from "react-icons/io";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { FaRegEdit } from "react-icons/fa";
+import { BsTrash3 } from "react-icons/bs";
 
 import logo_default from "../../assets/logo_default.png";
 import Button from "../../components/Button";
@@ -17,12 +16,12 @@ import axios from "axios";
 import { ToastContext } from "../../context/ToastProvider";
 
 const EditTournaments = () => {
-  const [tournaments, setTournaments] = useState([]); // State to store tournaments
+  const [tournaments, setTournaments] = useState([]);
   const { openModal, closeModal } = useContext(ModalContext);
   const tournamentsContext = useContext(TournamentsContext);
   const toast = useContext(ToastContext);
-  const tournamentsArray = tournamentsContext.tournaments; // Fetch tournaments from context
-  const [image, setImage] = useState(logo_default || ""); // Default image for preview
+  const tournamentsArray = tournamentsContext.tournaments;
+  const [image, setImage] = useState(logo_default || ""); // Default to provided image
 
   // State to track if the form is in editing mode
   const [isEditing, setIsEditing] = useState(false);
@@ -37,18 +36,15 @@ const EditTournaments = () => {
   const [createNew, setCreateNew] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Sync tournaments from context to local state
   useEffect(() => {
     setTournaments(tournamentsArray);
   }, [tournamentsArray]);
 
-  // Handle input changes for form fields
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setCurrentTournament({ ...currentTournament, [name]: value });
   };
 
-  // Convert Base64 string to a File object
   const convertBase64ToFile = (base64String, fileName) => {
     let arr = base64String.split(",");
     let mime = arr[0].match(/:(.*?);/)[1]; // Extract MIME type
@@ -65,35 +61,27 @@ const EditTournaments = () => {
     // Update the current tournament with the file
     setCurrentTournament((prevData) => ({
       ...prevData,
-      logo: file, // Store the file in the current tournament
+      logo: file, // ✅ Store the file in the current tournament
     }));
   };
 
-  // Handle image upload and update state
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        const base64Image = reader.result;
-        setImage(base64Image); // Update image preview
-        setCurrentTournament((prevData) => ({
-          ...prevData,
-          logo: base64Image, // Store Base64 string for submission
-        }));
+        setImage(reader.result); // ✅ Store Base64 for preview
+        convertBase64ToFile(reader.result, file.name); // ✅ Convert and set in currentTournament
       };
       reader.readAsDataURL(file);
-    } else {
-      // Reset to default image if no file is selected
-      setImage(logo_default);
+
       setCurrentTournament((prevData) => ({
         ...prevData,
-        logo: logo_default,
+        logo: file || logo_default, // ✅ Store file for submission
       }));
     }
   };
 
-  // Add a new tournament
   const addTournament = async (e) => {
     e.preventDefault();
 
@@ -114,9 +102,17 @@ const EditTournaments = () => {
     formData.append("totalScore", currentTournament.totalScore);
     formData.append("issueCount", currentTournament.issueCount);
 
-    // Append logo if it's a valid Base64 string
-    if (currentTournament.logo) {
+    // Append logo if it's a valid File object
+    if (currentTournament.logo instanceof File) {
       formData.append("logo", currentTournament.logo);
+    } else {
+      console.warn("Logo is not a valid File object");
+    }
+
+    // Debugging: Log FormData contents
+    console.log("FormData contents:");
+    for (let [key, value] of formData.entries()) {
+      console.log(`${key}:`, value);
     }
 
     try {
@@ -137,7 +133,7 @@ const EditTournaments = () => {
       toast.showToast("Tournament added successfully!");
 
       // Refresh tournament list
-      await tournamentsContext.fetchTournaments();
+      tournamentsContext.fetchTournaments();
 
       // Close modal and reset state
       closeModal();
@@ -150,50 +146,6 @@ const EditTournaments = () => {
     }
   };
 
-  // Update an existing tournament
-  const updateDetails = async (e) => {
-    e.preventDefault();
-
-    const id = currentTournament._id;
-    const formData = new FormData();
-    formData.append("title", currentTournament.title);
-    formData.append("description", currentTournament.description);
-    formData.append("totalScore", currentTournament.totalScore);
-    formData.append("issueCount", currentTournament.issueCount);
-
-    // Append logo if it's a valid Base64 string
-    if (currentTournament.logo) {
-      formData.append("logo", currentTournament.logo);
-    }
-
-    try {
-      const response = await axios.patch(
-        `http://localhost:5500/api/v1/tournaments/update-tournament/${id}`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        toast.showToast("Tournament updated successfully");
-
-        // Refresh tournament list
-        await tournamentsContext.fetchTournaments();
-
-        setIsEditing(false);
-      }
-    } catch (error) {
-      toast.showToast(
-        error.response?.data?.message || "An error occurred.",
-        "error"
-      );
-    }
-  };
-
-  // Delete a tournament
   const deleteTournament = async () => {
     const id = currentTournament._id;
     try {
@@ -204,6 +156,10 @@ const EditTournaments = () => {
         toast.showToast("Tournament deleted successfully", "error");
       }
     } catch (error) {
+      console.error(
+        "Error deleting tournament:",
+        error.response?.data || error
+      );
       toast.showToast(
         error.response?.data?.message || "An error occurred. Please try again.",
         "error"
@@ -215,14 +171,40 @@ const EditTournaments = () => {
     tournamentsContext.fetchTournaments();
   };
 
+  // Handle form submission to add or update tournament details
+  const updateDetails = async (e) => {
+    e.preventDefault();
+    console.log("Updating");
+
+    const id = currentTournament._id;
+    try {
+      const response = await axios.patch(
+        `http://localhost:5500/api/v1/tournaments/update-tournament/${id}`,
+        currentTournament,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log(response.data);
+
+      if (response.status === 200) {
+        toast.showToast("Tournament updated successfully");
+        setIsEditing(false);
+        tournamentsContext.fetchTournaments();
+      }
+    } catch (error) {
+      toast.showToast(error.response.message, "error");
+    }
+  };
+
   // Start editing a tournament
   const startEditing = (tournament) => {
     setCurrentTournament(tournament);
-    setImage(tournament.logo || logo_default); // Set image for preview
     openModal();
   };
 
-  // Start creating a new tournament
   const startCreating = (e) => {
     e.preventDefault();
     setCurrentTournament({
@@ -233,7 +215,7 @@ const EditTournaments = () => {
       issueCount: 0,
       logo: "",
     });
-    setImage(logo_default); // Reset image to default
+
     setIsEditing(true);
     setCreateNew(true);
     openModal();
@@ -261,7 +243,7 @@ const EditTournaments = () => {
               </div>
               <button
                 className="text-xl font-bold px-4 py-1 text-white bg-sky-700 rounded-lg shadow-md w-fit cursor-pointer hover:bg-sky-800 hover:shadow-xl hover:scale-102 mr-6"
-                onClick={startCreating}
+                onClick={startCreating} // ✅ Use `startCreating` instead of `openModal()`
               >
                 <div className="flex justify-center items-center">
                   <IoMdAdd />
@@ -291,23 +273,37 @@ const EditTournaments = () => {
           }}
         >
           <ModalHead className="w-1/3">
-            <div className="w-full text-center text-white bg-[#1E4788] rounded-xl shadow-md p-3 flex justify-between items-center">
+            <div className="w-full text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3 flex justify-between items-center">
               <span>{currentTournament.title || "New Tournament"}</span>
-              <span className="text-sm bg-white text-sky-800 px-3 py-1 rounded-xl shadow-md">
-                Total Score: {currentTournament.totalScore || 0}
-              </span>
+              {isEditing ? (
+                <input
+                  id="totalScore"
+                  name="totalScore"
+                  type="number"
+                  value={currentTournament.totalScore}
+                  onChange={handleInputChange}
+                  className="text-sm bg-white text-sky-800 px-3 py-1 rounded-full shadow-md border focus:outline-blue-500"
+                  required
+                />
+              ) : (
+                <span className="text-sm bg-white text-sky-800 px-3 py-1 rounded-full shadow-md">
+                  Total Score: {currentTournament.totalScore}
+                </span>
+              )}
             </div>
           </ModalHead>
           <ModalBody>
             <div className="p-2 flex flex-row items-start">
               <div className="w-2/3">
-                <form className="space-y-6">
+                <form
+                  onSubmit={createNew ? addTournament : updateDetails}
+                  className="space-y-6"
+                >
                   <div className="flex flex-col space-y-4">
                     <div className="flex items-center">
                       <label
                         htmlFor="title"
                         className="font-medium w-1/3 text-left pr-4"
-                        style={{ color: "#1E4788" }}
                       >
                         Tournament Name
                       </label>
@@ -315,10 +311,9 @@ const EditTournaments = () => {
                         id="title"
                         name="title"
                         type="text"
-                        placeholder="Enter Tournament Name"
                         value={currentTournament.title}
                         onChange={handleInputChange}
-                        className={`w-2/4 p-2 shadow-2xl rounded-xl transition-all duration-200 ${
+                        className={`w-2/3 p-2 rounded-3xl transition-all duration-200 ${
                           isEditing
                             ? "border focus:outline-blue-500"
                             : "bg-gray-100 cursor-default"
@@ -331,18 +326,15 @@ const EditTournaments = () => {
                       <label
                         htmlFor="description"
                         className="font-medium w-1/3 text-left pr-4"
-                        style={{ color: "#1E4788" }}
                       >
                         Tournament Description
                       </label>
                       <textarea
                         id="description"
                         name="description"
-                        placeholder="Enter Tournament Description"
                         value={currentTournament.description}
                         onChange={handleInputChange}
-                        maxLength={200}
-                        className={`w-2/4 p-2 shadow-2xl rounded-xl transition-all duration-200 resize-none ${
+                        className={`w-2/3 p-2 rounded-3xl transition-all duration-200 resize-none ${
                           isEditing
                             ? "border focus:outline-blue-500"
                             : "bg-gray-100 cursor-default"
@@ -352,13 +344,31 @@ const EditTournaments = () => {
                         required
                       />
                     </div>
+                    {isEditing && (
+                      <div className="flex items-center">
+                        <label
+                          htmlFor="totalScore"
+                          className="font-medium w-1/3 text-left pr-4"
+                        >
+                          Total Score
+                        </label>
+                        <input
+                          id="totalScore"
+                          name="totalScore"
+                          type="number"
+                          value={currentTournament.totalScore}
+                          onChange={handleInputChange}
+                          className="w-2/3 p-2 rounded-3xl border focus:outline-blue-500"
+                          required
+                        />
+                      </div>
+                    )}
                     <div className="flex items-center">
                       <label
                         htmlFor="issueCount"
                         className="font-medium w-1/3 text-left pr-4"
-                        style={{ color: "#1E4788" }}
                       >
-                        Tournament Issue Count
+                        Issue Count
                       </label>
                       <input
                         id="issueCount"
@@ -366,7 +376,7 @@ const EditTournaments = () => {
                         type="number"
                         value={currentTournament.issueCount}
                         onChange={handleInputChange}
-                        className={`w-2/4 p-2 shadow-2xl rounded-xl transition-all duration-200 "appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"${
+                        className={`w-2/3 p-2 rounded-3xl transition-all duration-200 ${
                           isEditing
                             ? "border focus:outline-blue-500"
                             : "bg-gray-100 cursor-default"
@@ -375,30 +385,47 @@ const EditTournaments = () => {
                         required
                       />
                     </div>
-                    {isEditing && (
-                      <div className="flex items-center">
-                        <label
-                          htmlFor="totalScore"
-                          className="font-medium w-1/3 text-left pr-4"
-                          style={{ color: "#1E4788" }}
-                        >
-                          Tournament Total Score
-                        </label>
-                        <input
-                          id="totalScore"
-                          name="totalScore"
-                          type="number"
-                          value={currentTournament.totalScore}
-                          onChange={handleInputChange}
-                          className={`w-2/4 p-2 shadow-2xl rounded-xl transition-all duration-200 "appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" ${
-                            isEditing
-                              ? "border focus:outline-blue-500"
-                              : "bg-gray-100 cursor-default"
-                          }`}
-                          readOnly={!isEditing}
-                          required
-                        />
-                      </div>
+                  </div>
+                  <div className="w-full p-4 bg-white border-t flex justify-center space-x-4 rounded-b-2xl">
+                    {!createNew && (
+                      <button
+                        type="button"
+                        className={`px-4 py-2 text-white rounded-lg shadow-md ${
+                          isEditing
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
+                        }`}
+                        
+                      >
+                        Edit
+                      </button>
+                    )}
+                    <button
+                      type="submit"
+                      className={`px-4 py-2  text-white rounded-lg shadow-md ${
+                        !isEditing
+                          ? "bg-gray-400 cursor-not-allowed"
+                          : "bg-green-600 hover:bg-green-700 hover:cursor-pointer"
+                      } `}
+                    >
+                      Save
+                    </button>
+
+                    {isEditing && !createNew && (
+                      <button
+                        type="button"
+                        className={`px-3 py-2 text-white rounded-lg shadow-md ${
+                          currentTournament && currentTournament.id === null
+                            ? "bg-gray-400 cursor-not-allowed"
+                            : "bg-red-600 hover:bg-red-700"
+                        }`}
+                        onClick={deleteTournament}
+                        disabled={
+                          currentTournament && currentTournament.id === null
+                        }
+                      >
+                        <BsTrash3 />
+                      </button>
                     )}
                   </div>
                 </form>
@@ -407,11 +434,7 @@ const EditTournaments = () => {
                 <img
                   src={image || logo_default}
                   alt="Tournament"
-                  className={`w-72 h-72 object-cover shadow-2xl rounded-xl ${
-                    image === logo_default
-                      ? "border-1 border-sky-700"
-                      : "w-72 h-72 object-cover shadow-2xl rounded-xl"
-                  }`}
+                  className="w-52 h-52 rounded-full object-cover"
                 />
                 <button
                   type="button"
@@ -423,7 +446,7 @@ const EditTournaments = () => {
                   onClick={() => fileInputRef.current.click()}
                   disabled={!isEditing}
                 >
-                  {isEditing ? "Update" : "Upload"}
+                  Upload
                 </button>
                 <input
                   id="image"
@@ -435,58 +458,6 @@ const EditTournaments = () => {
                   onChange={handleImageUpload}
                 />
               </div>
-            </div>
-            {/* Buttons Outside the Form */}
-            <div className="w-full p-4 bg-white flex justify-center space-x-4 rounded-b-2xl">
-              {!createNew && (
-                <button
-                  type="button"
-                  className={`w-[120px] h-[40px] px-4 py-2 text-white rounded-xl shadow-md ${
-                    isEditing
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
-                  }`}
-                  onClick={() => setIsEditing((prev) => !prev)}
-                  disabled={isEditing}
-                >
-                  <div className="flex items-center justify-center gap-4">
-                    <FaRegEdit />
-                    <span>Edit</span>
-                  </div>
-                </button>
-              )}
-              <button
-                type="button"
-                className={`w-[120px] h-[40px] px-4 py-2 text-white rounded-xl shadow-md ${
-                  !isEditing
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-[#68AA45] hover:bg-green-700 hover:cursor-pointer"
-                }`}
-                onClick={createNew ? addTournament : updateDetails}
-              >
-                {isEditing ? "Update" : "Save"}
-              </button>
-              {!createNew && (
-                <button
-                  type="button"
-                  className={`w-[120px] h-[40px] px-3 py-2  text-white rounded-xl shadow-md ${
-                    isEditing ||
-                    (currentTournament && currentTournament.id === null)
-                      ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-[#950202] hover:bg-red-700"
-                  }`}
-                  onClick={deleteTournament}
-                  disabled={
-                    isEditing ||
-                    (currentTournament && currentTournament.id === null)
-                  }
-                >
-                  <div className="flex items-center justify-center gap-4">
-                    <RiDeleteBin6Line />
-                    <span>Delete</span>
-                  </div>
-                </button>
-              )}
             </div>
           </ModalBody>
         </Modal>
