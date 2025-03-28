@@ -26,7 +26,7 @@ const ChatBox = ({
 
 
   return (
-    <div className="w-[30vw] h-[85vh] bg-gradient-to-b from-blue-900 to-blue-950 rounded-xl p-4 text-white shadow-lg flex flex-col relative z-40
+    <div className="w-[30vw] h-[85vh] bg-gradient-to-b from-blue-900 to-blue-950 rounded-xl p-4 text-white shadow-lg flex flex-col relative z-30
     ">
       <RxCross2
         className="absolute top-5 right-5 cursor-pointer text-xl z-40"
@@ -43,7 +43,7 @@ const ChatBox = ({
         </div>
       ) : (
         <div className="flex flex-col flex-1 overflow-y-auto pb-24 custom-scrollbar">
-          <div className="sticky top-0 bg-gradient-to-b from-blue-900 to-blue-900 text-center text-lg font-semibold pb-2 border-b border-gray-600 flex flex-col items-center z-40">
+          <div className="sticky top-0 bg-gradient-to-b from-blue-900 to-blue-900 text-center text-lg font-semibold pb-2 border-b border-gray-600 flex flex-col items-center z-30">
             <div className="text-2xl">🤖</div>
             <div className="text-2xl">MPC Chatbot</div>
           </div>
