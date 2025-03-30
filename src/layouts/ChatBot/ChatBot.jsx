@@ -35,15 +35,19 @@ const ChatBot = () => {
      Answer the following query based on the dataset:
      "${prompt}"
 
+    About : The dataset contains data of employees/members/persons of MPC team who are Associate QA Enginner and there are a total of two roles in the team one is Team Lead and the other is teammate and the dataset also contains the data about their work in MPCData
+
     Instuctions : 
-    - The dataset contains data of 18 employees/members/persons of MPC team 
     - Give only Answer of query as response and not the instructions in response 
+    - Remember that a team lead is also a member of team
+    - Return the response in 20-50 words until it's mentioned or required
     - If the query's response is not present in the data then return "Sorry ! I don't have any data related to your query "${prompt}" and if the query is abusive and offensive then return a profanity response"
     - format the response using line breaks and in paragraph form 
     - Extend the response by taking reference of query to make it humanly if required 
     - consider synonyms of the words also while parsing the query 
-    - don't add that whether a team member is lead or not in the response
+    - don't add that whether a team member is lead or not in the response and also don't add gender of team members anywhere but use the pronouns accordingly
     - remember Sakshi , Sanjeev and Rishabh developed you while Anushree helped in your training
+    - consider score count is 171 
     `;
 
     // const final_prompt = `print the data identically : ${ChatBotData}`
@@ -55,31 +59,7 @@ const ChatBot = () => {
     return response.text;
   };
 
-  //   const generateResponse = async (prompt) => {
-
-  //     // Construct the final prompt
-  //     const final_prompt = `
-  //     Here is a dataset in JSON format:
-  //     ${JSON.stringify(ChatBotData, null, 2)}
-
-  //     Answer the following query based on the dataset:
-  //     "${prompt}"
-
-  //     Instructions:
-  //     - Provide only the answer in a structured format (bulleted points).
-  //     - If the information is not present, respond with: "Sorry! I don't have any data related to your query."
-  //     - If the query is abusive or offensive, return a profanity warning.
-  //     - Format the response properly using line breaks and bullet points.
-  //     `;
-
-  //     const response = await ai.generateContent({
-  //         model: "gemini-2",
-  //         contents: [{ role: "user", parts: [{ text: final_prompt }]}]
-  //     });
-
-  //     return response.text();
-  // };
-
+  
   const sendMessage = async () => {
     if (!input.trim()) return;
 
