@@ -19,7 +19,7 @@ const PlayersProvider = ({ children }) => {
   }, [data])
 
   return (
-    <PlayersContext.Provider value={{ players, fetchPlayers }}>
+    <PlayersContext.Provider value={{ players }}>
       {children}
     </PlayersContext.Provider>
   )
