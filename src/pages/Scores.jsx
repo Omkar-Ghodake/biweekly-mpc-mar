@@ -11,6 +11,8 @@ import StadiumBack from './StadiumBack'
 import { PlayersContext } from '../context/PlayersProvider'
 import { FaChevronUp, FaChevronDown } from 'react-icons/fa'
 import useAxios from '../hooks/useAxios'
+import Button from '../components/Button'
+
 const Scores = () => {
   const gridItemVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -22,7 +24,7 @@ const Scores = () => {
   }
   const { openModal } = useContext(ModalContext)
   const [selectedPlayer, setSelectedPlayer] = useState(null)
-  const { players, fetchPlayers } = useContext(PlayersContext)
+  const { players, updateData } = useContext(PlayersContext)
   const [isCoursesOpen, setIsCoursesOpen] = useState(false)
   const [isProjectOpen, setIsProjectOpen] = useState(false)
   const [activeSection, setActiveSection] = useState('courses') // Default to Courses
@@ -210,6 +212,8 @@ const Scores = () => {
   const sortedPlayers = players.sort((a, b) => b.currentScore - a.currentScore)
   return (
     <>
+      {/* <Button onClick={updateData}>click to re fetch</Button> */}
+
       <div className='relative w-screen h-screen'>
         {/* Background Component */}
         <div className='absolute inset-0 '>
