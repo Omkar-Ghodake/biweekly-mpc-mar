@@ -6,8 +6,7 @@ import { ModalContext } from "../../context/ModalProvider";
 import ModalHead from "../../layouts/Modal/ModalHead";
 import ModalBody from "../../layouts/Modal/ModalBody";
 import background from "../../assets/background5.jpg";
-import { IoMdAdd } from "react-icons/io";
-import { MdDeleteOutline } from "react-icons/md";
+import { IoMdAdd, IoMdTrash } from "react-icons/io";
 import img from "../../glb/Blank Profile pic.png";
 import { BsTrash3 } from "react-icons/bs";
 import axios from "axios";
@@ -23,10 +22,72 @@ const EditTeam = () => {
   const [formData, setFormData] = useState({});
   const playersData = useContext(PlayersContext);
   const [image, setImage] = useState(img || ""); // Default to provided image
-
+  const [isEditing, setIsEditing] = useState(false);
+  const [createNew, setCreateNew] = useState(false);
+  const emptyForm = {
+    severity_count: {
+      blocker: "",
+      critical: "",
+      major: "",
+      normal: "",
+      minor: "",
+    },
+    domain_name: "",
+    name: "",
+    emp_id: "",
+    pre_score: "",
+    total_score: 0,
+    total_issues: 0,
+    courses: [],
+    projects : [],
+    role: "",
+    image : img
+  };
   useEffect(() => {
     setPlayers(playersData.players);
   }, [playersData]);
+
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    const numValue = Number(value)
+
+    if (["blocker", "critical", "major", "normal", "minor"].includes(id)) {
+      setFormData((prev) => {
+        const updatedData = {
+          ...prev,
+          severity_count: {
+            ...prev.severity_count,
+            [id]: numValue,
+          },
+        };
+        const totalIssues =
+          updatedData.severity_count.blocker +
+          updatedData.severity_count.critical +
+          updatedData.severity_count.major +
+          updatedData.severity_count.normal +
+          updatedData.severity_count.minor;
+
+        // Calculate total_score (EXCLUDES `pre_score` from weightings)
+        const totalScore =
+          updatedData.severity_count.blocker * 10 +
+          updatedData.severity_count.critical * 8 +
+          updatedData.severity_count.major * 5 +
+          updatedData.severity_count.normal * 3 +
+          updatedData.severity_count.minor * 1;
+
+        return {
+          ...updatedData,
+          total_issues: Number(totalIssues),
+          total_score: totalScore,
+        };
+      });
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [id]: value,
+      }));
+    }
+  };
 
   const convertBase64ToFile = (base64String, fileName) => {
     let arr = base64String.split(",");
@@ -45,6 +106,37 @@ const EditTeam = () => {
       ...prevData,
       image: file, // ✅ Store file in formData
     }));
+  };
+
+  const handleCourseChange = (index, value) => {
+    const updatedCourses = [...formData.courses];
+    updatedCourses[index] = value;
+    setFormData({ ...formData, courses: updatedCourses });
+  };
+
+  // Function to add a new empty course field
+  const addCourseField = () => {
+    setFormData({ ...formData, courses: [...formData.courses, ""] });
+  };
+
+  const removeCourseField = (index) => {
+    const updatedCourses = formData.courses.filter((_, i) => i !== index);
+    setFormData({ ...formData, courses: updatedCourses });
+  };
+  const removeProjectField = (index) => {
+    const updatedCourses = formData.projects.filter((_, i) => i !== index);
+    setFormData({ ...formData, projects: updatedCourses });
+  };
+
+  const handleProjectsChange = (index, value) => {
+    const updatedCourses = [...formData.projects];
+    updatedCourses[index] = value;
+    setFormData({ ...formData, projects: updatedCourses });
+  };
+
+  // Function to add a new empty course field
+  const addProjectField = () => {
+    setFormData({ ...formData, projects: [...formData.projects, ""] });
   };
 
   const handleImageUpload = (e) => {
@@ -87,10 +179,12 @@ const EditTeam = () => {
           <button
             className="text-xl font-bold px-4 py-1 <IoMdAdd />
  bg-sky-700  text-white rounded-lg shadow-md w-fit cursor-pointer hover:bg-sky-800 hover:shadow-xl hover:scale-102 mr-24"
-            onClick={() => {
+            onClick={(e) => {
+              e.preventDefault();
               openModal();
-              setPlayerCreate(true);
-              setFormData();
+              setIsEditing(true);
+              setCreateNew(true);
+              setFormData(emptyForm);
             }}
           >
             <div className="flex justify-center items-center ">
@@ -122,17 +216,7 @@ const EditTeam = () => {
             className="list flex flex-col space-y-3 cursor-pointer"
             onClick={() => {
               openModal();
-              setFormData(
-                item
-                //   {
-                //   ...item,
-                //   courses: item.courses[0]
-                //     .split(",")
-                //     .map((course) => course.trim()),
-                // }
-              );
-              // calculateTotalIssues(formData)
-              // setPlayerEdit(true);
+              setFormData(item);
             }}
           >
             <Pointlist item={item} index={index} />
@@ -141,7 +225,11 @@ const EditTeam = () => {
       </motion.div>
       <Modal
         className="h-[911px] text-md  tracking-wide"
-        afterClosing={() => {}}
+        afterClosing={() => {
+          setIsEditing(false);
+          setCreateNew(false);
+          setFormData(emptyForm);
+        }}
       >
         <ModalHead className="w-1/3 ">
           <div className="w-full flex px-4 justify-between text-center text-white bg-[#1E4788] rounded-xl shadow-md p-2">
@@ -167,16 +255,16 @@ const EditTeam = () => {
                     label={"Domain Name"}
                     id={"domain_name"}
                     value={formData.domain_name}
-                    onChange={onchange}
-                    isEditing={false}
+                    onChange={handleInputChange}
+                    isEditing={isEditing}
                   ></Input>
                   <Input
                     isLabel={true}
                     label={"Employee ID"}
                     id={"emp_id"}
                     value={formData.emp_id}
-                    onChange={onchange}
-                    isEditing={false}
+                    onChange={handleInputChange}
+                    isEditing={isEditing}
                   ></Input>
                   <Input
                     type={"select"}
@@ -185,8 +273,8 @@ const EditTeam = () => {
                     label={"Member Role"}
                     id={"role"}
                     value={formData.role}
-                    onChange={onchange}
-                    isEditing={false}
+                    onChange={handleInputChange}
+                    isEditing={isEditing}
                   ></Input>
                 </div>
 
@@ -207,7 +295,7 @@ const EditTeam = () => {
                             id={key}
                             type="number"
                             value={formData?.severity_count?.[key] ?? 0}
-                            onChange={onchange}
+                            onChange={handleInputChange}
                             isEditing={false}
                             className={`bg-[#BFB4FF] py-1.5 w-2/5 text-center rounded-sm transition-all duration-200 appearance-none
                               [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none
@@ -238,22 +326,47 @@ const EditTeam = () => {
                   </div>
                 </div>
                 <div className="h-1/3 flex flex-col">
+                  {/* Heading & Add Button */}
                   <div className="flex items-center justify-between w-3/4">
                     <label className="font-medium text-lg my-1">Courses</label>
-                    {/* {isEditing && ( */}
                     <button
-                      onClick={""}
-                      className=" px-2 py-1  bg-[#FAFAFA] text-[#1E4788] rounded-sm hover:bg-[#F1F1F1] transition "
+                      onClick={addCourseField} // Add new field on click
+                      className="px-2 py-1 bg-[#FAFAFA] text-[#1E4788] rounded-sm hover:bg-[#F1F1F1] transition"
                     >
                       <IoMdAdd className="text-xl font-bold" />
                     </button>
-                    {/* )} */}
                   </div>
-                  <input
-                    type="text"
-                    value={formData?.courses}
-                    className="w-3/4 bg-white border border-[#F1F1F1] shadow-md shadow-black/15 rounded-lg px-2"
-                  />
+
+                  {/* Dynamic Input Fields with Scrollable Container */}
+                  <div
+                    className="w-3/4 max-h-[70%] overflow-y-auto p-2
+        [&::-webkit-scrollbar]:w-1
+        [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
+        [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400"
+                  >
+                    {formData?.courses?.map((course, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center space-x-2 my-1"
+                      >
+                        <input
+                          type="text"
+                          value={course}
+                          onChange={(e) =>
+                            handleCourseChange(index, e.target.value)
+                          }
+                          className="w-full bg-white border border-[#F1F1F1] shadow-md shadow-black/15 rounded-lg px-2 py-1"
+                          placeholder={`Course ${index + 1}`}
+                        />
+                        <button
+                          onClick={() => removeCourseField(index)}
+                          className="hover:scale-110 transition"
+                        >
+                          <BsTrash3 className="text-xs text-black hover:text-red-600" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
               <div className="w-1/2">
@@ -264,9 +377,9 @@ const EditTeam = () => {
                       className="cursor-pointer flex justify-center "
                     >
                       <img
-                        src={formData.image || img}
+                        src={image || img}
                         alt="Profile"
-                        className="h-[80%] w-[80%] "
+                        className="h-[60%] w-auto"
                       />
                       <span className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#1E4788] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                         Upload an Image
@@ -283,40 +396,65 @@ const EditTeam = () => {
                     {/* <FaRegEdit className="w-6 h-6 absolute bottom-6 right-2"/> */}
                   </div>
                 </div>
-                <div className="h-1/3">
+                <div className="h-1/3 flex flex-col">
+                  {/* Heading & Add Button */}
                   <div className="flex items-center justify-between w-3/4">
-                    <label className="font-medium text-lg my-1">
-                      Projects{" "}
-                    </label>
-                    {/* {isEditing && ( */}
+                    <label className="font-medium text-lg my-1">Projects</label>
                     <button
-                      onClick={""}
-                      className=" px-2 py-1  bg-[#FAFAFA] text-[#1E4788] rounded-sm hover:bg-[#F1F1F1] transition "
+                      onClick={addProjectField} // Add new field on click
+                      className="px-2 py-1 bg-[#FAFAFA] text-[#1E4788] rounded-sm hover:bg-[#F1F1F1] transition"
                     >
                       <IoMdAdd className="text-xl font-bold" />
                     </button>
-                    {/* )} */}
                   </div>
-                  <input
-                    type="text"
-                    value={formData?.courses}
-                    className="w-3/4 bg-white border border-[#F1F1F1] shadow-md shadow-black/15 rounded-lg px-2 mb-2"
-                  />
-                  
+
+                  {/* Dynamic Input Fields with Scrollable Container */}
+                  <div
+                    className="w-[80%] max-h-[70%] overflow-y-auto p-2
+                    [&::-webkit-scrollbar]:w-1
+                    [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
+                    [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400"
+                  >
+                    {formData?.projects?.map((course, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center space-x-2 my-1"
+                      >
+                        <input
+                          type="text"
+                          value={course}
+                          onChange={(e) =>
+                            handleProjectsChange(index, e.target.value)
+                          }
+                          className="w-full bg-white border border-[#F1F1F1] shadow-md shadow-black/15 rounded-lg px-2 py-1"
+                          placeholder={`Project ${index + 1}`}
+                        />
+                        <button
+                          onClick={() => removeProjectField(index)}
+                          className="hover:scale-110 "
+                        >
+                          <BsTrash3 className="text-xs text-black hover:text-red-600" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
             <div className="w-full p-2 flex justify-center space-x-5 rounded-b-2xl">
               {/* Edit Button */}
-              <button
-                type="button"
-                className="w-[120px] h-[40px] px-4 py-2 text-white rounded-xl shadow-md bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
-              >
-                <div className="flex items-center justify-center gap-4">
-                  <FaRegEdit />
-                  <span>Edit</span>
-                </div>
-              </button>
+              {!createNew && (
+                <button
+                  type="button"
+                  className="w-[120px] h-[40px] px-4 py-2 text-white rounded-xl shadow-md bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
+                  onClick={() => setIsEditing(true)}
+                >
+                  <div className="flex items-center justify-center gap-4">
+                    <FaRegEdit />
+                    <span>Edit</span>
+                  </div>
+                </button>
+              )}
 
               {/* Save/Update Button */}
               <button
@@ -327,15 +465,17 @@ const EditTeam = () => {
               </button>
 
               {/* Delete Button */}
-              <button
-                type="button"
-                className="w-[120px] h-[40px] px-3 py-2 text-white rounded-xl shadow-md bg-[#950202] hover:bg-red-700"
-              >
-                <div className="flex items-center justify-center gap-4">
-                  <RiDeleteBin6Line />
-                  <span>Delete</span>
-                </div>
-              </button>
+              {!createNew && (
+                <button
+                  type="button"
+                  className="w-[120px] h-[40px] px-3 py-2 text-white rounded-xl shadow-md bg-[#950202] hover:bg-red-700"
+                >
+                  <div className="flex items-center justify-center gap-4">
+                    <RiDeleteBin6Line />
+                    <span>Delete</span>
+                  </div>
+                </button>
+              )}
             </div>
           </div>
         </ModalBody>

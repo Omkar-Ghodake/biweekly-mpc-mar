@@ -497,7 +497,7 @@ const EditTournaments = () => {
           </ModalBody>
         </Modal>
       )}
-    </>
+    </> 
   );
 };
 

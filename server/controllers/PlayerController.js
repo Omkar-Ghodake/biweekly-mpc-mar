@@ -33,7 +33,7 @@ exports.addPlayer = async (req, res) => {
     // Check if image is uploaded
     const playerImagePath = req.file?.path;
     console.log(playerImagePath);
-    
+
     if (!playerImagePath) {
       return ErrorResponse(res, 404, "Player's Image is required");
     }
@@ -43,7 +43,9 @@ exports.addPlayer = async (req, res) => {
     if (!playerImage) {
       return ErrorResponse(res, 500, "Internal Cloudinary Error");
     }
-
+    
+    const coursesArray = req.body.courses.split(","); 
+    console.log(courses);
 
     // Create player in DB
     const player = await Player.create({
@@ -54,7 +56,7 @@ exports.addPlayer = async (req, res) => {
       severity_count,
       total_issues,  // ✅ Add total issues
       total_score,
-      courses,
+      courses : coursesArray,
       gender,
       role,
       image: playerImage.url
