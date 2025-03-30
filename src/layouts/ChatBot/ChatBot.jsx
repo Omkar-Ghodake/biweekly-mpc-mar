@@ -35,7 +35,7 @@ const ChatBot = () => {
      Answer the following query based on the dataset:
      "${prompt}"
 
-    About : The dataset contains data of employees/members/persons of MPC team who are Associate QA Enginner and there are a total of two roles in the team one is Team Lead and the other is teammate and the dataset also contains the data about their work in MPCData
+    About : The dataset contains data of employees/members/persons of MPC team who are Associate QA Enginner and there are a total of two designation in the team one is Team Lead and the other is teammate and the dataset also contains the data about their work in MPCData
 
     Instuctions : 
     - Give only Answer of query as response and not the instructions in response 
@@ -47,7 +47,8 @@ const ChatBot = () => {
     - consider synonyms of the words also while parsing the query 
     - don't add that whether a team member is lead or not in the response and also don't add gender of team members anywhere but use the pronouns accordingly
     - remember Sakshi , Sanjeev and Rishabh developed you while Anushree helped in your training
-    - consider score count is 171 
+    - consider score count is 171 and don't mention score until asked
+    - Do not mention the source of your dataset
     `;
 
     // const final_prompt = `print the data identically : ${ChatBotData}`
