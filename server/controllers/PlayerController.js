@@ -6,13 +6,13 @@ exports.addPlayer = async (req, res) => {
   try {
     const {
       domain_name,
-      name,
       emp_id,
       pre_score,
       severity_count = {},  // Default to an empty object to prevent errors
       total_score,
       total_issues,
       courses,
+      projects,
       gender,
       role,
 
@@ -44,20 +44,20 @@ exports.addPlayer = async (req, res) => {
       return ErrorResponse(res, 500, "Internal Cloudinary Error");
     }
     
-    const coursesArray = req.body.courses.split(","); 
-    console.log(courses);
+    const coursesArray = courses?.split(","); 
+    const projectsArray = projects?.split(","); 
 
     // Create player in DB
     const player = await Player.create({
       domain_name,
-      name,
+      name : domain_name,
       emp_id,
       pre_score,
       severity_count,
       total_issues,  // ✅ Add total issues
       total_score,
       courses : coursesArray,
-      gender,
+      projects : projectsArray,
       role,
       image: playerImage.url
     });
@@ -108,7 +108,7 @@ exports.updatePlayer = async (req, res) => {
     // Check if player exists
     const existingPlayer = await Player.findById(id);
     if (!existingPlayer) {
-      return ErrorResponse(res, 404, 'Player not found');
+      return ErrorResponse(res, 404, "Player not found");
     }
 
     // If an image is uploaded, handle it
@@ -121,24 +121,22 @@ exports.updatePlayer = async (req, res) => {
       playerImageUrl = playerImage.url; // Update image URL
     }
 
-    // Update player details
-    const updatedPlayer = await Player.findByIdAndUpdate(
-      id,
-      {
-        $set: {
-          ...req.body,  // Update other fields
-          image: playerImageUrl, // Update image if uploaded
-        },
-      },
-      { new: true } // Return updated document
-    );
+    // Convert courses to an array if it's a string
+    let updatedFields = { ...req.body, image: playerImageUrl };
+    if (req.body.projects && typeof req.body.projects === "string") {
+      updatedFields.projects = req.body.projects.split(",").map(course => course.trim());
+    }
 
-    return SuccessResponse(res, 200, 'Player updated successfully', updatedPlayer);
+    // Update player details
+    const updatedPlayer = await Player.findByIdAndUpdate(id, { $set: updatedFields }, { new: true });
+
+    return SuccessResponse(res, 200, "Player updated successfully", updatedPlayer);
   } catch (error) {
-    console.error('Error:', error);
-    ErrorResponse(res, 500, 'Internal Server Error!', error);
+    console.error("Error:", error);
+    ErrorResponse(res, 500, "Internal Server Error!", error);
   }
 };
+
 
 exports.deletePlayer = async (req, res) => {
   try {

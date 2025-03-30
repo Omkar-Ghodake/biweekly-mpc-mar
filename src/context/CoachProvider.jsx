@@ -50,7 +50,7 @@ const CoachProvider = ({ children }) => {
         setCoach(json.data)
       } else {
         localStorage.removeItem('token')
-        if (json.error.message) {
+        if (json.error?.message) {
           showToast('Session expired. Login again.')
         }
         navigate('/login')

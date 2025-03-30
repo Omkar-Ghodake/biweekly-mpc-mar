@@ -35,6 +35,7 @@ app.use('/api/v1/auth', require('./routes/auth'))
 app.use('/api/v1/coach', require('./routes/coach'))
 app.use('/api/v1/players', require('./routes/player'))
 app.use('/api/v1/tournaments', require('./routes/tournament'))
+app.use('/api/v1/team', require('./routes/team'))
 
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`)

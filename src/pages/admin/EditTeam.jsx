@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import Pointlist from "../../components/Pointlist";
 import Modal from "../../layouts/Modal/Modal";
@@ -6,7 +6,7 @@ import { ModalContext } from "../../context/ModalProvider";
 import ModalHead from "../../layouts/Modal/ModalHead";
 import ModalBody from "../../layouts/Modal/ModalBody";
 import background from "../../assets/background5.jpg";
-import { IoMdAdd, IoMdTrash } from "react-icons/io";
+import { IoMdAdd } from "react-icons/io";
 import img from "../../glb/Blank Profile pic.png";
 import { BsTrash3 } from "react-icons/bs";
 import axios from "axios";
@@ -22,34 +22,46 @@ const EditTeam = () => {
   const [formData, setFormData] = useState({});
   const playersData = useContext(PlayersContext);
   const [image, setImage] = useState(img || ""); // Default to provided image
+  const toast = useContext(ToastContext);
+
   const [isEditing, setIsEditing] = useState(false);
   const [createNew, setCreateNew] = useState(false);
+
   const emptyForm = {
     severity_count: {
-      blocker: "",
-      critical: "",
-      major: "",
-      normal: "",
-      minor: "",
+      blocker: 0,
+      critical: 0,
+      major: 0,
+      normal: 0,
+      minor: 0,
     },
     domain_name: "",
-    name: "",
     emp_id: "",
     pre_score: "",
     total_score: 0,
     total_issues: 0,
     courses: [],
-    projects : [],
+    projects: [],
     role: "",
-    image : img
+    image: img,
   };
+
   useEffect(() => {
     setPlayers(playersData.players);
-  }, [playersData]);
+  }, [playersData.players]);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
-    const numValue = Number(value)
+    if (id === "emp_id") {
+      if (value.length > 8) return; // Limit to 8 characters
+      setFormData((prev) => ({
+        ...prev,
+        emp_id: value,
+      }));
+      return;
+    }
+
+    const numValue = Number(value);
 
     if (["blocker", "critical", "major", "normal", "minor"].includes(id)) {
       setFormData((prev) => {
@@ -114,7 +126,6 @@ const EditTeam = () => {
     setFormData({ ...formData, courses: updatedCourses });
   };
 
-  // Function to add a new empty course field
   const addCourseField = () => {
     setFormData({ ...formData, courses: [...formData.courses, ""] });
   };
@@ -123,20 +134,127 @@ const EditTeam = () => {
     const updatedCourses = formData.courses.filter((_, i) => i !== index);
     setFormData({ ...formData, courses: updatedCourses });
   };
+
   const removeProjectField = (index) => {
-    const updatedCourses = formData.projects.filter((_, i) => i !== index);
-    setFormData({ ...formData, projects: updatedCourses });
+    const updatedProjects = formData.projects.filter((_, i) => i !== index);
+    setFormData({ ...formData, projects: updatedProjects });
   };
 
   const handleProjectsChange = (index, value) => {
-    const updatedCourses = [...formData.projects];
-    updatedCourses[index] = value;
-    setFormData({ ...formData, projects: updatedCourses });
+    const updatedProjects = [...formData.projects];
+    updatedProjects[index] = value;
+    setFormData({ ...formData, projects: updatedProjects });
   };
 
-  // Function to add a new empty course field
   const addProjectField = () => {
     setFormData({ ...formData, projects: [...formData.projects, ""] });
+  };
+
+  const createPlayer = async (e) => {
+    e.preventDefault();
+    const cleanedFormData = {
+      ...formData,
+      courses: formData.courses.every((course) => course.trim() === "")
+        ? []
+        : formData.courses,
+      projects: formData.projects.every((project) => project.trim() === "")
+        ? []
+        : formData.projects,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5500/api/v1/players/add-player",
+        cleanedFormData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        setImage(null);
+        setFormData(emptyForm);
+        setCreateNew(false);
+        setIsEditing(false);
+        toast.showToast("Player added successfully!");
+        closeModal();
+      } else {
+        toast.showToast(`Error: ${response.statusText}`, "error");
+      }
+    } catch (error) {
+      console.error("Error adding player:", error);
+      toast.showToast(`${error.response?.data?.message || "An error occurred."}`, "error");
+    } finally {
+      playersData.updateData();
+    }
+  };
+
+  const updatePlayer = async (e) => {
+    e.preventDefault();
+    const cleanedFormData = {
+      ...formData,
+      courses: formData.courses.every((course) => course.trim() === "")
+        ? []
+        : formData.courses,
+      projects: formData.projects.every((project) => project.trim() === "")
+        ? []
+        : formData.projects,
+    };
+
+    try {
+      const id = formData._id;
+
+      const response = await axios.put(
+        `http://localhost:5500/api/v1/players/update-player/${id}`,
+        cleanedFormData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        toast.showToast("Player updated successfully!");
+        setIsEditing(false);
+      } else {
+        toast.showToast(`Error: ${response.statusText}`, "error");
+      }
+    } catch (error) {
+      toast.showToast(`${error.response?.data?.message || "An error occurred."}`, "error");
+    } finally {
+      playersData.updateData();
+    }
+  };
+
+  const deletePlayer = async (e) => {
+    e.preventDefault();
+    try {
+      const id = formData._id;
+
+      const response = await fetch(
+        `http://localhost:5500/api/v1/players/delete-player/${id}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+        }
+      );
+      if (response.ok) {
+        toast.showToast("Player deleted successfully!");
+      } else {
+        toast.showToast(`Error: ${response.statusText}`, "error");
+      }
+    } catch (error) {
+      console.error("Error deleting player:", error);
+      toast.showToast(`${error.response?.data?.message || "An error occurred."}`, "error");
+    } finally {
+      closeModal();
+      setIsEditing(false);
+      setFormData(emptyForm);
+      playersData.updateData();
+    }
   };
 
   const handleImageUpload = (e) => {
@@ -155,7 +273,6 @@ const EditTeam = () => {
       }));
     }
   };
-  console.log(formData);
 
   return (
     <div
@@ -177,14 +294,14 @@ const EditTeam = () => {
           </div>
 
           <button
-            className="text-xl font-bold px-4 py-1 <IoMdAdd />
- bg-sky-700  text-white rounded-lg shadow-md w-fit cursor-pointer hover:bg-sky-800 hover:shadow-xl hover:scale-102 mr-24"
+            className="text-xl font-bold px-4 py-1 bg-sky-700 text-white rounded-lg shadow-md w-fit cursor-pointer hover:bg-sky-800 hover:shadow-xl hover:scale-102 mr-24"
             onClick={(e) => {
               e.preventDefault();
               openModal();
               setIsEditing(true);
               setCreateNew(true);
               setFormData(emptyForm);
+              setImage(null);
             }}
           >
             <div className="flex justify-center items-center ">
@@ -212,11 +329,12 @@ const EditTeam = () => {
 
         {players?.map((item, index) => (
           <div
-            key={item.id} // ✅ Add a unique key
+            key={item._id} // ✅ Add a unique key
             className="list flex flex-col space-y-3 cursor-pointer"
             onClick={() => {
               openModal();
               setFormData(item);
+              setImage(item.image);
             }}
           >
             <Pointlist item={item} index={index} />
@@ -233,8 +351,8 @@ const EditTeam = () => {
       >
         <ModalHead className="w-1/3 ">
           <div className="w-full flex px-4 justify-between text-center text-white bg-[#1E4788] rounded-xl shadow-md p-2">
-            {formData.name ? (
-              <span>{formData.name}</span>
+            {formData.domain_name ? (
+              <span>{formData.domain_name}</span>
             ) : (
               <span>Domain Name</span>
             )}
@@ -246,238 +364,301 @@ const EditTeam = () => {
           </div>
         </ModalHead>
         <ModalBody>
-          <div className="flex flex-col text-[#1E4788]">
-            <div className=" w-full h-[470px] flex flex-row">
-              <div className="w-1/2 flex flex-col ml-3">
-                <div className="h-[28.33%]">
-                  <Input
-                    isLabel={true}
-                    label={"Domain Name"}
-                    id={"domain_name"}
-                    value={formData.domain_name}
-                    onChange={handleInputChange}
-                    isEditing={isEditing}
-                  ></Input>
-                  <Input
-                    isLabel={true}
-                    label={"Employee ID"}
-                    id={"emp_id"}
-                    value={formData.emp_id}
-                    onChange={handleInputChange}
-                    isEditing={isEditing}
-                  ></Input>
-                  <Input
-                    type={"select"}
-                    options={["Captain", "Player"]}
-                    isLabel={true}
-                    label={"Member Role"}
-                    id={"role"}
-                    value={formData.role}
-                    onChange={handleInputChange}
-                    isEditing={isEditing}
-                  ></Input>
-                </div>
-
-                <div className="h-[38.67%]">
-                  <div className="font-medium  text-lg  mb-1">
-                    Issue Tracker
+          <form
+            onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
+            onSubmit={createNew ? createPlayer : updatePlayer}
+          >
+            <div className="flex flex-col text-[#1E4788]">
+              <div className=" w-full h-[470px] flex flex-row">
+                <div className="w-1/2 flex flex-col ml-3">
+                  <div className="h-[28.33%]">
+                    <Input
+                      isLabel={true}
+                      label={"Domain Name"}
+                      id={"domain_name"}
+                      value={formData.domain_name}
+                      onChange={handleInputChange}
+                      isEditing={isEditing}
+                      required={true}
+                    ></Input>
+                    <Input
+                      type={"number"}
+                      placeholder={"Enter Employee ID"}
+                      isLabel={true}
+                      label={"Employee ID"}
+                      id={"emp_id"}
+                      value={formData.emp_id}
+                      onChange={handleInputChange}
+                      isEditing={isEditing}
+                      required={true}
+                    ></Input>
+                    <Input
+                      type={"select"}
+                      options={["Captain", "Player"]}
+                      isLabel={true}
+                      label={"Member Role"}
+                      id={"role"}
+                      value={formData.role}
+                      onChange={handleInputChange}
+                      isEditing={isEditing}
+                      required={true}
+                    ></Input>
                   </div>
-                  <div className="grid grid-cols-3 gap-y-3 text-sm">
-                    {["blocker", "critical", "major", "normal", "minor"].map(
-                      (key) => (
-                        <div className="bg-[#e6e1fd] p-1.5 flex justify-between items-center space-x-0.5 rounded-sm w-[120px]">
-                          <label htmlFor={key} className="font-medium ">
-                            {key.charAt(0).toUpperCase() + key.slice(1)}
-                          </label>
-                          <input
-                            key={key}
-                            label={key.charAt(0).toUpperCase() + key.slice(1)}
-                            id={key}
-                            type="number"
-                            value={formData?.severity_count?.[key] ?? 0}
-                            onChange={handleInputChange}
-                            isEditing={false}
-                            className={`bg-[#BFB4FF] py-1.5 w-2/5 text-center rounded-sm transition-all duration-200 appearance-none
-                              [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none
-                              
-                              `}
-                          />
+
+                  <div className="h-[38.67%]">
+                    <div className="font-medium  text-lg  mb-1">
+                      Issue Tracker
+                    </div>
+                    <div className="grid grid-cols-3 gap-y-3 text-sm">
+                      {["blocker", "critical", "major", "normal", "minor"].map(
+                        (key) => (
+                          <div className="bg-[#e6e1fd] p-1.5 flex justify-between items-center space-x-0.5 rounded-sm w-[120px]">
+                            <label htmlFor={key} className="font-medium ">
+                              {key.charAt(0).toUpperCase() + key.slice(1)}
+                            </label>
+                            <input
+                              key={key}
+                              label={key.charAt(0).toUpperCase() + key.slice(1)}
+                              id={key}
+                              type="number"
+                              value={formData?.severity_count?.[key] ?? 0}
+                              onChange={handleInputChange}
+                              isEditing={isEditing}
+                              className={`bg-[#BFB4FF] py-1.5 w-2/5 text-center rounded-sm transition-all duration-200 appearance-none
+                                [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none  ${
+                                  isEditing
+                                    ? "border focus:outline-blue-500"
+                                    : "bg-[#D1C9FF] cursor-default"
+                                }`}
+                              readOnly={!isEditing}
+                            />
+                          </div>
+                        )
+                      )}
+                    </div>
+                    <div className="flex space-x-4 mt-2 text-white font-medium  text-center tracking-wider">
+                      {[
+                        { label: "Issue Count", value: formData?.total_issues },
+                        { label: "Score", value: formData?.total_score },
+                      ].map(({ label, value }) => (
+                        <div
+                          key={label}
+                          className="flex space-x-1 items-center justify-center"
+                        >
+                          <span className="font-medium  bg-[#1E4788] p-1.5 w-32 rounded-sm">
+                            {label}
+                          </span>
+                          <span className="bg-[#1E4788] rounded-sm p-1.5 px-4">
+                            {value}
+                          </span>
                         </div>
-                      )
-                    )}
+                      ))}
+                    </div>
                   </div>
-                  <div className="flex space-x-4 mt-2 text-white font-medium   text-center tracking-wider">
-                    {[
-                      { label: "Issue Count", value: formData?.total_issues },
-                      { label: "Score", value: formData?.total_score },
-                    ].map(({ label, value }) => (
-                      <div
-                        key={label}
-                        className="flex space-x-1 items-center justify-center"
-                      >
-                        <span className="font-medium  bg-[#1E4788] p-1.5 w-32 rounded-sm">
-                          {label}
-                        </span>
-                        <span className="bg-[#1E4788] rounded-sm p-1.5 px-4">
-                          {value}
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                <div className="h-1/3 flex flex-col">
-                  {/* Heading & Add Button */}
-                  <div className="flex items-center justify-between w-3/4">
-                    <label className="font-medium text-lg my-1">Courses</label>
-                    <button
-                      onClick={addCourseField} // Add new field on click
-                      className="px-2 py-1 bg-[#FAFAFA] text-[#1E4788] rounded-sm hover:bg-[#F1F1F1] transition"
-                    >
-                      <IoMdAdd className="text-xl font-bold" />
-                    </button>
-                  </div>
-
-                  {/* Dynamic Input Fields with Scrollable Container */}
-                  <div
-                    className="w-3/4 max-h-[70%] overflow-y-auto p-2
-        [&::-webkit-scrollbar]:w-1
-        [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
-        [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400"
-                  >
-                    {formData?.courses?.map((course, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center space-x-2 my-1"
-                      >
-                        <input
-                          type="text"
-                          value={course}
-                          onChange={(e) =>
-                            handleCourseChange(index, e.target.value)
-                          }
-                          className="w-full bg-white border border-[#F1F1F1] shadow-md shadow-black/15 rounded-lg px-2 py-1"
-                          placeholder={`Course ${index + 1}`}
-                        />
+                  <div className="h-1/3 flex flex-col">
+                    {/* Heading & Add Button */}
+                    <div className="flex items-center justify-between w-3/4">
+                      <label className="font-medium text-lg my-1">
+                        Courses
+                      </label>
+                      {isEditing && (
                         <button
-                          onClick={() => removeCourseField(index)}
-                          className="hover:scale-110 transition"
+                          type="button"
+                          onClick={addCourseField} // Add new field on click
+                          className="px-2 py-1 bg-[#FAFAFA] text-[#1E4788] rounded-sm hover:bg-[#F1F1F1] transition"
                         >
-                          <BsTrash3 className="text-xs text-black hover:text-red-600" />
+                          <IoMdAdd className="text-xl font-bold" />
                         </button>
-                      </div>
-                    ))}
+                      )}
+                    </div>
+
+                    {/* Dynamic Input Fields with Scrollable Container */}
+                    <div
+                      className="w-3/4 max-h-[70%] overflow-y-auto p-2
+                        [&::-webkit-scrollbar]:w-1
+                        [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
+                        [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400"
+                    >
+                      {formData.courses?.length ? (
+                        formData?.courses?.map((course, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center space-x-2 my-1"
+                          >
+                            <span className="font-medium text-gray-700 w-3">
+                              {index + 1}.
+                            </span>
+                            <input
+                              type="text"
+                              value={course}
+                              onChange={(e) =>
+                                handleCourseChange(index, e.target.value)
+                              }
+                              className="w-full bg-white border border-[#F1F1F1] shadow-md shadow-black/15 rounded-lg px-2 py-1"
+                              placeholder={`Course ${index + 1}`}
+                            />
+                            {isEditing && (
+                              <button
+                                type="button"
+                                onClick={() => removeCourseField(index)}
+                                className="hover:scale-110 transition"
+                              >
+                                <BsTrash3 className="text-xs text-black hover:text-red-600" />
+                              </button>
+                            )}
+                          </div>
+                        ))
+                      ) : createNew ? (
+                        <span>Add a Course</span>
+                      ) : (
+                        <span>No courses added</span>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="w-1/2">
-                <div className="h-2/3 flex justify-center items-center">
-                  <div className="flex justify-center bg-white items-center h-[90%] w-[65%] rounded-2xl drop-shadow-2xl relative group">
-                    <label
-                      htmlFor="imageUpload"
-                      className="cursor-pointer flex justify-center "
-                    >
-                      <img
-                        src={image || img}
-                        alt="Profile"
-                        className="h-[60%] w-auto"
+                <div className="w-1/2">
+                  <div className="h-2/3 flex justify-center items-center">
+                    <div className="flex justify-center bg-white items-center h-[90%] w-[65%] rounded-2xl drop-shadow-2xl relative group">
+                      <label
+                        htmlFor="imageUpload"
+                        className="cursor-pointer flex justify-center "
+                      >
+                        <img
+                          src={image || img}
+                          alt="Profile"
+                          className="h-[60%] w-auto"
+                        />
+                        <span className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#1E4788] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                          Upload an Image
+                        </span>
+                      </label>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                        id="imageUpload"
                       />
-                      <span className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#1E4788] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        Upload an Image
-                      </span>
-                    </label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
-                      id="imageUpload"
-                    />
 
-                    {/* <FaRegEdit className="w-6 h-6 absolute bottom-6 right-2"/> */}
+                      {/* <FaRegEdit className="w-6 h-6 absolute bottom-6 right-2"/> */}
+                    </div>
                   </div>
-                </div>
-                <div className="h-1/3 flex flex-col">
-                  {/* Heading & Add Button */}
-                  <div className="flex items-center justify-between w-3/4">
-                    <label className="font-medium text-lg my-1">Projects</label>
-                    <button
-                      onClick={addProjectField} // Add new field on click
-                      className="px-2 py-1 bg-[#FAFAFA] text-[#1E4788] rounded-sm hover:bg-[#F1F1F1] transition"
-                    >
-                      <IoMdAdd className="text-xl font-bold" />
-                    </button>
-                  </div>
-
-                  {/* Dynamic Input Fields with Scrollable Container */}
-                  <div
-                    className="w-[80%] max-h-[70%] overflow-y-auto p-2
-                    [&::-webkit-scrollbar]:w-1
-                    [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
-                    [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400"
-                  >
-                    {formData?.projects?.map((course, index) => (
-                      <div
-                        key={index}
-                        className="flex items-center space-x-2 my-1"
-                      >
-                        <input
-                          type="text"
-                          value={course}
-                          onChange={(e) =>
-                            handleProjectsChange(index, e.target.value)
-                          }
-                          className="w-full bg-white border border-[#F1F1F1] shadow-md shadow-black/15 rounded-lg px-2 py-1"
-                          placeholder={`Project ${index + 1}`}
-                        />
+                  <div className="h-1/3 flex flex-col">
+                    {/* Heading & Add Button */}
+                    <div className="flex items-center justify-between w-3/4">
+                      <label className="font-medium text-lg my-1">
+                        Projects
+                      </label>
+                      {isEditing && (
                         <button
-                          onClick={() => removeProjectField(index)}
-                          className="hover:scale-110 "
+                          type="button"
+                          onClick={addProjectField} // Add new field on click
+                          className="px-2 py-1 bg-[#FAFAFA] text-[#1E4788] rounded-sm hover:bg-[#F1F1F1] transition"
                         >
-                          <BsTrash3 className="text-xs text-black hover:text-red-600" />
+                          <IoMdAdd className="text-xl font-bold" />
                         </button>
-                      </div>
-                    ))}
+                      )}
+                    </div>
+
+                    {/* Dynamic Input Fields with Scrollable Container */}
+                    <div
+                      className="w-[80%] max-h-[70%] overflow-y-auto p-2
+                        [&::-webkit-scrollbar]:w-1
+                        [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
+                        [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400"
+                    >
+                      {formData?.projects?.length ? (
+                        formData?.projects?.map((course, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center space-x-2 my-1"
+                          >
+                            <span className="font-medium text-gray-700 w-3">
+                              {index + 1}.
+                            </span>
+                            <input
+                              type="text"
+                              value={course}
+                              onChange={(e) =>
+                                handleProjectsChange(index, e.target.value)
+                              }
+                              className="w-full bg-white border border-[#F1F1F1] shadow-md shadow-black/15 rounded-lg px-2 py-1"
+                              placeholder={`Project ${index + 1}`}
+                            />
+                            {isEditing && (
+                              <button
+                                type="button"
+                                onClick={() => removeProjectField(index)}
+                                className="hover:scale-110 "
+                              >
+                                <BsTrash3 className="text-xs text-black hover:text-red-600" />
+                              </button>
+                            )}
+                          </div>
+                        ))
+                      ) : createNew ? (
+                        <span>Add a Project</span>
+                      ) : (
+                        <span>No projects added</span>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="w-full p-2 flex justify-center space-x-5 rounded-b-2xl">
-              {/* Edit Button */}
-              {!createNew && (
-                <button
-                  type="button"
-                  className="w-[120px] h-[40px] px-4 py-2 text-white rounded-xl shadow-md bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
-                  onClick={() => setIsEditing(true)}
-                >
-                  <div className="flex items-center justify-center gap-4">
-                    <FaRegEdit />
-                    <span>Edit</span>
-                  </div>
-                </button>
-              )}
+              <div className="w-full p-2 flex justify-center space-x-5 rounded-b-2xl">
+                {/* Edit Button */}
+                {!createNew && (
+                  <button
+                    type="button"
+                    className={`w-[120px] h-[40px] px-4 py-2 text-white rounded-xl shadow-md hover:cursor-pointer ${
+                      isEditing
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
+                    }`}
+                    disabled={isEditing}
+                    onClick={() => setIsEditing(true)}
+                  >
+                    <div className="flex items-center justify-center gap-4">
+                      <FaRegEdit />
+                      <span>Edit</span>
+                    </div>
+                  </button>
+                )}
 
-              {/* Save/Update Button */}
-              <button
-                type="button"
-                className="w-[120px] h-[40px] px-4 py-2 text-white rounded-xl shadow-md bg-[#68AA45] hover:bg-green-700 hover:cursor-pointer"
-              >
-                Save
-              </button>
-
-              {/* Delete Button */}
-              {!createNew && (
+                {/* Save/Update Button */}
                 <button
-                  type="button"
-                  className="w-[120px] h-[40px] px-3 py-2 text-white rounded-xl shadow-md bg-[#950202] hover:bg-red-700"
+                  type="submit"
+                  className={`w-[120px] h-[40px] px-4 py-2 text-white rounded-xl shadow-md  ${
+                    !isEditing
+                      ? "bg-gray-400 cursor-not-allowed"
+                      : "bg-[#68AA45] hover:bg-green-700 hover:cursor-pointer"
+                  }`}
+                  disabled={!isEditing}
                 >
-                  <div className="flex items-center justify-center gap-4">
-                    <RiDeleteBin6Line />
-                    <span>Delete</span>
-                  </div>
+                  Save
                 </button>
-              )}
+
+                {/* Delete Button */}
+                {!createNew && isEditing && (
+                  <button
+                    type="button"
+                    className={`w-[120px] h-[40px] px-3 py-2 text-white rounded-xl shadow-md ${
+                      !isEditing
+                        ? "bg-gray-400 cursor-not-allowed"
+                        : "bg-[#950202] hover:bg-red-700 hover:cursor-pointer"
+                    }`}
+                    disabled={!isEditing}
+                    onClick={deletePlayer}
+                  >
+                    <div className="flex items-center justify-center gap-4">
+                      <RiDeleteBin6Line />
+                      <span>Delete</span>
+                    </div>
+                  </button>
+                )}
+              </div>
             </div>
-          </div>
+          </form>
         </ModalBody>
       </Modal>
     </div>

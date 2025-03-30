@@ -277,7 +277,7 @@ const Scores = () => {
                     {/* Bottom Triangle */}
                     <div class='absolute bottom-[-40px] w-0 h-0 border-l-[112px] border-r-[112px] border-t-[40px] border-l-transparent border-r-transparent border-t-[#1E4788] cursor-pointer'></div>
                     <span class='absolute bottom-15 left-1/2 transform -translate-x-1/2 text-white font-bold text-xl text-center w-full z-1'>
-                      {player.name}
+                      {player.domain_name}
                     </span>
                     <span class='absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white text-sm text-center w-full z-1'>
                       Team MPC
@@ -323,7 +323,7 @@ const Scores = () => {
                 {/* Player Details Container */}
                 <div className='flex flex-col '>
                   <span className='font-bold text-2xl'>
-                    {selectedPlayer.name}
+                    {selectedPlayer.domain_name}
                   </span>
 
                   <span className='font-bold text-sm'>Team MPC</span>

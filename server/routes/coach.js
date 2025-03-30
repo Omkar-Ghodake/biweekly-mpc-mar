@@ -17,7 +17,7 @@ router.post('/get-coach', verifyCoach, getCoach)
 
 router.get('/get-all-coaches', verifyCoach, getAllCoaches)
 
-router.post('/update-coach', verifyCoach, updateCoach)
+router.patch('/update-coach', verifyCoach, updateCoach)
 
 router.delete('/delete-coach', verifyCoach, deleteCoach)
 
