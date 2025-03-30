@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { Link, useLocation } from 'react-router'
 import { CoachContext } from '../context/CoachProvider'
 import ball from '../assets/BallLoader.png'
@@ -10,17 +10,33 @@ import { FiActivity } from 'react-icons/fi'
 import { MdSportsScore } from 'react-icons/md'
 import { IoExitOutline } from 'react-icons/io5'
 import Button from '../components/Button'
+import useClickOutsideElement from '../hooks/useClickOutsideElement'
 
 const Navbar = () => {
   const { pathname } = useLocation()
 
-  const { isCoachAuthenticated, logout } = useContext(CoachContext)
   const [isNavbarOpen, setIsNavbarOpen] = useState(false)
 
-  useEffect(() => {}, [logout])
+  const { isCoachAuthenticated, logout } = useContext(CoachContext)
+
+  const navRef = useRef(null)
+  useClickOutsideElement(navRef, () => {
+    console.log('clicked outside...')
+  })
+
+  const excludeNavbarLinks = ['/', '/landing']
+
+  useEffect(() => {
+    setIsNavbarOpen(false)
+  }, [logout, pathname])
+
+  if (excludeNavbarLinks.includes(pathname)) return
 
   return (
-    <div className='h-fit w-fit fixed left-6 bottom-6 cursor-pointer overflow-hidden z-40'>
+    <div
+      className='h-fit w-fit fixed left-6 bottom-6 cursor-pointer overflow-hidden z-40'
+      ref={navRef}
+    >
       <div className='flex flex-col h-[16rem] w-[16rem]'>
         <motion.div
           initial={{ y: '16rem' }}

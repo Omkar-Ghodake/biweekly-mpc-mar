@@ -1,36 +1,22 @@
 import React, { createContext, useEffect, useState } from 'react'
+import useAxios from '../hooks/useAxios'
 
 const PlayersContext = createContext()
 
 const PlayersProvider = ({ children }) => {
   const [players, setPlayers] = useState([])
 
-  const fetchPlayers = async () => {
-    try {
-      const response = await fetch(
-        'http://localhost:5500/api/v1/players/get-all-players',
-        {
-          method: 'GET',
-          credentials: 'include', // Ensures authentication cookies are sent
-        }
-      )
-
-      if (!response.ok) {
-        throw new Error("Couldn't fetch players")
-      }
-
-      const json = await response.json()
-      const data = json.data
-
-      setPlayers(data)
-    } catch (error) {
-      console.error('Error fetching players:', error)
-    }
-  }
+  const { data, error, loading } = useAxios(
+    'http://localhost:5500/api/v1/players/get-all-players'
+  )
 
   useEffect(() => {
-    fetchPlayers()
-  }, [])
+    if (data) {
+      setPlayers(data)
+    } else {
+      console.log('Data not found')
+    }
+  }, [data])
 
   return (
     <PlayersContext.Provider value={{ players, fetchPlayers }}>

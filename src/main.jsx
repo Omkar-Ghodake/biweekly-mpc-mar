@@ -12,7 +12,6 @@ import Login from './pages/admin/Login.jsx'
 import Dashboard from './pages/admin/Dashboard.jsx'
 import EditTeam from './pages/admin/EditTeam.jsx'
 import EditTournaments from './pages/admin/EditTournaments.jsx'
-import Navbar from './layouts/Navbar.jsx'
 import StadiumBack from './pages/StadiumBack.jsx'
 import ModalProvider from './context/ModalProvider.jsx'
 import Temp from './pages/Temp.jsx'
@@ -28,6 +27,7 @@ import Loader from './layouts/Loader.jsx'
 import LoadingProvider from './context/LoadingProvider.jsx'
 import EditCoach from './pages/admin/EditCoach.jsx'
 import { PiDressFill } from 'react-icons/pi'
+import Navbar from './layouts/Navbar/Navbar.jsx'
 
 {
   /* 
@@ -46,11 +46,11 @@ import { PiDressFill } from 'react-icons/pi'
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
-      <ModalProvider>
-        <PlayersProvider>
-          <TournamentsProvider>
-            <CoachProvider>
-              <ToastProvider>
+      <ToastProvider>
+        <ModalProvider>
+          <PlayersProvider>
+            <TournamentsProvider>
+              <CoachProvider>
                 <LoadingProvider>
                   <Routes>
                     <Route path='/' element={<App />} />
@@ -96,11 +96,11 @@ createRoot(document.getElementById('root')).render(
                   <Navbar />
                 </LoadingProvider>
                 <ToastNotification />
-              </ToastProvider>
-            </CoachProvider>
-          </TournamentsProvider>
-        </PlayersProvider>
-      </ModalProvider>
+              </CoachProvider>
+            </TournamentsProvider>
+          </PlayersProvider>
+        </ModalProvider>
+      </ToastProvider>
     </BrowserRouter>
   </StrictMode>
 )
