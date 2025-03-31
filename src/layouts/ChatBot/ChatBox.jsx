@@ -39,13 +39,13 @@ const ChatBox = ({
           </div>
         </div>
       ) : (
-        <div className="flex flex-col flex-1 overflow-y-auto custom-scrollbar h-[90%]">
+        <div className="flex flex-col flex-1 overflow-y-auto ">
           <div className="bg-gradient-to-b bg-transparen text-center text-lg font-semibold border-b border-gray-600 flex flex-col items-center z-30 h-[18%] bg-red">
             <div className="text-2xl">🤖</div>
             <div className="text-2xl">MPC Chatbot</div>
           </div>
 
-          <div className="py-10 h-[82%]">
+          <div className="pb-15 overflow-y-scroll custom-scrollbar h-[90%] ">
             <div className="flex-1 space-y-2 p-4">
               {messages.map((msg, index) => (
                 <div
