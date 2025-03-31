@@ -7,6 +7,7 @@ const {
   getAllCoaches,
   deleteCoaches,
   changePassword,
+  resetPassword,
 } = require('../controllers/CoachController')
 const router = express.Router()
 const { verifyCoach } = require('../middleware/verifyJWT')
@@ -24,5 +25,7 @@ router.delete('/delete-coach', verifyCoach, deleteCoach)
 router.post('/delete-coaches', verifyCoach, deleteCoaches)
 
 router.post('/change-password', verifyCoach, changePassword)
+
+router.post('/reset-password', resetPassword)
 
 module.exports = router

@@ -38,7 +38,10 @@ exports.addCoach = async (req, res) => {
     const salt = await bcrypt.genSalt(10)
     const hashedPass = await bcrypt.hash(generatedPass, salt)
 
-    const coach = await Coach.create({ ...req.body, password: hashedPass }).select("-password");
+    const coach = await Coach.create({
+      ...req.body,
+      password: hashedPass,
+    })
 
     SuccessResponse(res, 201, 'Coach Created Successfully.', coach)
   } catch (error) {
@@ -53,7 +56,7 @@ exports.getCoach = async (req, res) => {
 
     if (!id) return ErrorResponse(res, 404, 'Coach not found')
 
-    const coach = await Coach.findById(id).select("-password");
+    const coach = await Coach.findById(id).select('-password')
 
     if (!coach) {
       return ErrorResponse(res, 404, 'Coach not found')
@@ -68,7 +71,7 @@ exports.getCoach = async (req, res) => {
 
 exports.getAllCoaches = async (req, res) => {
   try {
-    const coach = await Coach.find().select("-password");
+    const coach = await Coach.find().select('-password')
 
     if (!coach) {
       return ErrorResponse(res, 404, 'Coach not found')
@@ -95,7 +98,7 @@ exports.updateCoach = async (req, res) => {
       id,
       { $set: req.body },
       { new: true }
-    ).select("-password");
+    ).select('-password')
 
     return SuccessResponse(res, 200, 'Coach updated successfully', updatedCoach)
   } catch (error) {
@@ -115,7 +118,7 @@ exports.deleteCoach = async (req, res) => {
       return ErrorResponse(res, 404, 'Coach not found')
     }
 
-    const deletedCoach = await Coach.findByIdAndDelete(id).select("-password");
+    const deletedCoach = await Coach.findByIdAndDelete(id).select('-password')
 
     return SuccessResponse(res, 200, 'Coach deleted successfully', deletedCoach)
   } catch (error) {
@@ -134,7 +137,9 @@ exports.deleteCoaches = async (req, res) => {
       return ErrorResponse(res, 404, 'No coaches found')
     }
 
-    const deletedCoaches = await Coach.deleteMany({ _id: { $in: ids } }).select("-password");
+    const deletedCoaches = await Coach.deleteMany({ _id: { $in: ids } }).select(
+      '-password'
+    )
 
     return SuccessResponse(
       res,
@@ -153,6 +158,10 @@ exports.changePassword = async (req, res) => {
     const { currentPassword, newPassword } = req.body
     const { id } = req.coach
 
+    if (!currentPassword)
+      return ErrorResponse(res, 401, 'Current password is required')
+    if (!newPassword) return ErrorResponse(res, 401, 'New password is required')
+
     const existingCoach = await Coach.findById(id)
     if (!existingCoach) return ErrorResponse(res, 404, 'Coach not found')
 
@@ -168,6 +177,36 @@ exports.changePassword = async (req, res) => {
 
     existingCoach.password = hashedPass
     await existingCoach.save()
+
+    SuccessResponse(res, 200, 'Passwords updated successfully')
+  } catch (error) {
+    console.log('Error: ', error)
+    ErrorResponse(res, 500, 'Internal Server Error!', error)
+  }
+}
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const { email, newPassword } = req.body
+
+    if (!email) return ErrorResponse(res, 404, 'Email is required')
+    if (!newPassword) return ErrorResponse(res, 404, 'New password is required')
+
+    const existingCoach = await Coach.findOne({ email })
+
+    if (!existingCoach.isOTPVerified)
+      return ErrorResponse(res, 401, 'OTP not verified')
+
+    // console.log(first)
+
+    const salt = await bcrypt.genSalt(10)
+    const hashedPass = await bcrypt.hash(newPassword, salt)
+
+    existingCoach.password = hashedPass
+    existingCoach.isOTPVerified = false
+    await existingCoach.save()
+
+    SuccessResponse(res, 200, 'Password reset successfully')
   } catch (error) {
     console.log('Error: ', error)
     ErrorResponse(res, 500, 'Internal Server Error!', error)

@@ -4,6 +4,7 @@ import Button from './Button'
 import useAxios from '../hooks/useAxios'
 import { ToastContext } from '../context/ToastProvider'
 import { LoadingContext } from '../context/LoadingProvider'
+import { useNavigate } from 'react-router'
 
 const ForgotPassword = ({ closeModal }) => {
   const [step, setStep] = useState(1)
@@ -23,6 +24,8 @@ const ForgotPassword = ({ closeModal }) => {
 
   const { showToast } = useContext(ToastContext)
   const { setIsLoading } = useContext(LoadingContext)
+
+  const navigate = useNavigate()
 
   const handleOTPChange = (e, index) => {
     const value = e.target.value
@@ -155,8 +158,35 @@ const ForgotPassword = ({ closeModal }) => {
       setIsLoading(true)
 
       const response = await fetch(
-        'http://localhost:5500/api/v1/coach/update-coach'
+        'http://localhost:5500/api/v1/coach/reset-password',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            newPassword,
+          }),
+        }
       )
+
+      const json = await response.json()
+
+      if (response.ok) {
+        setIsLoading(false)
+        showToast(json.message)
+        navigate('/login')
+      } else {
+        if (
+          response.status === 401 ||
+          response.status === 404 ||
+          response.status === 500
+        ) {
+          setIsLoading(false)
+          return setError1(json.message)
+        }
+      }
 
       setIsLoading(false)
       closeModal()

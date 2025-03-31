@@ -7,8 +7,9 @@ import { HiOutlineLogin } from 'react-icons/hi'
 import { RiTeamFill } from 'react-icons/ri'
 import { FiActivity } from 'react-icons/fi'
 import { MdSportsScore, MdDashboardCustomize } from 'react-icons/md'
-import { IoExitOutline } from 'react-icons/io5'
 import { IoMdHome } from 'react-icons/io'
+import { TbLogout } from 'react-icons/tb'
+import { FaPowerOff } from 'react-icons/fa6'
 import useClickOutsideElement from '../../hooks/useClickOutsideElement'
 import NavLink from './NavLink'
 import { CoachContext } from '../../context/CoachProvider'
@@ -17,7 +18,7 @@ const VERTICAL_NAV_LINKS = [
   {
     label: 'Logout',
     path: '/exit',
-    icon: <IoExitOutline />,
+    icon: <TbLogout />,
     showOnAuth: true,
     showWithoutAuth: false,
     role: 'logout',
@@ -25,7 +26,7 @@ const VERTICAL_NAV_LINKS = [
   {
     label: 'Exit',
     path: '/exit',
-    icon: <IoExitOutline />,
+    icon: <FaPowerOff />,
     showOnAuth: true,
     showWithoutAuth: true,
   },
