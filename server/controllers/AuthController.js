@@ -50,7 +50,7 @@ exports.sendOTP = async (req, res) => {
     const hashed_otp = await bcrypt.hash(raw_otp, salt)
 
     const existingCoach = await Coach.findOne({
-      domain_name: email.toLowerCase().substring(0, email.indexOf('@')),
+      email,
     })
 
     if (!existingCoach) return ErrorResponse(res, 404, 'User not found.')
@@ -65,7 +65,7 @@ exports.sendOTP = async (req, res) => {
       subject: 'Reset Password',
       html: `
             <div>
-            <h3>Hello ${existingCoach.name},<br>Your otp to reset password is :</h3>
+            <h3>Hello ${existingCoach.domain_name},<br>Your otp to reset password is :</h3>
     
             <div style="display: flex; justify-content: center;">
                 <h1 fontSize:2vw; style="background-color:white; display: inline; color:rgb(0, 132, 209); padding-left: 1rem; padding-right: 1rem">${raw_otp}</h1>
@@ -109,7 +109,7 @@ exports.verifyOTP = async (req, res) => {
 
     const existingCoach = await Coach.findOne({
       domain_name: email.toLowerCase().substring(0, email.indexOf('@')),
-    })
+    }).select('-password')
     if (!existingCoach) return ErrorResponse(res, 404, 'User not found')
 
     const created_otp = existingCoach.otp
@@ -119,15 +119,8 @@ exports.verifyOTP = async (req, res) => {
     if (!isOTPValid) return ErrorResponse(res, 404, 'Invalid OTP')
 
     existingCoach.otp = ''
+    existingCoach.isOTPVerified = true
     const updatedCoach = await existingCoach.save()
-
-    // const updatedCoach = await Coach.findOneAndUpdate(
-    //   {
-    //     domain_name,
-    //   },
-    //   { otp: '' },
-    //   { new: true }
-    // )
 
     SuccessResponse(res, 200, 'OTP is valid', updatedCoach)
   } catch (error) {
