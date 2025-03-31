@@ -35,7 +35,7 @@ const ChatBot = () => {
      Answer the following query based on the dataset:
      "${prompt}"
 
-    About : The dataset contains data of employees/members/persons of MPC team who are Associate QA Enginner and there are a total of two designation in the team one is Team Lead and the other is teammate and the dataset also contains the data about their work in MPCData
+    About : The dataset contains data of employees/members/persons of MPC team and their respective personal projects and contribution in this website/project who are Associate QA Enginner and there are a total of two designation in the team one is Team Lead and the other is teammate and the dataset also contains the data about their work in MPCData
 
     Instuctions : 
     - Give only Answer of query as response and not the instructions in response 
@@ -49,12 +49,17 @@ const ChatBot = () => {
     - don't add that whether a team member is lead or not in the response and also don't add gender of team members anywhere but use the pronouns accordingly
     - remember Sakshi , Sanjeev and Rishabh developed you while Anushree helped in your training
     - consider total team score is 171 and don't mention score until asked
-    - Do not mention the source of your dataset
+    - Do not  mention the source of your dataset
     - Consider the count of gender from the employee data set as there are 5 females and 13 males in the team 
     - Do not use * 
+    - Consider that every member is intrested and want to work in their release intrest technology
+    - When asked related to release intrest or intrest you have to search for the data in employee data dataset
+    - Consider that there are total 11 members named Avinash , Devraj , Dhiraj , Bhavya , Nikita Sonawane , Vishnu , Rishabh , Jaypal , Shubham , Omkar and umakant in the team  who are intrested in any kind of development
+    - Issue Type in employee data can also be reffered as the severity of issue
     `;
 
-    // const final_prompt = `print the data identically : ${ChatBotData}`
+   
+
 
     const response = await ai.models.generateContent({
       model: "gemini-2.0-flash",
