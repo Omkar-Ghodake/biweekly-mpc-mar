@@ -28,6 +28,7 @@ const Tournaments = () => {
             onClick={() => {
               openModal();
               setCurrent(tournament);
+              // console.log(tournament);
             }}
             className="cursor-pointer relative bg-white/10 border border-white/30 backdrop-blur-lg px-6 rounded-2xl shadow-xl flex flex-col items-center w-[280px] transition duration-300 transform hover:scale-110 hover:shadow-2xl hover:border-green-400 hover:bg-white/20 object-cover"
           >
@@ -70,7 +71,12 @@ const Tournaments = () => {
                 }}
               ></div>
 
-              <div className="absolute z-[2]  left-1/2 -translate-x-1/2 -bottom-10  w-[350px] h-[70px]  bg-[#03104A]  rounded-t-[40px]"></div>
+            
+              <div className="absolute z-[2]  left-1/2 -translate-x-1/2 -bottom-10  w-[350px] h-[70px]  bg-[#03104A]  rounded-t-[40px] flex items-center justify-evenly text-white">
+              {current.issueCount !== 0 && (
+                <><p className="text-lg"><b>Issues:</b> {current.issueCount || 0}</p>
+                <p className="text-lg"><b>Score:</b> {current.totalScore || 0}</p>
+                </> )}</div>
             </div>
           </div>
           {/* Group 12 - Inner Section */}
@@ -79,7 +85,7 @@ const Tournaments = () => {
             <div className="absolute left-[0.75%] right-0 top-0 bottom-0 bg-[#03104A] rounded-[20px]"></div>
             {/* White Box */}
 
-            <div className="absolute left-0 right-[2.44%] top-[14.29%] bottom-0 bg-white rounded-[20px] flex items-center justify-center">
+            <div  className="absolute left-0 right-[2.44%] top-[14.29%] bottom-0 bg-white rounded-[20px] flex items-center justify-center">
               <p className="text-black text-4xl  text-center">
                 {current.title || "Error"}
               </p>
