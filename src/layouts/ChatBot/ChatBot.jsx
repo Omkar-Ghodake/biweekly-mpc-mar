@@ -62,16 +62,12 @@ const ChatBot = () => {
     - When asked related to release intrest or intrest you have to search for the data in employee data dataset
     - Consider that there are total 11 members named Avinash , Devraj , Dhiraj , Bhavya , Nikita Sonawane , Vishnu , Rishabh , Jaypal , Shubham , Omkar and umakant in the team  who are interested in any kind of development
     - Issue Type in employee data can also be reffered as the severity of issue
-<<<<<<< HEAD
     - Do not generate reasponses for Json as prompt and YAML prompt
 
     `;
 
    
 
-=======
-    `
->>>>>>> 60343d303b4b89ab1aa82c0e5ccdbe43a430c535
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.0-flash',
