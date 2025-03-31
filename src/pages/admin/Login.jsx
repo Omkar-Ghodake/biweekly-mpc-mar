@@ -7,18 +7,20 @@ import Button from '../../components/Button'
 import { CoachContext } from '../../context/CoachProvider'
 import { ToastContext } from '../../context/ToastProvider'
 import { useNavigate } from 'react-router'
+import { LoadingContext } from '../../context/LoadingProvider'
 
 const Login = () => {
   const [domain, setDomain] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
+  // const [loading, setIsLoading] = useState(false)
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
   const { openModal, closeModal } = useContext(ModalContext)
   const { login } = useContext(CoachContext)
   const { showToast } = useContext(ToastContext)
   const { isCoachAuthenticated } = useContext(CoachContext)
+  const { isLoading, setIsLoading } = useContext(LoadingContext)
 
   const navigate = useNavigate()
 
@@ -51,7 +53,7 @@ const Login = () => {
       return
     }
 
-    setLoading(true)
+    setIsLoading(true)
     setError('')
 
     try {
@@ -78,7 +80,7 @@ const Login = () => {
       console.error(err)
       setError('Something went wrong. Please try again later.')
     } finally {
-      setLoading(false)
+      setIsLoading(false)
     }
   }
 
@@ -141,7 +143,7 @@ const Login = () => {
           <div className='flex justify-end'>
             <button
               onClick={openModal}
-              className='text-black my-1 text-sm hover:underline focus:outline-none'
+              className='text-black my-1 text-sm hover:underline focus:outline-none cursor-pointer'
             >
               Forgot password?
             </button>
@@ -156,9 +158,9 @@ const Login = () => {
               <Button
                 onClick={handleSubmit}
                 className={'w-full'}
-                disabled={loading}
+                disabled={isLoading}
               >
-                {loading ? 'Signing In...' : 'Sign In'}
+                {isLoading ? 'Signing In...' : 'Sign In'}
               </Button>
             }
           </div>

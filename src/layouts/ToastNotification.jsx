@@ -13,11 +13,7 @@ const ToastNotification = () => {
       // transition={{ duration: 1, ease: 'easeInOut' }}
       className='z-50 fixed top-5 right-0 bg-white w-fit h-10 shadow-inner shadow-gray-500/80 flex items-center pl-5'
     >
-      <img
-        src={ball}
-        alt=''
-        className='absolute h-[150%] -translate-x-full animate-spin-reverse'
-      />
+      <img src={ball} alt='' className='absolute h-[150%] -translate-x-full' />
       <span
         className={`w-full text-right px-2 font-medium text-lg ${
           toastState.type === 'error' && 'text-red-500'

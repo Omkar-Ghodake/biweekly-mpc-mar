@@ -11,9 +11,9 @@ const PlayersProvider = ({ children }) => {
   )
 
   const updateData = () => {
-    console.log('refetching...')
+    // console.log('refetching...')
     refetch()
-    console.log('refetched data:', data)
+    // console.log('refetched data:', data)
   }
 
   useEffect(() => {

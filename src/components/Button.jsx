@@ -12,7 +12,7 @@ const Button = ({
   return (
     <button
       className={twMerge(
-        `btn-${variant} btn-${size} btn-${type} flex items-center justify-between space-x-2 rounded-lg shadow-md w-fit h-fit cursor-pointer font-medium duration-150 border-2 border-inherit`,
+        `btn-${variant} btn-${size} btn-${type} flex items-center justify-center space-x-2 rounded-lg shadow-md w-fit h-fit cursor-pointer font-medium duration-150 border-2 border-inherit text-center`,
         className
       )}
       onClick={onClick}
