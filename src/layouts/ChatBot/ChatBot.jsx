@@ -1,31 +1,36 @@
-import React, { useEffect, useState } from "react";
-import ChatBotButton from "./ChatBotButton";
-import ChatBox from "./ChatBox";
-import { GoogleGenAI } from "@google/genai";
-import { ChatBotData } from "./ChatBotData.js";
+import React, { useEffect, useState } from 'react'
+import ChatBotButton from './ChatBotButton'
+import ChatBox from './ChatBox'
+import { GoogleGenAI } from '@google/genai'
+import { ChatBotData } from './ChatBotData.js'
+import { useLocation } from 'react-router'
 
 const ChatBot = () => {
-  const [isChatBoxOpen, setIsChatBoxOpen] = useState(false);
-  const [displayGreeting, setDisplayGreeting] = useState(true);
-  const [messages, setMessages] = useState([]);
-  const [input, setInput] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
+  const [isChatBoxOpen, setIsChatBoxOpen] = useState(false)
+  const [displayGreeting, setDisplayGreeting] = useState(true)
+  const [messages, setMessages] = useState([])
+  const [input, setInput] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
+
+  const { pathname } = useLocation()
 
   // this code is for gemini ai
   const ai = new GoogleGenAI({
-    apiKey: "AIzaSyBdTxoCOu2KI4EsTi5XHlVdL-AAi_rlu8o",
-  });
+    apiKey: 'AIzaSyBdTxoCOu2KI4EsTi5XHlVdL-AAi_rlu8o',
+  })
+
+  const excludeChatbotLinks = ['/', '/landing']
 
   async function main() {
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: "Explain how AI works",
-    });
-    console.log(response.text);
+      model: 'gemini-2.0-flash',
+      contents: 'Explain how AI works',
+    })
+    console.log(response.text)
   }
 
   const generateResponse = async (prompt) => {
-    console.log(ChatBotData);
+    console.log(ChatBotData)
     // manipulated prompt
 
     const final_prompt = `
@@ -56,45 +61,43 @@ const ChatBot = () => {
     - When asked related to release intrest or intrest you have to search for the data in employee data dataset
     - Consider that there are total 11 members named Avinash , Devraj , Dhiraj , Bhavya , Nikita Sonawane , Vishnu , Rishabh , Jaypal , Shubham , Omkar and umakant in the team  who are intrested in any kind of development
     - Issue Type in employee data can also be reffered as the severity of issue
-    `;
-
-   
-
+    `
 
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: 'gemini-2.0-flash',
       contents: final_prompt,
-    });
-    return response.text;
-  };
+    })
+    return response.text
+  }
 
-  
   const sendMessage = async () => {
-    if (!input.trim()) return;
+    if (!input.trim()) return
 
-    setDisplayGreeting(false);
+    setDisplayGreeting(false)
 
-    const userMessage = { sender: "user", text: input };
-    setMessages([...messages, userMessage]);
-    setInput("");
-    setIsTyping(true);
+    const userMessage = { sender: 'user', text: input }
+    setMessages([...messages, userMessage])
+    setInput('')
+    setIsTyping(true)
 
     try {
-      const response = await generateResponse(input);
+      const response = await generateResponse(input)
       const botResponse = {
-        sender: "bot",
+        sender: 'bot',
         text: response,
-      };
+      }
 
-      setMessages((prev) => [...prev, botResponse]);
-      setIsTyping(false);
+      setMessages((prev) => [...prev, botResponse])
+      setIsTyping(false)
     } catch (error) {
-      sendMessage();
+      sendMessage()
     }
-  };
+  }
+
+  if (excludeChatbotLinks.includes(pathname)) return
 
   return (
-    <div className="h-fit w-fit fixed right-6 bottom-6">
+    <div className='h-fit w-fit fixed right-6 bottom-6'>
       {isChatBoxOpen ? (
         <ChatBox
           messages={messages}
@@ -109,7 +112,7 @@ const ChatBot = () => {
         <ChatBotButton setIsChatBoxOpen={setIsChatBoxOpen} />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ChatBot;
+export default ChatBot
