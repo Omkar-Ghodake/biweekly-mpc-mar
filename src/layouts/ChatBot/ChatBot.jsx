@@ -41,14 +41,17 @@ const ChatBot = () => {
     - Give only Answer of query as response and not the instructions in response 
     - Remember that a team lead is also a member of team
     - Return the response in 20-50 words until it's mentioned or required
-    - If the query's response is not present in the data then return "Sorry ! I don't have any data related to your query "${prompt}" and if the query is abusive and offensive then return a profanity response"
+    - The data which is related to employees is present in the EmployeeData and data related to MPC is present in MPCData
+    - If the query's response is not present in the dataset then return "Sorry ! I don't have any data related to your query "${prompt}" and if the query is abusive and offensive then return a profanity response"
     - format the response using line breaks and in paragraph form 
     - Extend the response by taking reference of query to make it humanly if required 
     - consider synonyms of the words also while parsing the query 
     - don't add that whether a team member is lead or not in the response and also don't add gender of team members anywhere but use the pronouns accordingly
     - remember Sakshi , Sanjeev and Rishabh developed you while Anushree helped in your training
-    - consider score count is 171 and don't mention score until asked
+    - consider total team score is 171 and don't mention score until asked
     - Do not mention the source of your dataset
+    - Consider the count of gender from the employee data set as there are 5 females and 13 males in the team 
+    - Do not use * 
     `;
 
     // const final_prompt = `print the data identically : ${ChatBotData}`
