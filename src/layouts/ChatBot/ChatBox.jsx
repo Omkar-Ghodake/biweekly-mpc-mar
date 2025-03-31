@@ -45,7 +45,7 @@ const ChatBox = ({
             <div className="text-2xl">MPC Chatbot</div>
           </div>
 
-          <div className="py-10 h-[82%] overflow-y-scroll">
+          <div className="py-10 h-[82%]">
             <div className="flex-1 space-y-2 p-4">
               {messages.map((msg, index) => (
                 <div
