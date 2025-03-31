@@ -11,8 +11,8 @@ exports.addPlayer = async (req, res) => {
       severity_count = {},  // Default to an empty object to prevent errors
       total_score,
       total_issues,
-      courses,
-      projects,
+      courses = [],
+      projects = [],
       gender,
       role,
 
@@ -118,16 +118,17 @@ exports.updatePlayer = async (req, res) => {
       if (!playerImage) {
         return ErrorResponse(res, 500, "Internal Cloudinary Error");
       }
-      playerImageUrl = playerImage.url; // Update image URL
+      playerImageUrl = playerImage.url; 
     }
 
-    // Convert courses to an array if it's a string
-    let updatedFields = { ...req.body, image: playerImageUrl };
-    if (req.body.projects && typeof req.body.projects === "string") {
-      updatedFields.projects = req.body.projects.split(",").map(course => course.trim());
-    }
+    let updatedFields = JSON.parse(JSON.stringify({ ...req.body, image: playerImageUrl }));
 
-    // Update player details
+    if (!Object.prototype.hasOwnProperty.call(updatedFields, "projects")) {
+      updatedFields.projects = [];
+    }
+    if (!Object.prototype.hasOwnProperty.call(updatedFields, "courses")) {
+      updatedFields.courses = [];
+    }
     const updatedPlayer = await Player.findByIdAndUpdate(id, { $set: updatedFields }, { new: true });
 
     return SuccessResponse(res, 200, "Player updated successfully", updatedPlayer);
@@ -136,7 +137,6 @@ exports.updatePlayer = async (req, res) => {
     ErrorResponse(res, 500, "Internal Server Error!", error);
   }
 };
-
 
 exports.deletePlayer = async (req, res) => {
   try {

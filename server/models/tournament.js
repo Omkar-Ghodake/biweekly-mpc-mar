@@ -12,11 +12,12 @@ const TournamentSchema = new Schema({
   },
   totalScore: {
     type: Number,
-    required: true,
+    default : 0
   },
   issueCount: {
     type: Number,
-    required: true,
+    default : 0
+
   },
   logo: {
     type: String,
