@@ -13,6 +13,10 @@ const CoachSchema = new Schema({
     unique: true,
     trim: true,
   },
+  email: {
+    type: String,
+    required: true,
+  },
   emp_id: {
     type: Number,
     required: true,
@@ -36,6 +40,10 @@ const CoachSchema = new Schema({
     required: true,
   },
   otp: String,
+  isOTPVerified: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 module.exports = model('Coach', CoachSchema)

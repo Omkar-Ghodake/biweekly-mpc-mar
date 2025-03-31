@@ -1,5 +1,6 @@
-import React, { createContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router'
+import React, { createContext, useContext, useEffect, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router'
+import { ToastContext } from './ToastProvider'
 
 const CoachContext = createContext()
 
@@ -10,7 +11,10 @@ const CoachProvider = ({ children }) => {
     localStorage.getItem('token') || null
   )
 
+  const { showToast } = useContext(ToastContext)
+
   const navigate = useNavigate()
+  const location = useLocation()
 
   const login = (token, coachData) => {
     localStorage.setItem('token', token)
@@ -41,10 +45,18 @@ const CoachProvider = ({ children }) => {
         }
       )
 
+      const json = await response.json()
       if (response.ok) {
-        const json = await response.json()
         setIsCoachAuthenticated(true)
         setCoach(json.data)
+      } else {
+        localStorage.removeItem('token')
+        if (json.error?.message) {
+          showToast('Session expired. Login again.')
+        }
+        if (location === '/dashboard') {
+          navigate('/login')
+        }
       }
     } catch (error) {
       console.log(error)

@@ -40,35 +40,35 @@ exports.authenticateUser = async (req, res) => {
 
 exports.sendOTP = async (req, res) => {
   try {
-    const { username, email } = req.body
+    const { email } = req.body
 
-    if (!username) return ErrorResponse(res, 401, 'Username required')
-    if (!email) return ErrorResponse(res, 401, 'Email required')
+    if (!email) return ErrorResponse(res, 401, 'Email is required')
 
     const raw_otp = Math.floor(100000 + Math.random() * 900000).toString()
 
     const salt = await bcrypt.genSalt(10)
     const hashed_otp = await bcrypt.hash(raw_otp, salt)
 
-    const updatedCoach = await Coach.findOneAndUpdate(
-      {
-        domain_name: email.substring(0, email.indexOf('@')),
-        // domain_name: 'Omkar.Ghodake',
-      },
-      { otp: hashed_otp },
-      { new: true }
-    )
+    const existingCoach = await Coach.findOne({
+      email,
+    })
+
+    if (!existingCoach) return ErrorResponse(res, 404, 'User not found.')
+
+    existingCoach.otp = hashed_otp
+
+    const updatedCoach = await existingCoach.save()
 
     const msg = {
       from: 'testbot.1831@gmail.com',
-      to: req.body.email,
+      to: email,
       subject: 'Reset Password',
       html: `
             <div>
-            <h3>Hello ${username},<br>Your otp to reset password is :</h3>
+            <h3>Hello ${existingCoach.domain_name},<br>Your otp to reset password is :</h3>
     
             <div style="display: flex; justify-content: center;">
-                <h1 fontSize:2vw; style="background-color:white; display: inline; color:rgb(0, 132, 209);">${raw_otp}</h1>
+                <h1 fontSize:2vw; style="background-color:white; display: inline; color:rgb(0, 132, 209); padding-left: 1rem; padding-right: 1rem">${raw_otp}</h1>
             </div>
     
             <h3>Thanks and Regards,<br>Team MPC</h3>
@@ -102,11 +102,14 @@ exports.sendOTP = async (req, res) => {
 
 exports.verifyOTP = async (req, res) => {
   try {
-    const { domain_name, user_otp } = req.body
+    const { email, user_otp } = req.body
 
-    if (!user_otp) return ErrorResponse(res, 404, 'OTP required')
+    if (!user_otp) return ErrorResponse(res, 401, 'OTP is required')
+    if (!email) return ErrorResponse(res, 401, 'Email is required')
 
-    const existingCoach = await Coach.findOne({ domain_name })
+    const existingCoach = await Coach.findOne({
+      domain_name: email.toLowerCase().substring(0, email.indexOf('@')),
+    }).select('-password')
     if (!existingCoach) return ErrorResponse(res, 404, 'User not found')
 
     const created_otp = existingCoach.otp
@@ -115,13 +118,9 @@ exports.verifyOTP = async (req, res) => {
 
     if (!isOTPValid) return ErrorResponse(res, 404, 'Invalid OTP')
 
-    const updatedCoach = await Coach.findOneAndUpdate(
-      {
-        domain_name,
-      },
-      { otp: '' },
-      { new: true }
-    )
+    existingCoach.otp = ''
+    existingCoach.isOTPVerified = true
+    const updatedCoach = await existingCoach.save()
 
     SuccessResponse(res, 200, 'OTP is valid', updatedCoach)
   } catch (error) {

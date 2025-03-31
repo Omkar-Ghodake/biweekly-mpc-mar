@@ -2,16 +2,19 @@ import React, { useState, useContext, useEffect } from "react";
 import background from "../../assets/background5.jpg";
 import imgPlaceholder from "../../glb/Blank Profile pic.png";
 import { CoachContext } from "../../context/CoachProvider";
+import { FaRegEdit, FaRegSave } from "react-icons/fa";
+import axios from "axios";
+import { ToastContext } from "../../context/ToastProvider";
 
 export default function CoachForm() {
   const coach = useContext(CoachContext);
   const coachData = coach.coach;
-
+  console.log(coachData);
+  const toast = useContext(ToastContext);
   const [formData, setFormData] = useState({
     name: "",
     domain_name: "",
     emp_id: "",
-    password: "",
     image: "",
     description: "",
     gender: "",
@@ -21,71 +24,135 @@ export default function CoachForm() {
 
   useEffect(() => {
     if (coachData) {
-      setFormData(coachData);
+      setFormData((prev) => ({ ...prev, ...coachData }));
       setImage(coachData.image || "");
     }
   }, [coachData]);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value, type } = e.target;
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: type === "number" ? Number(value) : value, // Ensure numbers are stored correctly
+    }));
   };
 
+  const convertBase64ToFile = (base64String, fileName) => {
+    let arr = base64String.split(",");
+    let mime = arr[0].match(/:(.*?);/)[1]; // Extract MIME type
+    let bstr = atob(arr[1]); // Decode Base64
+    let n = bstr.length;
+    let u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    const file = new File([u8arr], fileName, { type: mime });
+
+    setFormData((prevData) => ({
+      ...prevData,
+      image: file, // ✅ Store file in formData
+    }));
+  };
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result);
+        setImage(reader.result); // ✅ Store Base64 for preview
+        convertBase64ToFile(reader.result, file.name); // ✅ Convert and set in formData
       };
       reader.readAsDataURL(file);
+
+      setFormData((prevData) => ({
+        ...prevData,
+        image: file, // ✅ Store file for submission
+      }));
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData); // Replace with API call
+    try {
+      const response = await axios.patch(
+        "http://localhost:5500/api/v1/coach/update-coach",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      if (response.status === 200) {
+        toast.showToast("Coach Updated Successfully");
+      }
+    } catch (error) {
+      toast.showToast("Couldn't Update coach", "error");
+    } finally {
+      coachData.checkForSession;
+      setFormData(coachData)
+    }
   };
+  console.log(formData); // Replace with API call
 
   return (
     <div
       className="h-screen flex items-center justify-center bg-cover bg-center transition-all delay-200"
       style={{ backgroundImage: `url(${background})` }}
     >
-      <div className="max-w-4xl w-full bg-white shadow-lg rounded-lg p-6 flex flex-col">
-        <div className="w-full flex px-4 justify-between text-center text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-xl shadow-md p-3">
+      <div className="max-w-4xl w-full h-full max-h-[80%] bg-white shadow-lg rounded-xl p-6 flex flex-col">
+        {/* Header Section */}
+        <div className="w-full flex px-4 justify-between text-white bg-[#1E4788] rounded-xl shadow-md p-3">
           <h2 className="text-xl font-bold">Coach Registration</h2>
         </div>
-        <div className="flex">
-          <div className="flex flex-col justify-center items-center h-[55vh] w-1/3">
-            <img
-              src={image || imgPlaceholder}
-              alt="Profile"
-              className="w-auto h-72 object-contain"
-            />
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="hidden"
-              id="imageUpload"
-            />
-            <label
-              htmlFor="imageUpload"
-              className="px-4 py-2 mt-3 bg-sky-700 text-white rounded-lg shadow-md w-fit cursor-pointer hover:bg-sky-800 hover:shadow-xl hover:scale-105 transition-transform duration-200"
-            >
-              Upload
-            </label>
+
+        <div className="flex h-full">
+          {/* Image Upload Section */}
+          <div className="flex flex-col justify-center items-center h-[80%] w-1/3">
+            <div className="flex justify-center items-center bg-white h-[60%] w-[90%] rounded-2xl drop-shadow-xl relative group">
+              <label
+                htmlFor="imageUpload"
+                className="cursor-pointer flex justify-center "
+              >
+                <img
+                  src={image || imgPlaceholder}
+                  alt="Profile"
+                  className="w-[80%] h-auto object-contain"
+                />
+                <span className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#1E4788] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  Upload an Image
+                </span>
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                className="hidden"
+                id="imageUpload"
+              />
+            </div>
           </div>
+
+          {/* Form Fields Section */}
           <div className="w-2/3 p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               {[
                 { label: "Name", name: "name", type: "text" },
                 { label: "Domain Name", name: "domain_name", type: "text" },
-                { label: "Employee ID", name: "emp_id", type: "number" },
-                { label: "Password", name: "password", type: "password" },
+                {
+                  label: "Employee ID",
+                  name: "emp_id",
+                  type: "number",
+                  maxLength: 8,
+                },
               ].map((field) => (
                 <div key={field.name} className="flex items-center w-full">
-                  <label htmlFor={field.name} className="font-medium w-1/3">
+                  <label
+                    htmlFor={field.name}
+                    className="font-medium w-1/3 text-[#1E4788]"
+                  >
                     {field.label}
                   </label>
                   <input
@@ -94,37 +161,50 @@ export default function CoachForm() {
                     name={field.name}
                     placeholder={`Enter ${field.label.toLowerCase()}`}
                     required
+                    maxLength={field.maxLength}
                     value={formData[field.name]}
                     onChange={handleChange}
-                    className={`ml-5 w-full p-2 rounded-3xl transition-all duration-200 ${
-                      isEditing ? "border focus:outline-blue-500" : "bg-gray-100 cursor-default"
+                    className={`ml-5 w-full p-2 rounded-xl transition-all duration-200 border shadow-md ${
+                      isEditing
+                        ? "focus:outline-[#1E4788]"
+                        : "bg-gray-100 cursor-default"
                     }`}
                     readOnly={!isEditing}
                   />
                 </div>
               ))}
+
+              {/* Description Field */}
               <div className="flex items-center w-full">
-                <label htmlFor="description" className="font-medium w-1/3">
+                <label
+                  htmlFor="description"
+                  className="font-medium w-1/3 text-[#1E4788]"
+                >
                   Description
                 </label>
                 <textarea
                   id="description"
                   name="description"
                   placeholder="Enter description"
-                  className="ml-5 w-full p-2 rounded-3xl border focus:outline-blue-500"
+                  className="ml-5 w-full max-h-52 min-h-32 p-2 rounded-xl border shadow-md focus:outline-[#1E4788]"
                   value={formData.description}
                   onChange={handleChange}
                 ></textarea>
               </div>
+
+              {/* Gender Selection */}
               <div className="flex items-center w-full">
-                <label htmlFor="gender" className="font-medium w-1/3">
+                <label
+                  htmlFor="gender"
+                  className="font-medium w-1/3 text-[#1E4788]"
+                >
                   Gender
                 </label>
                 <select
                   id="gender"
                   name="gender"
                   required
-                  className="ml-5 w-full p-2 rounded-3xl border focus:outline-blue-500"
+                  className="ml-5 w-full p-2 rounded-xl border shadow-md focus:outline-[#1E4788]"
                   value={formData.gender}
                   onChange={handleChange}
                 >
@@ -133,9 +213,30 @@ export default function CoachForm() {
                   <option value="female">Female</option>
                 </select>
               </div>
-              <button type="submit" className="w-full p-2 bg-blue-600 text-white rounded">
-                Submit
-              </button>
+
+              {/* Submit Button */}
+              <div className="w-full  p-2 flex justify-center space-x-5 rounded-b-2xl">
+                {/* Edit Button */}
+                {/* <button
+                  type="button"
+                  className="w-[120px] h-[40px] px-4 py-2 text-white rounded-xl shadow-md bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
+                  onClick={() => {}}
+                >
+                  <div className="flex items-center justify-center gap-4">
+                    <FaRegEdit />
+                    <span>Edit</span>
+                  </div>
+                </button> */}
+
+                {/* Save/Update Button */}
+                <button
+                  type="submit"
+                  className="flex items-center gap-4 w-[120px] h-[40px] px-4 py-2 text-white rounded-xl shadow-md bg-[#68AA45] hover:bg-green-700 hover:cursor-pointer"
+                >
+                  <FaRegSave />
+                  Save
+                </button>
+              </div>
             </form>
           </div>
         </div>

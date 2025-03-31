@@ -6,13 +6,13 @@ exports.addPlayer = async (req, res) => {
   try {
     const {
       domain_name,
-      name,
       emp_id,
       pre_score,
       severity_count = {},  // Default to an empty object to prevent errors
       total_score,
       total_issues,
-      courses,
+      courses = [],
+      projects = [],
       gender,
       role,
 
@@ -33,7 +33,7 @@ exports.addPlayer = async (req, res) => {
     // Check if image is uploaded
     const playerImagePath = req.file?.path;
     console.log(playerImagePath);
-    
+
     if (!playerImagePath) {
       return ErrorResponse(res, 404, "Player's Image is required");
     }
@@ -43,19 +43,21 @@ exports.addPlayer = async (req, res) => {
     if (!playerImage) {
       return ErrorResponse(res, 500, "Internal Cloudinary Error");
     }
-
+    
+    const coursesArray = courses?.split(","); 
+    const projectsArray = projects?.split(","); 
 
     // Create player in DB
     const player = await Player.create({
       domain_name,
-      name,
+      name : domain_name,
       emp_id,
       pre_score,
       severity_count,
       total_issues,  // ✅ Add total issues
       total_score,
-      courses,
-      gender,
+      courses : coursesArray,
+      projects : projectsArray,
       role,
       image: playerImage.url
     });
@@ -106,7 +108,7 @@ exports.updatePlayer = async (req, res) => {
     // Check if player exists
     const existingPlayer = await Player.findById(id);
     if (!existingPlayer) {
-      return ErrorResponse(res, 404, 'Player not found');
+      return ErrorResponse(res, 404, "Player not found");
     }
 
     // If an image is uploaded, handle it
@@ -116,25 +118,23 @@ exports.updatePlayer = async (req, res) => {
       if (!playerImage) {
         return ErrorResponse(res, 500, "Internal Cloudinary Error");
       }
-      playerImageUrl = playerImage.url; // Update image URL
+      playerImageUrl = playerImage.url; 
     }
 
-    // Update player details
-    const updatedPlayer = await Player.findByIdAndUpdate(
-      id,
-      {
-        $set: {
-          ...req.body,  // Update other fields
-          image: playerImageUrl, // Update image if uploaded
-        },
-      },
-      { new: true } // Return updated document
-    );
+    let updatedFields = JSON.parse(JSON.stringify({ ...req.body, image: playerImageUrl }));
 
-    return SuccessResponse(res, 200, 'Player updated successfully', updatedPlayer);
+    if (!Object.prototype.hasOwnProperty.call(updatedFields, "projects")) {
+      updatedFields.projects = [];
+    }
+    if (!Object.prototype.hasOwnProperty.call(updatedFields, "courses")) {
+      updatedFields.courses = [];
+    }
+    const updatedPlayer = await Player.findByIdAndUpdate(id, { $set: updatedFields }, { new: true });
+
+    return SuccessResponse(res, 200, "Player updated successfully", updatedPlayer);
   } catch (error) {
-    console.error('Error:', error);
-    ErrorResponse(res, 500, 'Internal Server Error!', error);
+    console.error("Error:", error);
+    ErrorResponse(res, 500, "Internal Server Error!", error);
   }
 };
 

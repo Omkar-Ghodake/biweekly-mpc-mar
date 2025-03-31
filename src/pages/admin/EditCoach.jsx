@@ -6,26 +6,26 @@ import { CoachContext } from "../../context/CoachProvider";
 export default function CoachForm() {
   const coach = useContext(CoachContext);
   const coachData = coach.coach;
+  console.log(coach);
   
   const [formData, setFormData] = useState({
-      name: "",
-      domain_name: "",
-      emp_id: "",
-      password: "",
-      image: "",
-      description: "",
-      gender: "",
-    });
-    const [image, setImage] = useState("");
-    const [isEditing, setIsEditing] = useState(true);
-    
-    useEffect(() => {
-        if (coachData) {
+    name: "",
+    domain_name: "",
+    emp_id: "",
+    image: "",
+    description: "",
+    gender: "",
+  });
+  const [image, setImage] = useState("");
+  const [isEditing, setIsEditing] = useState(true);
+
+  useEffect(() => {
+    if (coachData) {
       setFormData(coachData);
       setImage(coachData.image || "");
     }
-}, [coachData]);
-console.log(coachData);
+  }, [coachData]);
+  console.log(coachData);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -83,7 +83,6 @@ console.log(coachData);
                 { label: "Name", name: "name", type: "text" },
                 { label: "Domain Name", name: "domain_name", type: "text" },
                 { label: "Employee ID", name: "emp_id", type: "number" },
-                { label: "Password", name: "password", type: "password" },
               ].map((field) => (
                 <div key={field.name} className="flex items-center w-full">
                   <label htmlFor={field.name} className="font-medium w-1/3">
@@ -98,7 +97,9 @@ console.log(coachData);
                     value={formData[field.name]}
                     onChange={handleChange}
                     className={`ml-5 w-full p-2 rounded-3xl transition-all duration-200 ${
-                      isEditing ? "border focus:outline-blue-500" : "bg-gray-100 cursor-default"
+                      isEditing
+                        ? "border focus:outline-blue-500"
+                        : "bg-gray-100 cursor-default"
                     }`}
                     readOnly={!isEditing}
                   />
@@ -134,7 +135,10 @@ console.log(coachData);
                   <option value="female">Female</option>
                 </select>
               </div>
-              <button type="submit" className="w-full p-2 bg-blue-600 text-white rounded">
+              <button
+                type="submit"
+                className="w-full p-2 bg-blue-600 text-white rounded"
+              >
                 Submit
               </button>
             </form>

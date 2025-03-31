@@ -8,11 +8,6 @@ const PlayerSchema = new Schema({
     unique: true,
     trim: true,
   },
-  name: {
-    type: String,
-    required: true,
-    trim: true,
-  },
   emp_id: {
     type: Number,
     required: true,
@@ -41,14 +36,13 @@ const PlayerSchema = new Schema({
     type: [String],
     default: [],
   },
+  projects: {
+    type: [String],
+    default: [],
+  },
   image: {
     type: String,
     default: '',
-  },
-  gender: {
-    type: String,
-    enum: ['Male', 'Female', 'Other'],
-    required: true,
   },
   role: {
     type: String,

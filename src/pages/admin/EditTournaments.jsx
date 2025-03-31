@@ -15,6 +15,7 @@ import Button from "../../components/Button";
 import { TournamentsContext } from "../../context/TournamentsProvider";
 import axios from "axios";
 import { ToastContext } from "../../context/ToastProvider";
+import { LoadingContext } from "../../context/LoadingProvider";
 
 const EditTournaments = () => {
   const [tournaments, setTournaments] = useState([]); // State to store tournaments
@@ -23,6 +24,7 @@ const EditTournaments = () => {
   const toast = useContext(ToastContext);
   const tournamentsArray = tournamentsContext.tournaments; // Fetch tournaments from context
   const [image, setImage] = useState(logo_default || ""); // Default image for preview
+  const { isLoading, setIsLoading } = useContext(LoadingContext);
 
   // State to track if the form is in editing mode
   const [isEditing, setIsEditing] = useState(false);
@@ -99,12 +101,7 @@ const EditTournaments = () => {
     e.preventDefault();
 
     // Validate required fields
-    if (
-      !currentTournament.title ||
-      !currentTournament.description ||
-      !currentTournament.totalScore ||
-      !currentTournament.issueCount
-    ) {
+    if (!currentTournament.title || !currentTournament.description) {
       toast.showToast("Please fill in all required fields", "error");
       return;
     }
@@ -119,7 +116,7 @@ const EditTournaments = () => {
     if (currentTournament.logo) {
       formData.append("logo", currentTournament.logo); // Append the file directly
     }
-
+    setIsLoading(true);
     try {
       const response = await axios.post(
         "http://localhost:5500/api/v1/tournaments/add-tournament",
@@ -152,6 +149,8 @@ const EditTournaments = () => {
         error.response?.data?.message || "Internal server error",
         "error"
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -170,7 +169,7 @@ const EditTournaments = () => {
     if (currentTournament.logo) {
       formData.append("logo", currentTournament.logo);
     }
-
+    setIsLoading(true);
     try {
       const response = await axios.patch(
         `http://localhost:5500/api/v1/tournaments/update-tournament/${id}`,
@@ -195,12 +194,15 @@ const EditTournaments = () => {
         error.response?.data?.message || "An error occurred.",
         "error"
       );
+    } finally {
+      setIsLoading(false);
     }
   };
 
   // Delete a tournament
   const deleteTournament = async () => {
     const id = currentTournament._id;
+    setIsLoading(true);
     try {
       const response = await axios.delete(
         `http://localhost:5500/api/v1/tournaments/delete-tournament/${id}`
@@ -213,11 +215,13 @@ const EditTournaments = () => {
         error.response?.data?.message || "An error occurred. Please try again.",
         "error"
       );
+    } finally {
+      setIsLoading(false)
+      setCurrentTournament(null);
+      closeModal();
+      setIsEditing(false);
+      tournamentsContext.fetchTournaments();
     }
-    setCurrentTournament(null);
-    closeModal();
-    setIsEditing(false);
-    tournamentsContext.fetchTournaments();
   };
 
   // Start editing a tournament
@@ -293,18 +297,18 @@ const EditTournaments = () => {
             setCurrentTournament(null);
             setCreateNew(false);
           }}
-          className="bg-[rgba(255,255,255,0.60)]"
+          className=" text-md  tracking-wide"
         >
           <ModalHead className="w-1/3">
             <div className="w-full text-center text-white bg-[#1E4788] rounded-xl shadow-md p-3 flex justify-between items-center">
               <span>{currentTournament.title || "New Tournament"}</span>
-              <span className="text-sm bg-white text-sky-800 px-3 py-1 rounded-xl shadow-md">
+              <span className="font-bold ">
                 Total Score: {currentTournament.totalScore || 0}
               </span>
             </div>
           </ModalHead>
           <ModalBody>
-            <div className="p-2 flex flex-row items-start">
+            <div className="p-2 flex flex-row items-start min-h-[300px] text-[#1E4788]">
               <div className="w-2/3">
                 <form className="space-y-6">
                   <div className="flex flex-col space-y-4">
@@ -323,7 +327,7 @@ const EditTournaments = () => {
                         placeholder="Enter Tournament Name"
                         value={currentTournament.title}
                         onChange={handleInputChange}
-                        className={`w-2/4 p-2 shadow-2xl rounded-xl transition-all duration-200 ${
+                        className={`w-2/4 p-2 rounded-xl transition-all duration-200 ${
                           isEditing
                             ? "border focus:outline-blue-500 bg-gray-100 border-gray-400"
                             : "bg-gray-100 cursor-default"
@@ -347,7 +351,7 @@ const EditTournaments = () => {
                         value={currentTournament.description}
                         onChange={handleInputChange}
                         maxLength={200}
-                        className={`w-2/4 p-2 shadow-2xl rounded-xl transition-all duration-200 resize-none border-gray-400 ${
+                        className={`w-2/4 p-2 rounded-xl transition-all duration-200 resize-none border-gray-400 ${
                           isEditing
                             ? "border focus:outline-blue-500 bg-gray-100 border-gray-400"
                             : "bg-gray-100 cursor-default"
@@ -371,7 +375,7 @@ const EditTournaments = () => {
                         type="number"
                         value={currentTournament.issueCount}
                         onChange={handleInputChange}
-                        className={`w-2/4 p-2 shadow-2xl rounded-xl transition-all duration-200 resize-none border-gray-400 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+                        className={`w-2/4 p-2 rounded-xl transition-all duration-200 resize-none border-gray-400 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
                           isEditing
                             ? "border focus:outline-blue-500 bg-gray-100"
                             : "bg-gray-100 cursor-default"
@@ -395,7 +399,7 @@ const EditTournaments = () => {
                           type="number"
                           value={currentTournament.totalScore}
                           onChange={handleInputChange}
-                          className={`w-2/4 p-2 shadow-2xl rounded-xl transition-all duration-200 resize-none border-gray-400 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+                          className={`w-2/4 p-2 rounded-xl transition-all duration-200 resize-none border-gray-400 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
                             isEditing
                               ? "border focus:outline-blue-500 bg-gray-100"
                               : "bg-gray-100 cursor-default"
@@ -408,37 +412,32 @@ const EditTournaments = () => {
                   </div>
                 </form>
               </div>
-              <div className="w-1/3 flex flex-col items-center space-y-4">
-                <img
-                  src={image || logo_default}
-                  alt="Tournament"
-                  className={`w-72 h-72 object-cover shadow-2xl rounded-xl ${
-                    image === logo_default
-                      ? "border-1 border-sky-700"
-                      : "w-72 h-72 object-cover shadow-2xl rounded-xl"
-                  }`}
-                />
-                <button
-                  type="button"
-                  className={`px-4 py-2 text-white rounded-lg shadow-md ${
-                    isEditing
-                      ? "bg-sky-700 hover:bg-sky-800 hover:cursor-pointer"
-                      : "bg-gray-400 cursor-not-allowed"
-                  }`}
-                  onClick={() => fileInputRef.current.click()}
-                  disabled={!isEditing}
-                >
-                  {createNew && isEditing ? "Upload" : "Update"}
-                </button>
-                <input
-                  id="image"
-                  name="image"
-                  type="file"
-                  accept="image/*"
-                  ref={fileInputRef}
-                  className="hidden"
-                  onChange={handleImageUpload}
-                />
+              <div className="w-1/2 h-full flex justify-center items-center ">
+                <div className="flex justify-center bg-white items-center h-[85%] w-[70%] rounded-2xl drop-shadow-2xl relative group p-2">
+                  <label
+                    htmlFor="imageUpload"
+                    className="cursor-pointer flex justify-center "
+                  >
+                    <img
+                      src={image || img}
+                      alt="Profile"
+                      className="h-[60%] w-auto"
+                    />
+                    <span className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#1E4788] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      Upload an Image
+                    </span>
+                  </label>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    id="imageUpload"
+                    disabled={!isEditing}
+                  />
+
+                  {/* <FaRegEdit className="w-6 h-6 absolute bottom-6 right-2"/> */}
+                </div>
               </div>
             </div>
             {/* Buttons Outside the Form */}
@@ -470,20 +469,20 @@ const EditTournaments = () => {
                 onClick={createNew ? addTournament : updateDetails}
               >
                 {/* {isEditing ? "Update" : "Save"} */}
-                {createNew && isEditing ? "Save" : "Update"}
+                {createNew ? "Save" : "Update"}
               </button>
-              {!createNew && (
+              {!createNew && isEditing && (
                 <button
                   type="button"
                   className={`w-[120px] h-[40px] px-3 py-2  text-white rounded-xl shadow-md ${
-                    isEditing ||
+                    !isEditing ||
                     (currentTournament && currentTournament.id === null)
                       ? "bg-gray-400 cursor-not-allowed"
                       : "bg-[#950202] hover:bg-red-700"
                   }`}
                   onClick={deleteTournament}
                   disabled={
-                    isEditing ||
+                    !isEditing ||
                     (currentTournament && currentTournament.id === null)
                   }
                 >

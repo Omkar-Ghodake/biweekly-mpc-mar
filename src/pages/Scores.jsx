@@ -10,6 +10,9 @@ import { PiSelectionBackgroundDuotone } from "react-icons/pi";
 import StadiumBack from "./StadiumBack";
 import { PlayersContext } from "../context/PlayersProvider";
 import { FaChevronUp, FaChevronDown } from "react-icons/fa";
+import useAxios from "../hooks/useAxios";
+import Button from "../components/Button";
+
 const Scores = () => {
   const gridItemVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -19,18 +22,28 @@ const Scores = () => {
       transition: { delay: index * 0.1, duration: 0.5, ease: "easeOut" },
     }),
   };
-  const { openModal } = useContext(ModalContext);
+  const { openModal, closeModal } = useContext(ModalContext);
   const [selectedPlayer, setSelectedPlayer] = useState(null);
-  const { players, fetchPlayers } = useContext(PlayersContext);
+  const { players, updateData } = useContext(PlayersContext);
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
   const [isProjectOpen, setIsProjectOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("courses"); // Default to Courses
 
+  // useEffect(() => {
+  //   fetchPlayers()
+  // }, [])
+
   useEffect(() => {
-    fetchPlayers();
-  }, []);
+    if (closeModal) {
+      setActiveSection("courses");
+    }
+  }, [closeModal]);
 
   // console.log(selectedPlayer.project);
+
+  // const { data, error, loading } = useAxios(
+  //   'http://localhost:5500/api/v1/players/get-all-players'
+  // )
 
   const toggleCourses = () => {
     setIsCoursesOpen(!isCoursesOpen);
@@ -40,171 +53,17 @@ const Scores = () => {
     setIsProjectOpen(!isProjectOpen);
     setIsCoursesOpen(false);
   };
-  // const players = [
-  //   {
-  //     id: 1,
-  //     name: "Vishnu Menon",
-  //     image: "src/glb/Members_Photos_Final/Vishnu.png",
-  //     role: "Captain",
-  //     currentScore: 31,
-  //     previousScore: 0,
-  //     courses: ["C++", "Java", "Backend with Database and springboot"],
-  //   },
-  //   {
-  //     id: 2,
-  //     name: "Anagha Shinde",
-  //     image: "src/glb/Members_Photos_Final/Anagha.png",
-  //     role: "Captain",
-  //     currentScore: 18,
-  //     previousScore: 0,
-  //     courses: ["Python", "JavaScript"],
-  //   },
-  //   {
-  //     id: 3,
-  //     name: "Anshree Shukla",
-  //     image: "src/glb/Members_Photos_Final/Anushree.png",
-  //     currentScore: 13,
-  //     previousScore: 0,
-  //     courses: ["React", "Node.js"],
-  //   },
-  //   {
-  //     id: 4,
-  //     name: "Avinash Gupta",
-  //     image: "src/glb/Members_Photos_Final/Avinash.png",
-  //     currentScore: 3,
-  //     previousScore: 0,
-  //     courses: ["C#", "ASP.NET"],
-  //   },
-  //   {
-  //     id: 5,
-  //     name: "Bhavya Momaya",
-  //     image: "src/glb/Members_Photos_Final/Bhavya.png",
-  //     currentScore: 10,
-  //     previousScore: 0,
-  //     courses: ["Data Science", "Machine Learning"],
-  //   },
-  //   {
-  //     id: 6,
-  //     name: "Devraj Singh",
-  //     image: "src/glb/Members_Photos_Final/Devraj.png",
-  //     currentScore: 5,
-  //     previousScore: 0,
-  //     courses: ["Cybersecurity", "Blockchain"],
-  //   },
-  //   {
-  //     id: 7,
-  //     name: "Dhiraj Kunder",
-  //     image: "src/glb/Members_Photos_Final/Dhiraj.png",
-  //     currentScore: 6,
-  //     previousScore: 0,
-  //     courses: ["Swift", "iOS Development"],
-  //   },
-  //   {
-  //     id: 8,
-  //     name: "Jaypal Koli",
-  //     image: "src/glb/Members_Photos_Final/Jaipal.png",
-  //     currentScore: 3,
-  //     previousScore: 0,
-  //     courses: ["Kotlin", "Android Development"],
-  //   },
-  //   {
-  //     id: 9,
-  //     name: "Manoj Inbarajan",
-  //     image: "src/glb/Members_Photos_Final/Manoj.png",
-  //     currentScore: 6,
-  //     previousScore: 0,
-  //     courses: ["PHP", "Laravel"],
-  //   },
-  //   {
-  //     id: 10,
-  //     name: "Mridual Upadhya",
-  //     image: "src/glb/Members_Photos_Final/Mridul.png",
-  //     currentScore: 3,
-  //     previousScore: 0,
-  //     courses: ["Go", "Rust"],
-  //   },
-  //   {
-  //     id: 11,
-  //     name: "Nikita Sonawane",
-  //     image: "src/glb/Members_Photos_Final/Nikita_Sonawane.png",
-  //     currentScore: 4,
-  //     previousScore: 0,
-  //     courses: ["UI/UX", "Graphic Design"],
-  //   },
-  //   {
-  //     id: 12,
-  //     name: "Nikita Suhane",
-  //     image: "src/glb/Members_Photos_Final/Nikita_Suhane.png",
-  //     currentScore: 5,
-  //     previousScore: 0,
-  //     courses: ["AWS", "Cloud Computing"],
-  //   },
-  //   {
-  //     id: 13,
-  //     name: "Omkar Ghodake",
-  //     image: "src/glb/Members_Photos_Final/Omkar.png",
-  //     currentScore: 8,
-  //     previousScore: 0,
-  //     courses: ["SQL", "Database Management"],
-  //   },
-  //   {
-  //     id: 14,
-  //     name: "Prithwikumar Selukar",
-  //     image: "src/glb/Members_Photos_Final/Prithwi.png",
-  //     currentScore: 0,
-  //     previousScore: 0,
-  //     courses: ["Ethical Hacking", "Cybersecurity"],
-  //   },
-  //   {
-  //     id: 15,
-  //     name: "Rishabh Kanojiya",
-  //     image: "src/glb/Members_Photos_Final/Rishabh.png",
-  //     currentScore: 8,
-  //     previousScore: 0,
-  //     courses: ["Python", "AI"],
-  //   },
-  //   {
-  //     id: 16,
-  //     name: "Sakshi Rai",
-  //     image: "src/glb/Members_Photos_Final/Sakshi.png",
-  //     currentScore: 14,
-  //     previousScore: 0,
-  //     courses: ["JavaScript", "TypeScript"],
-  //   },
-  //   {
-  //     id: 17,
-  //     name: "Sanjeev Prajapati",
-  //     image: "src/glb/Members_Photos_Final/Sanjeev.png",
-  //     currentScore: 4,
-  //     previousScore: 0,
-  //     courses: ["C", "Embedded Systems"],
-  //   },
-  //   {
-  //     id: 18,
-  //     name: "Shubham Joshi",
-  //     image: "src/glb/Members_Photos_Final/Shubham.png",
-  //     currentScore: 8,
-  //     previousScore: 0,
-  //     courses: ["C++", "Java"],
-  //   },
-  //   {
-  //     id: 19,
-  //     name: "Umakant Patil",
-  //     image: "src/glb/Members_Photos_Final/Umakant.png",
-  //     currentScore: 9,
-  //     previousScore: 0,
-  //     courses: ["Big Data", "Hadoop"],
-  //   },
-  // ];
 
   const handleCardClick = (player) => {
     setSelectedPlayer(player);
     openModal();
   };
 
-  const sortedPlayers = players.sort((a, b) => b.currentScore - a.currentScore);
+  const sortedPlayers = players.sort((a, b) => b.total_score - a.total_score);
   return (
     <>
+      {/* <Button onClick={updateData}>click to re fetch</Button> */}
+
       <div className="relative w-screen h-screen">
         {/* Background Component */}
         <div className="absolute inset-0 ">
@@ -268,7 +127,7 @@ const Scores = () => {
                     {/* Bottom Triangle */}
                     <div class="absolute bottom-[-40px] w-0 h-0 border-l-[112px] border-r-[112px] border-t-[40px] border-l-transparent border-r-transparent border-t-[#1E4788] cursor-pointer"></div>
                     <span class="absolute bottom-15 left-1/2 transform -translate-x-1/2 text-white font-bold text-xl text-center w-full z-1">
-                      {player.name}
+                      {player.domain_name}
                     </span>
                     <span class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white text-sm text-center w-full z-1">
                       Team MPC
@@ -281,7 +140,7 @@ const Scores = () => {
         </div>
       </div>
       {selectedPlayer && (
-        <Modal className="bg-transparent w-1/3 flex justify-center">
+        <Modal className="bg-transparent max-w-1/3  flex items-start justify-center ">
           <div className="absolute w-[750px] h-[600px] flex  justify-center items-end mx-auto">
             {/* Player Rank (Top-Right Corner) */}
             <div
@@ -314,7 +173,7 @@ const Scores = () => {
                 {/* Player Details Container */}
                 <div className="flex flex-col ">
                   <span className="font-bold text-2xl">
-                    {selectedPlayer.name}
+                    {selectedPlayer.domain_name}
                   </span>
 
                   <span className="font-bold text-sm">Team MPC</span>
@@ -353,25 +212,25 @@ const Scores = () => {
                 clipPath: "polygon(0% 65%, 100% 20%, 100% 100%, 0% 100%)",
               }}
             >
-              <div className="relative grid grid-cols-1 md:grid-cols-3 py-70 p-5 gap-4">
+              <div className="relative grid grid-cols-1 md:grid-cols-3 py-72 p-3 gap-4">
                 {/* Left Side: Scores & Issues */}
                 <div className="col-span-2 w-3/4 flex flex-col gap-4">
                   {/* Current Score */}
                   <div className="p-2  rounded-lg bg-gray-900/50 backdrop-blur-md">
                     <span className="text-md font-bold">Current Score: </span>
-                    {selectedPlayer.currentScore || "N/A"}
+                    {selectedPlayer.total_score || "N/A"}
                   </div>
 
                   {/* Previous Score */}
                   <div className="bg-gray-900/50 p-2 rounded-lg">
                     <span className="text-md font-bold">Previous Score: </span>
-                    {selectedPlayer.previousScore || "N/A"}
+                    {selectedPlayer.pre_score || "N/A"}
                   </div>
 
                   {/* Total Issue Count */}
                   <div className="bg-gray-900/50 p-2 rounded-lg">
                     <span className="text-md font-bold">Total Issues: </span>
-                    {selectedPlayer.totalIssues || "N/A"}
+                    {selectedPlayer.total_issues || "N/A"}
                   </div>
                 </div>
 
@@ -379,11 +238,11 @@ const Scores = () => {
 
                 <div className="col-span-1 flex flex-col w-full  md:w-49 -mx-16">
                   <div className="flex justify-center my-0 ">
-                    <div className="relative w-full h-10 bg-gray-900/50 rounded-lg flex items-center p-1 shadow-md">
+                    <div className="relative w-full h-10 bg-gray-900/50 rounded-lg flex items-center p-1 shadow-md ">
                       <button
-                        className={`w-1/2 h-full flex items-center justify-center rounded-full transition-all duration-300 ${
+                        className={`w-1/2 h-full flex items-center justify-center rounded-full transition-all duration-300 cursor-pointer ${
                           activeSection === "courses"
-                            ? "bg-gray-600 text-white"
+                            ? "bg-gray-900 text-white"
                             : "text-gray-300"
                         }`}
                         onClick={() => setActiveSection("courses")}
@@ -392,9 +251,9 @@ const Scores = () => {
                       </button>
 
                       <button
-                        className={`w-1/2 h-full flex items-center justify-center rounded-full transition-all duration-300 ${
+                        className={`w-1/2 h-full flex items-center justify-center rounded-full transition-all duration-300 cursor-pointer ${
                           activeSection === "projects"
-                            ? "bg-gray-600 text-white"
+                            ? "bg-gray-900 text-white"
                             : "text-gray-300"
                         }`}
                         onClick={() => setActiveSection("projects")}
@@ -407,9 +266,10 @@ const Scores = () => {
                   {/* Content Below Switch */}
                   <div className="bg-gray-900/50 p-2 rounded-lg mt-1">
                     {activeSection === "courses" && (
-                      <ul className="list-disc pl-5 max-h-19 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                      <ul className="list-disc pl-5 max-h-19 h-19 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
                         {selectedPlayer.courses &&
-                        Array.isArray(selectedPlayer.courses) ? (
+                        Array.isArray(selectedPlayer.courses) &&
+                        selectedPlayer.courses.length > 0 ? (
                           selectedPlayer.courses.flatMap((course, index) =>
                             course.split(",").map((subCourse, subIndex) => (
                               <li key={`${index}-${subIndex}`}>
@@ -419,25 +279,30 @@ const Scores = () => {
                             ))
                           )
                         ) : (
-                          <li>N/A</li>
+                          <h2 className="flex mr-7  items-center justify-center">
+                            No Courses Found
+                          </h2>
                         )}
                       </ul>
                     )}
 
                     {activeSection === "projects" && (
-                      <ul className="list-disc pl-5 max-h-19 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
-                        {selectedPlayer.courses &&
-                        Array.isArray(selectedPlayer.courses) ? (
-                          selectedPlayer.courses.flatMap((course, index) =>
-                            course.split(",").map((subCourse, subIndex) => (
+                      <ul className="list-disc pl-5 max-h-19 h-19 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                        {selectedPlayer.projects &&
+                        Array.isArray(selectedPlayer.projects) &&
+                        selectedPlayer.projects.length > 0 ? (
+                          selectedPlayer.projects.flatMap((project, index) =>
+                            project.split(",").map((subProject, subIndex) => (
                               <li key={`${index}-${subIndex}`}>
-                                {subCourse.trim()}
-                                {console.log(selectedPlayer.courses)}
+                                {subProject.trim()}
+                                {console.log(selectedPlayer.projects)}
                               </li>
                             ))
                           )
                         ) : (
-                          <li>N/A</li>
+                          <h2 className="flex mr-7  items-center justify-center">
+                            No Project Found
+                          </h2>
                         )}
                       </ul>
                     )}
