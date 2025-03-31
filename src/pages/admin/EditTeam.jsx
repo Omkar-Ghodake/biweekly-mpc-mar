@@ -15,6 +15,7 @@ import { PlayersContext } from "../../context/PlayersProvider";
 import Input from "../../components/form/Input";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { LoadingContext } from "../../context/LoadingProvider";
 
 const EditTeam = () => {
   const [players, setPlayers] = useState([]);
@@ -23,7 +24,7 @@ const EditTeam = () => {
   const playersData = useContext(PlayersContext);
   const [image, setImage] = useState(img || ""); // Default to provided image
   const toast = useContext(ToastContext);
-
+  const { isLoading, setIsLoading } = useContext(LoadingContext);
   const [isEditing, setIsEditing] = useState(false);
   const [createNew, setCreateNew] = useState(false);
 
@@ -37,7 +38,7 @@ const EditTeam = () => {
     },
     domain_name: "",
     emp_id: "",
-    pre_score: "",
+    pre_score: 0,
     total_score: 0,
     total_issues: 0,
     courses: [],
@@ -51,17 +52,17 @@ const EditTeam = () => {
   }, [playersData.players]);
 
   const handleInputChange = (e) => {
-    const { id, value } = e.target;
+    const { type, id, value } = e.target;
+    const numValue = type === "number" ? Number(value) || 0 : value; // Ensure valid number
+
     if (id === "emp_id") {
       if (value.length > 8) return; // Limit to 8 characters
       setFormData((prev) => ({
         ...prev,
-        emp_id: value,
+        emp_id: Number(value) || 0, // Ensure emp_id is stored as a number
       }));
       return;
     }
-
-    const numValue = Number(value);
 
     if (["blocker", "critical", "major", "normal", "minor"].includes(id)) {
       setFormData((prev) => {
@@ -72,14 +73,12 @@ const EditTeam = () => {
             [id]: numValue,
           },
         };
-        const totalIssues =
-          updatedData.severity_count.blocker +
-          updatedData.severity_count.critical +
-          updatedData.severity_count.major +
-          updatedData.severity_count.normal +
-          updatedData.severity_count.minor;
 
-        // Calculate total_score (EXCLUDES `pre_score` from weightings)
+        const totalIssues = Object.values(updatedData.severity_count).reduce(
+          (acc, count) => acc + count,
+          0
+        );
+
         const totalScore =
           updatedData.severity_count.blocker * 10 +
           updatedData.severity_count.critical * 8 +
@@ -89,17 +88,18 @@ const EditTeam = () => {
 
         return {
           ...updatedData,
-          total_issues: Number(totalIssues),
+          total_issues: totalIssues,
           total_score: totalScore,
         };
       });
     } else {
       setFormData((prev) => ({
         ...prev,
-        [id]: value,
+        [id]: numValue, // Store pre_score and other numbers as numbers
       }));
     }
   };
+
 
   const convertBase64ToFile = (base64String, fileName) => {
     let arr = base64String.split(",");
@@ -131,9 +131,11 @@ const EditTeam = () => {
   };
 
   const removeCourseField = (index) => {
+    if (!formData.courses) return; // Prevent errors if courses is undefined
     const updatedCourses = formData.courses.filter((_, i) => i !== index);
-    setFormData({ ...formData, courses: updatedCourses });
+    setFormData(prev => ({ ...prev, courses: updatedCourses }));
   };
+
 
   const removeProjectField = (index) => {
     const updatedProjects = formData.projects.filter((_, i) => i !== index);
@@ -161,7 +163,7 @@ const EditTeam = () => {
         ? []
         : formData.projects,
     };
-
+    setIsLoading(true);
     try {
       const response = await axios.post(
         "http://localhost:5500/api/v1/players/add-player",
@@ -185,27 +187,34 @@ const EditTeam = () => {
       }
     } catch (error) {
       console.error("Error adding player:", error);
-      toast.showToast(`${error.response?.data?.message || "An error occurred."}`, "error");
+      toast.showToast(
+        `${error.response?.data?.message || "An error occurred."}`,
+        "error"
+      );
     } finally {
+      setIsLoading(false);
       playersData.updateData();
     }
   };
 
   const updatePlayer = async (e) => {
     e.preventDefault();
+    console.log("Formdata before cleaning: ",formData);
     const cleanedFormData = {
       ...formData,
       courses: formData.courses.every((course) => course.trim() === "")
-        ? []
-        : formData.courses,
+      ? []
+      : formData.courses,
       projects: formData.projects.every((project) => project.trim() === "")
-        ? []
-        : formData.projects,
+      ? []
+      : formData.projects,
     };
-
+    console.log("Formdata after cleaning: ",cleanedFormData);
+    
+    setIsLoading(true);
     try {
       const id = formData._id;
-
+      
       const response = await axios.put(
         `http://localhost:5500/api/v1/players/update-player/${id}`,
         cleanedFormData,
@@ -215,22 +224,29 @@ const EditTeam = () => {
           },
         }
       );
-
+      
       if (response.status === 200) {
         toast.showToast("Player updated successfully!");
         setIsEditing(false);
+        console.log(response.data);
+        
       } else {
         toast.showToast(`Error: ${response.statusText}`, "error");
       }
     } catch (error) {
-      toast.showToast(`${error.response?.data?.message || "An error occurred."}`, "error");
+      toast.showToast(
+        `${error.response?.data?.message || "An error occurred."}`,
+        "error"
+      );
     } finally {
       playersData.updateData();
+      setIsLoading(false);
     }
   };
 
   const deletePlayer = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
     try {
       const id = formData._id;
 
@@ -248,8 +264,12 @@ const EditTeam = () => {
       }
     } catch (error) {
       console.error("Error deleting player:", error);
-      toast.showToast(`${error.response?.data?.message || "An error occurred."}`, "error");
+      toast.showToast(
+        `${error.response?.data?.message || "An error occurred."}`,
+        "error"
+      );
     } finally {
+      setIsLoading(false);
       closeModal();
       setIsEditing(false);
       setFormData(emptyForm);
@@ -327,22 +347,28 @@ const EditTeam = () => {
 
         {/* Animated Pointlist Items */}
 
-        {players?.map((item, index) => (
-          <div
-            key={item._id} // ✅ Add a unique key
-            className="list flex flex-col space-y-3 cursor-pointer"
-            onClick={() => {
-              openModal();
-              setFormData(item);
-              setImage(item.image);
-            }}
-          >
-            <Pointlist item={item} index={index} />
-          </div>
-        ))}
+        {players
+          ?.slice() // Create a shallow copy to avoid mutating the original array
+          .sort((a, b) => b.total_score - a.total_score) // Sort in descending order
+          .map((item, index) => (
+            <div
+              key={item._id} // ✅ Add a unique key
+              className="list flex flex-col space-y-3"
+            >
+              <Pointlist
+                item={item}
+                index={index}
+                onClick={() => {
+                  openModal();
+                  setFormData(item);
+                  setImage(item.image);
+                }}
+              />
+            </div>
+          ))}
       </motion.div>
       <Modal
-        className="h-[911px] text-md  tracking-wide"
+        className="text-md  tracking-wide"
         afterClosing={() => {
           setIsEditing(false);
           setCreateNew(false);
@@ -436,23 +462,34 @@ const EditTeam = () => {
                         )
                       )}
                     </div>
-                    <div className="flex space-x-4 mt-2 text-white font-medium  text-center tracking-wider">
-                      {[
-                        { label: "Issue Count", value: formData?.total_issues },
-                        { label: "Score", value: formData?.total_score },
-                      ].map(({ label, value }) => (
-                        <div
-                          key={label}
-                          className="flex space-x-1 items-center justify-center"
-                        >
-                          <span className="font-medium  bg-[#1E4788] p-1.5 w-32 rounded-sm">
-                            {label}
-                          </span>
-                          <span className="bg-[#1E4788] rounded-sm p-1.5 px-4">
-                            {value}
-                          </span>
-                        </div>
-                      ))}
+                    <div className="flex space-x-4 mt-2 text-white font-medium text-center tracking-wider">
+                      <div className="flex space-x-1 items-center justify-center">
+                        <span className="font-medium bg-[#1E4788] p-1.5 w-32 rounded-sm">
+                          Issue Count
+                        </span>
+                        <span className="bg-[#1E4788] rounded-sm p-1.5 px-4">
+                          {formData?.total_issues}
+                        </span>
+                      </div>
+                      <div className="flex space-x-1 items-center justify-center">
+                        <label className="font-medium bg-[#1E4788] p-1.5 w-32 rounded-sm">
+                          Prev Score
+                        </label>
+                        <input
+                          id="pre_score"
+                          type="number"
+                          value={formData?.pre_score}
+                          readOnly = {!isEditing}
+                          onChange={handleInputChange} // Use a correct handler
+                          className={`rounded-sm p-1.5 w-12 text-center  appearance-none
+                            [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+                              isEditing
+                                ? "bg-white border-1 border-[#1E4788] text-[#1E4788] "
+                                : "bg-[#1E4788] text-white cursor-default"
+                            }`}
+                          
+                        />
+                      </div>
                     </div>
                   </div>
                   <div className="h-1/3 flex flex-col">
@@ -521,7 +558,7 @@ const EditTeam = () => {
                     <div className="flex justify-center bg-white items-center h-[90%] w-[65%] rounded-2xl drop-shadow-2xl relative group">
                       <label
                         htmlFor="imageUpload"
-                        className="cursor-pointer flex justify-center "
+                        className={`${isEditing ? 'cursor-pointer ':'cursor-default'} flex justify-center `}
                       >
                         <img
                           src={image || img}
@@ -538,6 +575,7 @@ const EditTeam = () => {
                         onChange={handleImageUpload}
                         className="hidden"
                         id="imageUpload"
+                        disabled={!isEditing}
                       />
 
                       {/* <FaRegEdit className="w-6 h-6 absolute bottom-6 right-2"/> */}
