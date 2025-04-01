@@ -14,21 +14,21 @@ const Tournaments = () => {
   }, [fetchTournaments]);
 
   return (
-    <div className="h-dvh  overflow-auto bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col items-center py-10 px-6">
+    <div className="h-dvh h-screen w-screen overflow-hidden bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col items-center">
       {/* Header */}
-      <h1 className="text-5xl md:text-6xl font-extrabold text-white drop-shadow-lg flex items-center mb-10 tracking-wide">
+      <h1 className="text-5xl md:text-6xl font-extrabold text-white drop-shadow-lg flex h-[20%] w-full items-center tracking-wide text=center flex justify-center item-center">
         Tournaments
       </h1>
 
       {/* Tournament Cards */}
-      <div className="flex flex-wrap justify-center gap-10 w-full max-w-7xl">
+      <div className="flex flex-wrap justify-center items-center flex-1 p-6 gap-8 w-full">
         {tournaments.map((tournament) => (
           <div
             key={tournament.id}
             onClick={() => {
               openModal();
               setCurrent(tournament);
-              // console.log(tournament);
+              console.log(tournament);
             }}
             className="cursor-pointer relative bg-white/10 border border-white/30 backdrop-blur-lg px-6 rounded-2xl shadow-xl flex flex-col items-center w-[280px] transition duration-300 transform hover:scale-110 hover:shadow-2xl hover:border-green-400 hover:bg-white/20 object-cover"
           >

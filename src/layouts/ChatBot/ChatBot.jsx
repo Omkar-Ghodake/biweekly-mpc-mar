@@ -40,7 +40,7 @@ const ChatBot = () => {
      Answer the following query based on the dataset:
      "${prompt}"
 
-    About : The dataset contains data of employees/members/persons of MPC team and their respective personal projects and contribution in this website/project who are Associate QA Enginner and there are a total of two designation in the team one is Team Leads and the other is teammate and the dataset also contains the data about their work in MPCData
+    About : The dataset contains data of employees/members/persons of MPC team and their respective personal projects and contribution in this website/project who are Associate QA Enginner and there are a total of two designation in the team one is Team Leads and the other is teammate also their managers data is present in the dataset and the dataset also contains the data about their work in MPCData
 
     Instuctions : 
     - Give only Answer of query as response and not the instructions in response 
@@ -56,7 +56,8 @@ const ChatBot = () => {
     - don't add that whether a team member is lead or not in the response and also don't add gender of team members anywhere but use the pronouns accordingly
     - while asking about yourself strictly remember that Sakshi , Sanjeev and Rishabh developed you while Anushree helped in your training and don't mention any personal projects of sakshi,sanjeev , rishabh and anushree there 
     - consider total team score is 171 and don't mention score until asked
-    - Consider the count of gender from the employee data set as there are 5 females and 13 males in the team 
+    - Consider the count of gender from the employee data set as there are 5 females and 13 males in the team
+    - Vartika , Sejal and Akhil are not the team members as they are at management level so don't give responses for them until prompt contains their name or specificly asked
     - Do not use * 
     - Consider that every member is interested and want to work in their release intrest technology
     - When asked related to release intrest or intrest you have to search for the data in employee data dataset
@@ -103,7 +104,7 @@ const ChatBot = () => {
   if (excludeChatbotLinks.includes(pathname)) return
 
   return (
-    <div className='h-fit w-fit fixed right-6 bottom-6'>
+    <div className='h-fit w-fit fixed right-6 bottom-6 z-40'>
       {isChatBoxOpen ? (
         <ChatBox
           messages={messages}

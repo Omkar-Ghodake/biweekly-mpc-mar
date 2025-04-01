@@ -28,6 +28,7 @@ const Scores = () => {
   const [isCoursesOpen, setIsCoursesOpen] = useState(false);
   const [isProjectOpen, setIsProjectOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("courses"); // Default to Courses
+  const [selectedPlayerIndex, setSelectedPlayerIndex] = useState(undefined);
 
   // useEffect(() => {
   //   fetchPlayers()
@@ -54,8 +55,9 @@ const Scores = () => {
     setIsCoursesOpen(false);
   };
 
-  const handleCardClick = (player) => {
+  const handleCardClick = (player, index) => {
     setSelectedPlayer(player);
+    setSelectedPlayerIndex(index);
     openModal();
   };
 
@@ -71,10 +73,10 @@ const Scores = () => {
         </div>
 
         {/* Foreground Content */}
-        <div className="relative flex flex-col items-center justify-center h-full ">
+        <div className="relative flex flex-col items-center justify-center h-full">
           {/* Header Section */}
           <div className="w-auto max-h-[950px] min-h-2/3 justify-center items-center  flex flex-col  p-1 rounded-3xl ">
-            <div className=" text-white bg-gradient-to-b from-[#1E4788] to-sky-800 shadow-2xl w-full rounded-xl p-4 mt-2 ">
+            <div className=" text-white bg-gradient-to-b from-[#1E4788] to-sky-800 shadow-2xl w-full rounded-xl p-4 mt-2 cursor-pointer">
               <div className="flex items-center justify-center text-3xl font-bold font-serif h-10 uppercase ">
                 {/* Optional logo */}
                 {/* <img src="logo.png" alt="Logo" className="w-12 h-12 mr-4" /> */}
@@ -83,7 +85,7 @@ const Scores = () => {
             </div>
 
             <div className="w-full flex-1  overflow-y-scroll [&::-webkit-scrollbar]:hidden opacity-90 rounded-lg backdrop-blur-sm">
-              <div className="grid grid-cols-4 md:grid-cols-4 gap-14 my-5 p-5  ">
+              <div className="grid grid-cols-4 md:grid-cols-4 gap-14 my-5 p-5">
                 {sortedPlayers.map((player, index) => (
                   <motion.div
                     initial="hidden"
@@ -91,8 +93,8 @@ const Scores = () => {
                     variants={gridItemVariants}
                     custom={index}
                     key={index}
-                    onClick={() => handleCardClick(player)}
-                    class="relative w-56 h-56   rounded-t-lg  flex justify-center items-end mx-auto my-4 rounded-b-lg"
+                    onClick={() => handleCardClick(player, index)}
+                    class="relative w-56 h-56 rounded-t-lg flex justify-center items-end mx-auto my-4 rounded-b-lg cursor-pointer"
                   >
                     <div class="absolute inset-0 bg-gray-300 rounded-t-lg opacity-90 "></div>
                     <div className="cursor-pointer">
@@ -140,29 +142,30 @@ const Scores = () => {
         </div>
       </div>
       {selectedPlayer && (
-        <Modal className="bg-transparent max-w-1/3  flex items-start justify-center ">
-          <div className="absolute w-[750px] h-[600px] flex  justify-center items-end mx-auto">
+        <Modal className="bg-transparent max-w-1/3 flex items-start justify-center">
+          <div className="absolute h-[600px] flex w-fit justify-center items-end mx-auto">
             {/* Player Rank (Top-Right Corner) */}
             <div
-              className="absolute -top-1 z-10 text-4xl   text-white font-bold rounded-bl-lg rounded-tr-lg"
-              style={{
-                left:
-                  (
-                    sortedPlayers.findIndex(
-                      (player) => player.id === selectedPlayer.id
-                    ) + 1
-                  ).toString().length === 1
-                    ? "560px"
-                    : "552px",
-              }}
+              className="absolute right-0 -top-2 z-10 text-4xl w-15 h-13 flex justify-center items-center text-white font-bold rounded-bl-lg rounded-tr-lg"
+              // style={{
+              //   left:
+              //     (
+              //       sortedPlayers.findIndex(
+              //         (player) => player.id === selectedPlayer.id
+              //       ) + 1
+              //     ).toString().length === 1
+              //       ? '560px'
+              //       : '552px',
+              // }}
             >
-              {sortedPlayers.findIndex(
+              {/* {sortedPlayers.findIndex(
                 (player) => player.id === selectedPlayer.id
-              ) + 1}
+                ) + 1} */}
+              {selectedPlayerIndex + 1}
             </div>
 
             {/* Player Image and Name */}
-            <div className="absolute z-10 -top-[5px] right-0 transform -translate-x-40 flex items-center justify-between w-full max-w-[420px]">
+            <div className="absolute z-10 -top-[5px] right-0 transform flex items-center justify-between w-full px-5">
               {/* Player Info (Left Side) */}
               <div className="flex flex-col text-left">
                 {/* Player Role (Top) */}
@@ -179,7 +182,7 @@ const Scores = () => {
                   <span className="font-bold text-sm">Team MPC</span>
                 </div>
               </div>
-              <div className="absolute z-1 top-[5px] left-85 transform -translate-x-40 flex items-center justify-between w-full max-w-[420px]">
+              <div className="absolute z-1 top-[5px] right-0 w-fit flex items-center justify-between">
                 {/* Player Image (Right Side) */}
                 <img
                   src={selectedPlayer.image}
@@ -190,7 +193,7 @@ const Scores = () => {
             </div>
 
             {/* Background Shapes */}
-            <div className="w-[450px] h-[405px] -top-50  relative">
+            <div className="w-[450px] h-[405px] -top-50 relative">
               {/* Top-Left Dark Gray Section */}
 
               {/* Top-Right Square Section */}
@@ -198,7 +201,7 @@ const Scores = () => {
 
               {/* Main Background (Light Gray) */}
               <div
-                className="absolute inset-0 bg-slate-200 opacity-65  rounded-tl-2xl rounded-tr-2xl rounded-2xl "
+                className="absolute inset-0 bg-slate-200 opacity-65 rounded-tl-2xl rounded-tr-2xl rounded-2xl "
                 style={{
                   clipPath: "polygon(0% 0%, 100% 0%, 100% 20%, 0% 70%)",
                 }}
@@ -266,7 +269,12 @@ const Scores = () => {
                   {/* Content Below Switch */}
                   <div className="bg-gray-900/50 p-2 rounded-lg mt-1">
                     {activeSection === "courses" && (
-                      <ul className="list-disc pl-5 max-h-19 h-19 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                      <ul
+                        className="list-disc pl-5 max-h-19 h-19 my-2 overflow-y-auto
+                        [&::-webkit-scrollbar]:w-1
+                        [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
+                        [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400"
+                      >
                         {selectedPlayer.courses &&
                         Array.isArray(selectedPlayer.courses) &&
                         selectedPlayer.courses.length > 0 ? (
@@ -287,7 +295,12 @@ const Scores = () => {
                     )}
 
                     {activeSection === "projects" && (
-                      <ul className="list-disc pl-5 max-h-19 h-19 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                      <ul
+                        className="list-disc pl-5 max-h-19 h-19 my-2 overflow-y-auto 
+                        [&::-webkit-scrollbar]:w-1
+                        [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
+                        [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400"
+                      >
                         {selectedPlayer.projects &&
                         Array.isArray(selectedPlayer.projects) &&
                         selectedPlayer.projects.length > 0 ? (
