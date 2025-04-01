@@ -269,7 +269,12 @@ const Scores = () => {
                   {/* Content Below Switch */}
                   <div className="bg-gray-900/50 p-2 rounded-lg mt-1">
                     {activeSection === "courses" && (
-                      <ul className="list-disc pl-5 max-h-19 h-19 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                      <ul
+                        className="list-disc pl-5 max-h-19 h-19 my-2 overflow-y-auto
+                        [&::-webkit-scrollbar]:w-1
+                        [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
+                        [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400"
+                      >
                         {selectedPlayer.courses &&
                         Array.isArray(selectedPlayer.courses) &&
                         selectedPlayer.courses.length > 0 ? (
@@ -290,7 +295,12 @@ const Scores = () => {
                     )}
 
                     {activeSection === "projects" && (
-                      <ul className="list-disc pl-5 max-h-19 h-19 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                      <ul
+                        className="list-disc pl-5 max-h-19 h-19 my-2 overflow-y-auto 
+                        [&::-webkit-scrollbar]:w-1
+                        [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
+                        [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400"
+                      >
                         {selectedPlayer.projects &&
                         Array.isArray(selectedPlayer.projects) &&
                         selectedPlayer.projects.length > 0 ? (
