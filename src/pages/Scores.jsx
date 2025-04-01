@@ -212,7 +212,7 @@ const Scores = () => {
                 clipPath: "polygon(0% 65%, 100% 20%, 100% 100%, 0% 100%)",
               }}
             >
-              <div className="relative grid grid-cols-1 md:grid-cols-3 py-72 p-3 gap-4">
+              <div className="relative grid grid-cols-1 md:grid-cols-3 py-72 p-5 gap-4">
                 {/* Left Side: Scores & Issues */}
                 <div className="col-span-2 w-3/4 flex flex-col gap-4">
                   {/* Current Score */}
@@ -266,7 +266,12 @@ const Scores = () => {
                   {/* Content Below Switch */}
                   <div className="bg-gray-900/50 p-2 rounded-lg mt-1">
                     {activeSection === "courses" && (
-                      <ul className="list-disc pl-5 max-h-19 h-19 my-2 overflow-y-scroll [&::-webkit-scrollbar]:hidden">
+                      <ul
+                        className="list-disc pl-5 max-h-19 h-19 my-2 overflow-y-auto p-0
+                        [&::-webkit-scrollbar]:w-1
+                        [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
+                        [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400"
+                      >
                         {selectedPlayer.courses &&
                         Array.isArray(selectedPlayer.courses) &&
                         selectedPlayer.courses.length > 0 ? (
