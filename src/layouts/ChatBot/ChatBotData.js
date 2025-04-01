@@ -3,24 +3,6 @@ export const ChatBotData =
   {
     EmployeesData: [
       {
-        "Name":"Vartika Chawla",
-        "Gender":"Female",
-        "Designation": "Deputy Manager",
-        "About":"She is a Deputy Manager in Bond Team"
-      },
-      {
-        "Name":"Sejal Hatiskar",
-        "Gender":"Female",
-        "Designation": "Program Manager",
-        "About":"She is a program manager of MPC and DAM bond teams"
-      },
-      {
-        "Name":"Akhil Panicker",
-        "Gender":"Male",
-        "Designation": "L1 Manager",
-        "About":"He's L1 manager who manages whole bond team"    
-      },
-      {
         "Domain Name": "Anagha.Shinde",
         "Gender": "Female",
         "Score": 18,
@@ -273,6 +255,27 @@ export const ChatBotData =
         "Designation": "Team Lead",
         "Issue type": {"Minor_Issue": 0,"Normal_Issue": 0,"Major_Issue": 1,"Critical_Issue": 2,"Blocker_Issue": 1},
       },
+    ],
+
+    ManagersData :[
+      {
+        "Name":"Vartika Chawla",
+        "Gender":"Female",
+        "Designation": "Deputy Manager",
+        "About":"She is a Deputy Manager in Bond Team"
+      },
+      {
+        "Name":"Sejal Hatiskar",
+        "Gender":"Female",
+        "Designation": "Program Manager",
+        "About":"She is a program manager of MPC and DAM bond teams"
+      },
+      {
+        "Name":"Akhil Panicker",
+        "Gender":"Male",
+        "Designation": "L1 Manager",
+        "About":"He's L1 manager who manages whole bond team"    
+      }
     ],
 
       ProjectDetails:[
