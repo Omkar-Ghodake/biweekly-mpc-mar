@@ -55,7 +55,7 @@ const EditCommon = () => {
   };
   useEffect(() => {
     fetchTeam();
-  }, []);
+  }, [fetchTeam]);
 
   console.log(formData);
   console.log(preview);
@@ -77,8 +77,8 @@ const EditCommon = () => {
       if (response.status === 200) toast.showToast("Team updated successfully");
     } catch (error) {
       toast.showToast("Couldn't update team", "error");
-    }finally{
-      fetchTeam()
+    } finally {
+      fetchTeam();
     }
   };
 
@@ -91,7 +91,7 @@ const EditCommon = () => {
         <div className="w-full flex px-4 justify-between text-white bg-[#1E4788] rounded-xl shadow-md p-3">
           <h2 className="text-xl font-bold">Team Registration</h2>
         </div>
-        <div className="flex h-full justify-center items-center gap-x-10">
+        <div className="flex h-full justify-center items-center gap-x-10 ">
           {/* Image Uploads */}
           <div className="flex flex-col items-center w-2/5 h-full space-y-5">
             {["logo", "display_picture"].map((field) => (
@@ -125,16 +125,18 @@ const EditCommon = () => {
 
           {/* Form Inputs */}
           <div className="w-2/3 p-6">
-            <form onSubmit={handleSubmit} className="space-y-4 w-10/12">
+            <form onSubmit={handleSubmit} className="space-y-4 w-10/12 ">
               {["short_name", "long_name", "tag_line"].map((id) => (
                 <Input
                   key={id}
-                  label={id.replace("_", " ")}
+                  label={id
+                    .replace("_", " ")
+                    .replace(/\b\w/g, (char) => char.toUpperCase())}
                   id={id}
                   value={formData[id]}
                   onChange={handleChange}
                   isEditing
-                  width="w-2/3"
+                  width="w-2/3  text-start"
                 />
               ))}
               <div className="flex items-center w-full">
@@ -147,17 +149,25 @@ const EditCommon = () => {
                 <textarea
                   id="description"
                   placeholder="Enter your description"
-                  className="w-2/3 text-center px-2 py-1 rounded-xl border focus:outline-blue-500 max-h-52 min-h-32 p-2 shadow-md"
+                  className="w-2/3 mx-3 text-start px-2 py-1 rounded-xl border focus:outline-blue-500 max-h-52 min-h-32 p-2 shadow-md"
                   value={formData.description}
                   onChange={handleChange}
                 />
               </div>
-              <button
-                type="submit"
-                className="w-full p-2 bg-green-600 text-white rounded-lg shadow-md hover:bg-green-700"
-              >
-                Submit
-              </button>
+              <div className="w-full flex justify-center space-x-3">
+                <button
+                  type="button"
+                  className="w-1/3 p-2 mt-10 bg-[#1E4788] hover:bg-blue-700 hover:cursor-pointer text-white rounded-lg shadow-md  "
+                >
+                  Reset
+                </button>
+                <button
+                  type="submit"
+                  className="w-1/3 p-2 mt-10 bg-[#68AA45] hover:bg-green-700 hover:cursor-pointer text-white rounded-lg shadow-md  "
+                >
+                  Submit
+                </button>
+              </div>
             </form>
           </div>
         </div>
