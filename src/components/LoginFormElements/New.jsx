@@ -284,11 +284,11 @@ const Login = () => {
             <div className="w-[470px] flex items-center justify-center p-4 rounded-r-lg">
               <div className="w-full  ml-20">
                 {/* Login header */}
-                <h2 className="text-blue-900 font-bold text-lg mb-8 text-center">
+                <h2 className="text-blue-900 font-bold text-2xl mb-8 text-center">
                   {step === 0 && "Login"}
                   {step === 1 && "Forgot your password ?"}
-                  {step === 2 && "Enter OTP"}
-                  {step === 3 && "Create New Password"}
+                  {step === 2 && "OTP page Login"}
+                  {step === 3 && "Reset Password to Login"}
                 </h2>
 
                 {step === 0 && (
@@ -391,8 +391,9 @@ const Login = () => {
                     <div className="flex justify-center">
                       <button
                         type="submit"
-                        onClick={handleEmailSubmit}
-                        className="w-50 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer"
+                        // onClick={handleEmailSubmit}
+                        onClick ={() =>setStep(2)}//for checkin figma
+                        className="w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer"
                       >
                         Submit
                       </button>
@@ -401,18 +402,21 @@ const Login = () => {
                       <button
                         type="button"
                         onClick={() => setStep(0)}
-                        className="text-sm text-blue-900  cursor-pointer font-bold flex items-center gap-2"
+                        className="text-sm text-blue-950 font-medium  cursor-pointer  flex items-center gap-2"
                       >
-                        <FaArrowLeftLong size={18} className="text-blue-900" />
+                        <FaArrowLeftLong size={18} className="text-blue-900 font-bold" />
                         <span>Back to Login</span>
                       </button>
                     </div>
                   </div>
                 )}
 
-                {step === 2 && otpSent && (
+                {step === 2 && !otpSent && (//for figma check
                   <div className="space-y-4">
-                    <div className="flex justify-center gap-x-4 mb-4">
+                  <div className="text-center mx-0 text-gray-400 -mt-7">
+                       <p> Enter Code send to your Email ID</p>
+                  </div>
+                      <div className="flex justify-center gap-x-2 mb-9">
                       {[0, 1, 2, 3, 4, 5].map((index) => (
                         <input
                           key={index}
@@ -421,7 +425,7 @@ const Login = () => {
                           maxLength="1"
                           onChange={(e) => handleOTPChange(e, index)}
                           onPaste={handlePaste}
-                          className="w-10 h-13 text-center text-lg rounded bg-[rgba(209,201,255,0.6)] border-0 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                          className="w-10 h-10 text-center text-lg rounded bg-[rgba(209,201,255,0.6)] border-0 focus:outline-none focus:ring-1 focus:ring-blue-500"
                         />
                       ))}
                     </div>
@@ -430,22 +434,33 @@ const Login = () => {
                         {error1}
                       </div>
                     )}
+                       <div className="text-center mt-5 text-gray-400">
+                  <span> Didn't get the OTP ? </span>
+                  <button type="submit" 
+                  
+                  className="text-blue-900 mx-2 cursor-pointer hover:underline">
+                    Resend it.
+                  </button>
+
+                  </div>
                     <div className="flex justify-center">
                       <button
                         type="submit"
-                        onClick={handleOTPSubmit}
-                        className="w-50 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer"
+                        // onClick={handleOTPSubmit}
+                        onClick ={() =>setStep(3)}//for checkin figma
+                        className="w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer"
                       >
                         Verify OTP
                       </button>
                     </div>
-                    <div className="text-center mt-4">
+                    <div className="text-center mt-4 flex justify-center">
                       <button
                         type="button"
-                        onClick={() => setStep(1)}
-                        className="text-sm text-blue-900 hover:underline cursor-pointer font-bold"
+                        onClick={() => setStep(0)}
+                        className="text-sm text-blue-950 font-medium  cursor-pointer  flex items-center gap-2"
                       >
-                        Back
+                        <FaArrowLeftLong size={18} className="text-blue-900 font-bold" />
+                        <span>Back to Login</span>
                       </button>
                     </div>
                   </div>
@@ -456,7 +471,7 @@ const Login = () => {
                     <div>
                       <input
                         type={isPasswordVisible ? "text" : "password"}
-                        placeholder="New Password"
+                        placeholder="Enter your New Password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
                         className="w-full p-3 rounded bg-[rgba(209,201,255,0.6)] border-0 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -478,7 +493,7 @@ const Login = () => {
                     <div className="relative">
                       <input
                         type={isConfirmPasswordVisible ? "text" : "password"}
-                        placeholder="Confirm New Password"
+                        placeholder="Confirm your Password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         className="w-full p-3 rounded bg-[rgba(209,201,255,0.6)] border-0 focus:outline-none focus:ring-1 focus:ring-blue-500"
@@ -503,18 +518,19 @@ const Login = () => {
                     <div className="flex justify-center">
                       <button
                         onClick={handlePasswordSubmit}
-                        className="w-50 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer"
+                        className="w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer"
                       >
                         Reset Password
                       </button>
                     </div>
-                    <div className="text-center mt-4">
+                    <div className="text-center mt-4 flex justify-center">
                       <button
                         type="button"
                         onClick={() => setStep(0)}
-                        className="text-sm text-blue-900 hover:underline cursor-pointer font-bold"
+                        className="text-sm text-blue-950 font-medium  cursor-pointer  flex items-center gap-2"
                       >
-                        Back to Login
+                        <FaArrowLeftLong size={18} className="text-blue-900 font-bold" />
+                        <span>Back to Login</span>
                       </button>
                     </div>
                   </div>
