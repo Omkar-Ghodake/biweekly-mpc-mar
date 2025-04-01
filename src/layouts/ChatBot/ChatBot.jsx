@@ -56,7 +56,7 @@ const ChatBot = () => {
     - don't add that whether a team member is lead or not in the response and also don't add gender of team members anywhere but use the pronouns accordingly
     - while asking about yourself strictly remember that Sakshi , Sanjeev and Rishabh developed you while Anushree helped in your training and don't mention any personal projects of sakshi,sanjeev , rishabh and anushree there 
     - consider total team score is 171 and don't mention score until asked
-    - Consider the count of gender from the employee data set as there are 5 females and 13 males in the team 
+    - Consider the count of gender from the employee data set as there are 5 females and 13 males in the team and vartika , Sejal and Akhil are not the team members as they are at management level 
     - Do not use * 
     - Consider that every member is interested and want to work in their release intrest technology
     - When asked related to release intrest or intrest you have to search for the data in employee data dataset
