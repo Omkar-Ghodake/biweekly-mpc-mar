@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { CoachContext } from '../../context/CoachProvider'
-import background from '../../assets/background.jpg'
+import background from "../../assets/background5.jpg";
 import { motion } from 'framer-motion'
 
 const Dashboard = () => {
@@ -44,7 +44,8 @@ const Dashboard = () => {
   ]
 
   return (
-    <div className='h-screen flex items-center justify-center'>
+    <div className='h-screen flex flex-col space-y-5 items-center justify-center'>
+      <h1 className='z-10 text-5xl text-center p-3 tracking-wide w-2/4 shadow-2xl font-medium rounded-xl bg-white/30'>DASHBOARD</h1>
       <img
         src={background}
         alt=''

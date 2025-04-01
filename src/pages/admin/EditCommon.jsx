@@ -5,6 +5,8 @@ import Input from "../../components/form/Input";
 import imgPlaceholder from "../../glb/Blank Profile pic.png";
 import { ToastContext } from "../../context/ToastProvider";
 import { LoadingContext } from "../../context/LoadingProvider";
+import { useNavigate } from "react-router";
+import BackButton from "../../components/BackButton";
 
 const EditCommon = () => {
   const [formData, setFormData] = useState({
@@ -21,7 +23,7 @@ const EditCommon = () => {
     logo: "",
     display_picture: "",
   });
-
+  const navigate = useNavigate(); // Call the hook inside the component
   const toast = useContext(ToastContext);
 
   const handleChange = (e) => {
@@ -90,20 +92,23 @@ const EditCommon = () => {
 
   return (
     <div
-      className="h-screen flex items-center justify-center bg-cover bg-center"
+      className="h-screen flex items-center justify-center bg-cover bg-center  tracking-wide"
       style={{ backgroundImage: `url(${background})` }}
     >
-      <div className="max-w-4xl w-full h-full max-h-[80%] bg-white shadow-lg rounded-lg p-6 flex flex-col">
+      <div className="absolute left-2 top-2">
+        <BackButton onClick={() => navigate("/admin/dashboard")} />
+      </div>
+      <div className="max-w-4xl w-full h-full max-h-[85%] bg-white shadow-lg rounded-lg p-6 flex flex-col">
         <div className="w-full flex px-4 justify-between text-white bg-[#1E4788] rounded-xl shadow-md p-3">
           <h2 className="text-xl font-bold">Team Registration</h2>
         </div>
-        <div className="flex h-full justify-center items-center gap-x-10 ">
+        <div className="flex h-full justify-center items-center gap-x-10 text-[#1E4788]">
           {/* Image Uploads */}
-          <div className="flex flex-col items-center w-2/5 h-full space-y-5">
+          <div className="flex flex-col items-center w-2/5 h-full space-y-5 mt-5">
             {["logo", "display_picture"].map((field) => (
               <div
                 key={field}
-                className="relative group bg-white h-[45%] w-[80%] rounded-2xl drop-shadow-xl flex items-center justify-center"
+                className="flex-col relative group bg-white h-[45%] w-[80%] rounded-2xl drop-shadow-xl flex items-center justify-center"
               >
                 <label
                   htmlFor={field}
@@ -112,7 +117,7 @@ const EditCommon = () => {
                   <img
                     src={preview[field] || imgPlaceholder}
                     alt={field}
-                    className="w-[80%] h-auto object-contain"
+                    className={`h-auto object-contain ${field==="display_picture" ? "w-[95%]" : "w-[80%]" }`} 
                   />
                   <span className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#1E4788] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity">
                     Upload {field.replace("_", " ")}
@@ -125,6 +130,8 @@ const EditCommon = () => {
                   onChange={(e) => handleImageUpload(e, field)}
                   className="hidden"
                 />
+            <span
+              className="cursor-pointer flex items-center justify-center">{field.charAt(0).toUpperCase()+field.substring(1,field.length).replace('_',' ')}</span>
               </div>
             ))}
           </div>
@@ -161,17 +168,17 @@ const EditCommon = () => {
                 />
               </div>
               <div className="w-full flex justify-center space-x-3">
-                <button
+                {/* <button
                   type="button"
                   className="w-1/3 p-2 mt-10 bg-[#1E4788] hover:bg-blue-700 hover:cursor-pointer text-white rounded-lg shadow-md  "
                 >
                   Reset
-                </button>
+                </button> */}
                 <button
                   type="submit"
                   className="w-1/3 p-2 mt-10 bg-[#68AA45] hover:bg-green-700 hover:cursor-pointer text-white rounded-lg shadow-md  "
                 >
-                  Submit
+                  Update
                 </button>
               </div>
             </form>
