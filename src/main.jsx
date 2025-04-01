@@ -28,6 +28,7 @@ import LoadingProvider from './context/LoadingProvider.jsx'
 import EditCoach from './pages/admin/EditCoach.jsx'
 import { PiDressFill } from 'react-icons/pi'
 import Navbar from './layouts/Navbar/Navbar.jsx'
+import TeamProvider from './context/TeamProvider.jsx'
 
 {
   /* 
@@ -51,50 +52,52 @@ createRoot(document.getElementById('root')).render(
           <PlayersProvider>
             <TournamentsProvider>
               <CoachProvider>
-                <LoadingProvider>
-                  <Routes>
-                    <Route path='/' element={<App />} />
-                    {/* <Route path='/background' element={<StadiumBack />} /> */}
-                    <Route path='/landing' element={<Landing />} />
-                    <Route path='/team' element={<Team />} />
-                    <Route path='/tournaments' element={<Tournaments />} />
-                    <Route
-                      path='/scores'
-                      element={
-                        <Suspense fallback={null}>
-                          <Scores />
-                        </Suspense>
-                      }
-                    />
-                    <Route path='/login' element={<Login />} />
+                <TeamProvider>
+                  <LoadingProvider>
+                    <Routes>
+                      <Route path='/' element={<App />} />
+                      {/* <Route path='/background' element={<StadiumBack />} /> */}
+                      <Route path='/landing' element={<Landing />} />
+                      <Route path='/team' element={<Team />} />
+                      <Route path='/tournaments' element={<Tournaments />} />
+                      <Route
+                        path='/scores'
+                        element={
+                          <Suspense fallback={null}>
+                            <Scores />
+                          </Suspense>
+                        }
+                      />
+                      <Route path='/login' element={<Login />} />
 
-                    <Route path='/admin/dashboard' element={<Dashboard />} />
-                    <Route
-                      path='/admin/dashboard/editTournaments'
-                      element={<EditTournaments />}
-                    />
-                    <Route
-                      path='/admin/dashboard/editPlayers'
-                      element={<EditTeam />}
-                    />
-                    <Route
-                      path='/admin/dashboard/editTeam'
-                      element={<EditCommon />}
-                    />
-                    <Route path='/admin/profile' element={<Profile />} />
-                    <Route
-                      path='/admin/dashboard/editCoach'
-                      element={<EditCoach />}
-                    />
+                      <Route path='/admin/dashboard' element={<Dashboard />} />
+                      <Route
+                        path='/admin/dashboard/editTournaments'
+                        element={<EditTournaments />}
+                      />
+                      <Route
+                        path='/admin/dashboard/editPlayers'
+                        element={<EditTeam />}
+                      />
+                      <Route
+                        path='/admin/dashboard/editTeam'
+                        element={<EditCommon />}
+                      />
+                      <Route path='/admin/profile' element={<Profile />} />
+                      <Route
+                        path='/admin/dashboard/editCoach'
+                        element={<EditCoach />}
+                      />
 
-                    <Route path='/exit' element={<Exit />} />
-                    <Route path='/temp' element={<Temp />} />
-                  </Routes>
+                      <Route path='/exit' element={<Exit />} />
+                      <Route path='/temp' element={<Temp />} />
+                    </Routes>
 
-                  <Loader />
-                  <ChatBot />
-                  <Navbar />
-                </LoadingProvider>
+                    <Loader />
+                    <ChatBot />
+                    <Navbar />
+                  </LoadingProvider>
+                </TeamProvider>
                 <ToastNotification />
               </CoachProvider>
             </TournamentsProvider>
