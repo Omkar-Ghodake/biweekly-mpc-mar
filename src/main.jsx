@@ -29,6 +29,7 @@ import EditCoach from './pages/admin/EditCoach.jsx'
 import { PiDressFill } from 'react-icons/pi'
 import Navbar from './layouts/Navbar/Navbar.jsx'
 import TeamProvider from './context/TeamProvider.jsx'
+import New from './components/LoginFormElements/New.jsx'
 
 {
   /* 
@@ -68,7 +69,8 @@ createRoot(document.getElementById('root')).render(
                           </Suspense>
                         }
                       />
-                      <Route path='/login' element={<Login />} />
+                      {/* <Route path='/login' element={<Login />} /> */}
+                      <Route path='/login' element={<New />} />
 
                       <Route path='/admin/dashboard' element={<Dashboard />} />
                       <Route

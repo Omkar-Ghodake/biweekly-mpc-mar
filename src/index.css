@@ -88,6 +88,27 @@
   font-size: 1.2rem;
 }
 
+/* width */
+.chatbot-scrollbar::-webkit-scrollbar {
+  width: 2px;
+}
+
+/* Track */
+.chatbot-scrollbar::-webkit-scrollbar-track {
+  width: 5px;
+  background: #f1f1f1;
+}
+
+/* Handle */
+.chatbot-scrollbar::-webkit-scrollbar-thumb {
+  background: #435bb4;
+}
+
+/* Handle on hover */
+.chatbot-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 /* toast notification animation */
 @keyframes spin-reverse {
   from {
