@@ -73,10 +73,10 @@ const Scores = () => {
         </div>
 
         {/* Foreground Content */}
-        <div className='relative flex flex-col items-center justify-center h-full '>
+        <div className='relative flex flex-col items-center justify-center h-full'>
           {/* Header Section */}
           <div className='w-auto max-h-[950px] min-h-2/3 justify-center items-center  flex flex-col  p-1 rounded-3xl '>
-            <div className=' text-white bg-gradient-to-b from-[#1E4788] to-sky-800 shadow-2xl w-full rounded-xl p-4 mt-2 '>
+            <div className=' text-white bg-gradient-to-b from-[#1E4788] to-sky-800 shadow-2xl w-full rounded-xl p-4 mt-2 cursor-pointer'>
               <div className='flex items-center justify-center text-3xl font-bold font-serif h-10 uppercase '>
                 {/* Optional logo */}
                 {/* <img src="logo.png" alt="Logo" className="w-12 h-12 mr-4" /> */}
@@ -85,7 +85,7 @@ const Scores = () => {
             </div>
 
             <div className='w-full flex-1  overflow-y-scroll [&::-webkit-scrollbar]:hidden opacity-90 rounded-lg backdrop-blur-sm'>
-              <div className='grid grid-cols-4 md:grid-cols-4 gap-14 my-5 p-5  '>
+              <div className='grid grid-cols-4 md:grid-cols-4 gap-14 my-5 p-5'>
                 {sortedPlayers.map((player, index) => (
                   <motion.div
                     initial='hidden'
@@ -94,7 +94,7 @@ const Scores = () => {
                     custom={index}
                     key={index}
                     onClick={() => handleCardClick(player, index)}
-                    class='relative w-56 h-56 rounded-t-lg flex justify-center items-end mx-auto my-4 rounded-b-lg'
+                    class='relative w-56 h-56 rounded-t-lg flex justify-center items-end mx-auto my-4 rounded-b-lg cursor-pointer'
                   >
                     <div class='absolute inset-0 bg-gray-300 rounded-t-lg opacity-90 '></div>
                     <div className='cursor-pointer'>
