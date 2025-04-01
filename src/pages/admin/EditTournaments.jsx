@@ -355,7 +355,10 @@ const EditTournaments = () => {
                               isEditing
                                 ? "border focus:outline-blue-500 bg-gray-100 border-gray-400"
                                 : "bg-gray-100 cursor-default"
-                            }`}
+                            } overflow-y-auto
+                              [&::-webkit-scrollbar]:w-1
+                              [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
+                              [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-gray-400`}
                             readOnly={!isEditing}
                             style={{ height: "150px" }}
                             required
@@ -456,7 +459,7 @@ const EditTournaments = () => {
                 </div>
               </div>
               {/* Buttons Outside the Form */}
-              <div className="w-full p-4 bg-transparent  flex justify-center space-x-5 rounded-b-2xl">
+              <div className="w-full p-4 bg-transparent  flex justify-center space-x-5 rounded-b-2xl mt-5">
                 {!createNew && (
                   <button
                     type="button"
