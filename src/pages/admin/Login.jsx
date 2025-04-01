@@ -43,9 +43,9 @@ const Login = () => {
       return setError('Please enter both domain id and password')
     }
 
-    if (password.length < 8 || password.length > 20) {
-      return setError('Password must be between  8-20 characters')
-    }
+    // if (password.length < 8 || password.length > 20) {
+    // return setError('Password must be between  8-20 characters')
+    // }
     if (domain.length < 10) {
       return setError('Domain Id should be atleast 10 characters')
     }

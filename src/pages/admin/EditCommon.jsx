@@ -4,6 +4,7 @@ import background from "../../assets/background5.jpg";
 import Input from "../../components/form/Input";
 import imgPlaceholder from "../../glb/Blank Profile pic.png";
 import { ToastContext } from "../../context/ToastProvider";
+import { LoadingContext } from "../../context/LoadingProvider";
 
 const EditCommon = () => {
   const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ const EditCommon = () => {
     logo: null,
     display_picture: null,
   });
+  const { isLoading, setIsLoading } = useContext(LoadingContext);
 
   const [preview, setPreview] = useState({
     logo: "",
@@ -55,13 +57,15 @@ const EditCommon = () => {
   };
   useEffect(() => {
     fetchTeam();
-  }, [fetchTeam]);
+  }, []);
 
   console.log(formData);
   console.log(preview);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true)
+
     try {
       const formDataToSend = new FormData();
       Object.entries(formData).forEach(([key, value]) => {
@@ -78,7 +82,9 @@ const EditCommon = () => {
     } catch (error) {
       toast.showToast("Couldn't update team", "error");
     } finally {
+      setIsLoading(false)
       fetchTeam();
+
     }
   };
 
