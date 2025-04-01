@@ -269,25 +269,23 @@ const Login = () => {
 
   return (
     <>
-      <div className="h-dvh overflow-hidden bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col items-center py-10 px-6">
-        <div className="absolute inset-0 bg-gray-50/90"></div>
-
-        <div className="flex justify-center items-center h-screen rounded-lg z-10">
+      <div className="h-dvh overflow-hidden bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col items-center px-7">
+        <div className="absolute inset-0 bg-gray-50/90"></div>      
           {/* Content container */}
-          <div className="relative h-[550px]  flex flex-col md:flex-row  overflow-hidden">
+          <div className="relative h-full flex ">
             {/* Left side - Image placeholder with purple overlay */}
-            <div className="w-[440px]  p-4 flex items-center justify-center bg-[rgba(40,31,108,0.3)] rounded-2xl backdrop-blur-sm">
-              <span className="text-white text-2xl font-bold">Hello</span>
+            <div className="ml-15">
+            <img src="LoginLogo.png" alt="" className="h-full" />
             </div>
 
             {/* Right side - Login form with transparency */}
-            <div className="w-[470px] flex items-center justify-center p-4 rounded-r-lg">
-              <div className="w-full  ml-20">
+            <div className=" flex items-center justify-center  rounded-r-lg">
+              <div className="w-full">
                 {/* Login header */}
                 <h2 className="text-blue-900 font-bold text-2xl mb-8 text-center">
                   {step === 0 && "Login"}
                   {step === 1 && "Forgot your password ?"}
-                  {step === 2 && "OTP page Login"}
+                  {step === 2 && "OTP Login"}
                   {step === 3 && "Reset Password to Login"}
                 </h2>
 
@@ -298,7 +296,7 @@ const Login = () => {
                       <input
                         type="text"
                         placeholder="Domain Id"
-                        className="w-full p-3 my-4 rounded-[10px] bg-[rgba(209,201,255,0.6)] border-b-blue-100 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className=" w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500"
                         value={domain}
                         onChange={handleEmailChange}
                       />
@@ -309,7 +307,7 @@ const Login = () => {
                       <input
                         type={isPasswordVisible ? "text" : "password"}
                         placeholder="Password"
-                        className="w-full p-3  rounded-[10px] bg-[rgba(209,201,255,0.6)] border-0 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className=" w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500"
                         value={password}
                         onChange={handlePasswordChange}
                       />
@@ -474,7 +472,7 @@ const Login = () => {
                         placeholder="Enter your New Password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
-                        className="w-full p-3 rounded bg-[rgba(209,201,255,0.6)] border-0 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className=" w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                       {newPassword !== "" && (
                         <button
@@ -496,7 +494,7 @@ const Login = () => {
                         placeholder="Confirm your Password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="w-full p-3 rounded bg-[rgba(209,201,255,0.6)] border-0 focus:outline-none focus:ring-1 focus:ring-blue-500"
+                        className=" w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
                       {confirmPassword !== "" && (
                         <button
@@ -538,7 +536,7 @@ const Login = () => {
               </div>
             </div>
           </div>
-        </div>
+    
       </div>
     </>
   );
