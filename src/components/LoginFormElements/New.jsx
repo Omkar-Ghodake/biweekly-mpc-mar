@@ -18,7 +18,7 @@ const Login = () => {
     //const [loading, setIsLoading] = useState(false)
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
-    
+
     const { login } = useContext(CoachContext)
     const { showToast } = useContext(ToastContext)
     const { isCoachAuthenticated } = useContext(CoachContext)
@@ -32,14 +32,14 @@ const Login = () => {
     const [otpSent, setOtpSent] = useState(false)
     const [actualOTP, setActualOTP] = useState('')
     const [isBlurred, setIsBlurred] = useState(false)
-    
+
     const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
         useState(false)
     const [error1, setError1] = useState('')
     const [error2, setError2] = useState('')
 
-    
-    
+
+
 
     const navigate = useNavigate()
 
@@ -268,7 +268,7 @@ const Login = () => {
             }
 
             setIsLoading(false)
-            
+
         } catch (error) { }
     }
 
@@ -340,7 +340,7 @@ const Login = () => {
                             </div>
                             <div className="mb-4">
                                 <button
-                                    onclick={handleSubmit}
+                                    onClick={handleSubmit}
                                     className="w-full bg-blue-800 text-white py-2 rounded-lg hover:bg-blue-900"
                                     disabled={isLoading}
                                 >
@@ -385,9 +385,9 @@ const Login = () => {
                                 <div className='text-red-500 text-sm  mt-1 mx-2'>{error2}</div>
                             )}
                             {
-                                <Button onClick={()=>{
-                                  handleEmailSubmit();
-                                  setStep(2);
+                                <Button onClick={() => {
+                                    handleEmailSubmit();
+                                    // setStep(2);
                                 }} className={'w-full my-2'}>
                                     Send OTP
                                 </Button>
@@ -414,10 +414,11 @@ const Login = () => {
                                     <div className='text-red-500 text-sm  mt-1 mx-9'>{error1}</div>
                                 )}
                                 {
-                                    <Button onClick={()=>{
-                                      handleOTPSubmit();
-                                      setStep(3);} 
-                                    }className={'w-full my-2'}>
+                                    <Button onClick={() => {
+                                        handleOTPSubmit();
+                                        // setStep(3);
+                                    }
+                                    } className={'w-full my-2'}>
                                         Verify OTP
                                     </Button>
                                 }
