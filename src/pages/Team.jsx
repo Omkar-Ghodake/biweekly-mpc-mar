@@ -3,6 +3,7 @@ import background from '../assets/background.jpg'
 import Button from '../components/Button'
 import { Link } from 'react-router'
 import { TeamContext } from '../context/TeamProvider'
+import { FaAngleRight } from 'react-icons/fa6'
 
 const Team = () => {
   const { teamInfo } = useContext(TeamContext)
@@ -21,9 +22,14 @@ const Team = () => {
         className='absolute inset-0 z-30 object-cover'
       />
 
-      <Link to={'/tournaments'} className=' absolute right-10 top-6 z-40 h-fit'>
-        <Button className={''}>Tournaments</Button>
-      </Link>
+      <Button className={'absolute right-6 top-6 z-40 h-fit'} size='sm'>
+        <Link
+          to={'/tournaments'}
+          className='flex justify-between items-center space-x-2'
+        >
+          <span>Tournaments</span> <FaAngleRight />
+        </Link>
+      </Button>
     </div>
   )
 }
