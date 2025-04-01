@@ -56,9 +56,9 @@ const Login = () => {
       return setError("Please enter both domain id and password");
     }
 
-    if (password.length < 8 || password.length > 20) {
-      return setError("Password must be between  8-20 characters");
-    }
+    // if (password.length < 8 || password.length > 20) {
+    //   return setError("Password must be between  8-20 characters");
+    // }
     if (domain.length < 10) {
       return setError("Domain Id should be atleast 10 characters");
     }
@@ -328,7 +328,7 @@ const Login = () => {
 
                     {/* Error message */}
                     {error && (
-                      <div className="text-red-500 text-sm">{error}</div>
+                      <div className="text-red-500 ml-2 text-sm">{error}</div>
                     )}
 
                     {/* Forgot password link */}
@@ -381,16 +381,16 @@ const Login = () => {
                       placeholder="Enter your Email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className=" w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500"
+                      className=" w-[350px] p-3 rounded-[10px] bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500"
                     />
                     {error2 && (
-                      <div className="text-red-500 text-sm mt-1">{error2}</div>
+                      <div className="text-red-500 text-sm ml-2 mt-1">{error2}</div>
                     )}
                     <div className="flex justify-center">
                       <button
                         type="submit"
-                        // onClick={handleEmailSubmit}
-                        onClick ={() =>setStep(2)}//for checkin figma
+                        onClick={handleEmailSubmit} 
+                        
                         className="w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer"
                       >
                         Submit
@@ -409,10 +409,10 @@ const Login = () => {
                   </div>
                 )}
 
-                {step === 2 && !otpSent && (//for figma check
+                {step === 2 && otpSent && (
                   <div className="space-y-4">
                   <div className="text-center mx-0 text-gray-400 -mt-7">
-                       <p> Enter Code send to your Email ID</p>
+                       <p> Enter Code sent to your Email ID</p>
                   </div>
                       <div className="flex justify-center gap-x-2 mb-9">
                       {[0, 1, 2, 3, 4, 5].map((index) => (
@@ -428,14 +428,14 @@ const Login = () => {
                       ))}
                     </div>
                     {error1 && (
-                      <div className="text-red-500 text-sm mt-1 text-center">
+                      <div className="text-red-500 text-sm mt-1 ml-2 text-center">
                         {error1}
                       </div>
                     )}
                        <div className="text-center mt-5 text-gray-400">
                   <span> Didn't get the OTP ? </span>
                   <button type="submit" 
-                  
+                  onClick={handleEmailSubmit} 
                   className="text-blue-900 mx-2 cursor-pointer hover:underline">
                     Resend it.
                   </button>
@@ -444,8 +444,8 @@ const Login = () => {
                     <div className="flex justify-center">
                       <button
                         type="submit"
-                        // onClick={handleOTPSubmit}
-                        onClick ={() =>setStep(3)}//for checkin figma
+                        onClick={handleOTPSubmit}
+                        
                         className="w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer"
                       >
                         Verify OTP
@@ -474,7 +474,7 @@ const Login = () => {
                         onChange={(e) => setNewPassword(e.target.value)}
                         className=" w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500"
                       />
-                      {newPassword !== "" && (
+                      {/* {newPassword !== "" && (
                         <button
                           type="button"
                           className="absolute right-3 transform -translate-y-1/2 text-gray-400"
@@ -486,7 +486,7 @@ const Login = () => {
                             <AiFillEye size={20} />
                           )}
                         </button>
-                      )}
+                      )} */}
                     </div>
                     <div className="relative">
                       <input
@@ -511,11 +511,13 @@ const Login = () => {
                       )}
                     </div>
                     {error3 && (
-                      <div className="text-red-500 text-sm mt-1">{error3}</div>
+                      <div className="text-red-500 text-sm ml-2 mt-1">{error3}</div>
                     )}
                     <div className="flex justify-center">
                       <button
-                        onClick={handlePasswordSubmit}
+                        onClick={()=>{handlePasswordSubmit();
+                          setStep(0);
+                        }}
                         className="w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer"
                       >
                         Reset Password

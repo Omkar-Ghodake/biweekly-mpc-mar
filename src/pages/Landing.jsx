@@ -9,6 +9,7 @@ import Button from '../components/Button'
 import { Link } from 'react-router'
 import { LuSkipForward } from 'react-icons/lu'
 import { TeamContext } from '../context/TeamProvider'
+import { FaAngleRight } from 'react-icons/fa6'
 
 const Landing = () => {
   const [isVideoComplete, setIsVideoComplete] = useState(false)
@@ -72,29 +73,34 @@ const Landing = () => {
 
       {/*Content */}
       {isVideoComplete && (
-        <div className='absolute inset-0 flex justify-center '>
-          <div>
-            <h1>Members of Parliament's Corner</h1>
+        <div className='absolute inset-0 flex flex-col items-center justify-center z-30 text-white space-y-10'>
+          <div className='text-center flex flex-col space-y-5 font-bold'>
+            <h1 className='text-7xl'>{teamInfo.short_name}</h1>
+            <h1 className='text-5xl'>{teamInfo.long_name}</h1>
           </div>
 
-          {/* <div className='entry_content'>
-            <p className='bg-red-500'>{teamInfo.short_name}</p>
+          <img src={teamInfo.logo} alt='' className='w-[50vh]' />
 
-            <h2>{teamInfo.description}</h2>
+          <p className='text-3xl font-semibold'>{teamInfo.description}</p>
 
-            <div>
-              <img src={teamInfo.logo} alt='Logo Not Loaded' />
-            </div>
-
-            <div className='absolute right-10 bottom-[20vh] flex flex-col space-y-5'>
-              <Link to={'/team'}>
-                <Button>I'm a Player</Button>
+          <div className='absolute right-6 bottom-6  flex flex-col items-center justify-center space-y-5'>
+            <Button className={'text-lg'} size='sm'>
+              <Link
+                to={'/login'}
+                className='flex justify-center items-center space-x-2'
+              >
+                <span>I'm a Coach</span> <FaAngleRight />
               </Link>
-              <Link to={'/login'}>
-                <Button variant='secondary'>I'm a Coach</Button>
+            </Button>
+            <Button className={''} variant='secondary' size='sm'>
+              <Link
+                to={'/team'}
+                className='flex justify-center items-center space-x-2'
+              >
+                <span>I'm a Player</span> <FaAngleRight />
               </Link>
-            </div>
-          </div> */}
+            </Button>
+          </div>
         </div>
       )}
     </div>

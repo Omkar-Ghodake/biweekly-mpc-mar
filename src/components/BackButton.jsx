@@ -1,14 +1,12 @@
-// import { useNavigate } from "react-router-dom";
-
-const BackButton = () => {
-  const navigate = useNavigate();
+import { MdArrowBackIosNew } from "react-icons/md";
+const BackButton = ({onClick}) => {
 
   return (
     <button 
-      onClick={() => navigate(-1)} 
-      className="px-4 py-2 bg-blue-500 text-white rounded-lg"
+      onClick={onClick} 
+      className="px-4 py-2  bg-gradient-to-b from-[#3b7adf] to-[#1E4788]  text-white rounded-lg h-12 z-0 text-nowrap cursor-pointer"
     >
-      ← Back
+      <MdArrowBackIosNew />
     </button>
   );
 };
