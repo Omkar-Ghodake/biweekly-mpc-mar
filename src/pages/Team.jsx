@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import background from '../assets/background.jpg'
 import Button from '../components/Button'
 import { Link } from 'react-router'
+import { TeamContext } from '../context/TeamProvider'
 
 const Team = () => {
+  const { teamInfo } = useContext(TeamContext)
+
   return (
     <div className='h-screen flex items-center justify-center'>
       {/* <img
@@ -13,7 +16,7 @@ const Team = () => {
       /> */}
 
       <img
-        src='/Team Photo MPC.png'
+        src={teamInfo?.display_picture}
         alt=''
         className='absolute inset-0 z-30 object-cover'
       />
