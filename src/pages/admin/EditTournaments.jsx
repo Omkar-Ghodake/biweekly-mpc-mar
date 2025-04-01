@@ -16,7 +16,7 @@ import { TournamentsContext } from "../../context/TournamentsProvider";
 import axios from "axios";
 import { ToastContext } from "../../context/ToastProvider";
 import { LoadingContext } from "../../context/LoadingProvider";
-import BackButton from "../../components/BackButton";
+// import BackButton from "../../components/BackButton";
 
 const EditTournaments = () => {
   const [tournaments, setTournaments] = useState([]); // State to store tournaments
