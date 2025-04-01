@@ -52,7 +52,7 @@ exports.updateTournament = async (req, res) => {
       )
     }
 
-    let updatedData = { ...req.body }
+    let tournamentLogoUrl = tournament.logo;
 
     if (req.file) {
       const imagePath = req.file.path
@@ -65,19 +65,21 @@ exports.updateTournament = async (req, res) => {
         return ErrorResponse(res, 500, 'Image upload failed')
       }
 
-      updatedData.image = uploadedImage.url
+      tournamentLogoUrl = uploadedImage.url
     }
-    console.log(updatedData);
+    let updatedData = JSON.parse(JSON.stringify({ ...req.body, logo: tournamentLogoUrl }));
+    console.log("updatedData",updatedData);
     
-    tournament = await Tournament.findByIdAndUpdate(id, updatedData, {
+    const newTournament = await Tournament.findByIdAndUpdate(id, { $set: updatedData }, {
       new: true,
     })
-
+    console.log("tournament",newTournament);
+    
     return SuccessResponse(
       res,
       200,
       `Tournament with ID ${id} updated successfully`,
-      tournament
+      newTournament
     )
   } catch (error) {
     console.error('Error:', error)

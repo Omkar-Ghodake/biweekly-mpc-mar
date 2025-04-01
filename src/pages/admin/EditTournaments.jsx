@@ -16,6 +16,7 @@ import { TournamentsContext } from "../../context/TournamentsProvider";
 import axios from "axios";
 import { ToastContext } from "../../context/ToastProvider";
 import { LoadingContext } from "../../context/LoadingProvider";
+import BackButton from "../../components/BackButton";
 
 const EditTournaments = () => {
   const [tournaments, setTournaments] = useState([]); // State to store tournaments
@@ -25,8 +26,7 @@ const EditTournaments = () => {
   const tournamentsArray = tournamentsContext.tournaments; // Fetch tournaments from context
   const [image, setImage] = useState(logo_default || ""); // Default image for preview
   const { isLoading, setIsLoading } = useContext(LoadingContext);
-
-  // State to track if the form is in editing mode
+  
   const [isEditing, setIsEditing] = useState(false);
   const [currentTournament, setCurrentTournament] = useState({
     id: null,
@@ -36,6 +36,8 @@ const EditTournaments = () => {
     issueCount: 0,
     logo: "",
   });
+  const maxLength = 200;
+  const [charCount, setCharCount] = useState(currentTournament?.description?.length || 0);  // State to track if the form is in editing mode
   const [createNew, setCreateNew] = useState(false);
   const fileInputRef = useRef(null);
 
@@ -44,6 +46,14 @@ const EditTournaments = () => {
     setTournaments(tournamentsArray);
   }, [tournamentsArray]);
 
+  const handleChange = (e) => {
+    if (isEditing) {
+      setCharCount(e.target.value.length);
+      handleInputChange(e);
+    }
+  };
+
+
   // Handle input changes for form fields
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -51,25 +61,6 @@ const EditTournaments = () => {
   };
 
   // Convert Base64 string to a File object
-  const convertBase64ToFile = (base64String, fileName) => {
-    let arr = base64String.split(",");
-    let mime = arr[0].match(/:(.*?);/)[1]; // Extract MIME type
-    let bstr = atob(arr[1]); // Decode Base64
-    let n = bstr.length;
-    let u8arr = new Uint8Array(n);
-
-    while (n--) {
-      u8arr[n] = bstr.charCodeAt(n);
-    }
-
-    const file = new File([u8arr], fileName, { type: mime });
-
-    // Update the current tournament with the file
-    setCurrentTournament((prevData) => ({
-      ...prevData,
-      logo: file, // Store the file in the current tournament
-    }));
-  };
 
   // Handle image upload and update state
   const handleImageUpload = (e) => {
@@ -186,6 +177,7 @@ const EditTournaments = () => {
 
         // Refresh tournament list
         await tournamentsContext.fetchTournaments();
+        console.log(response);
 
         setIsEditing(false);
       }
@@ -216,7 +208,7 @@ const EditTournaments = () => {
         "error"
       );
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
       setCurrentTournament(null);
       closeModal();
       setIsEditing(false);
@@ -252,7 +244,8 @@ const EditTournaments = () => {
       <div
         className="h-screen flex justify-center items-center bg-cover bg-center"
         style={{ backgroundImage: `url(${background})` }}
-      >
+        >
+        {/* <BackButton className=""/> */}
         <motion.div
           initial="hidden"
           animate="visible"
@@ -308,7 +301,7 @@ const EditTournaments = () => {
             </div>
           </ModalHead>
           <ModalBody>
-            <div className="p-2 flex flex-row items-start min-h-[300px] text-[#1E4788]">
+            <div className="p-2 flex flex-row items-start h-[350px]  min-h-[300px] text-[#1E4788]">
               <div className="w-2/3">
                 <form className="space-y-6">
                   <div className="flex flex-col space-y-4">
@@ -336,30 +329,44 @@ const EditTournaments = () => {
                         required
                       />
                     </div>
-                    <div className="flex items-center">
-                      <label
-                        htmlFor="description"
-                        className="font-medium w-1/3 text-left pr-4"
-                        style={{ color: "#1E4788" }}
-                      >
-                        Tournament Description
-                      </label>
-                      <textarea
-                        id="description"
-                        name="description"
-                        placeholder="Enter Tournament Description"
-                        value={currentTournament.description}
-                        onChange={handleInputChange}
-                        maxLength={200}
-                        className={`w-2/4 p-2 rounded-xl transition-all duration-200 resize-none border-gray-400 ${
-                          isEditing
-                            ? "border focus:outline-blue-500 bg-gray-100 border-gray-400"
-                            : "bg-gray-100 cursor-default"
-                        }`}
-                        readOnly={!isEditing}
-                        style={{ height: "150px" }}
-                        required
-                      />
+                    <div className="flex flex-col">
+                      <div className="flex items-center">
+                        <label
+                          htmlFor="description"
+                          className="font-medium w-1/3 text-left pr-4"
+                          style={{ color: "#1E4788" }}
+                        >
+                          Tournament Description
+                        </label>
+                        <textarea
+                          id="description"
+                          name="description"
+                          placeholder="Enter Tournament Description"
+                          value={currentTournament.description}
+                          onChange={handleChange}
+                          maxLength={maxLength}
+                          className={`w-2/4 p-2 rounded-xl transition-all duration-200 resize-none border-gray-400 ${
+                            isEditing
+                              ? "border focus:outline-blue-500 bg-gray-100 border-gray-400"
+                              : "bg-gray-100 cursor-default"
+                          }`}
+                          readOnly={!isEditing}
+                          style={{ height: "150px" }}
+                          required
+                        />
+                      </div>
+                      {/* Character Count Warning */}
+                      <div className="text-right text-sm pr-4 w-2/4 ml-auto">
+                        <span
+                          className={
+                            charCount > maxLength-1
+                              ? "text-red-500"
+                              : "text-gray-500"
+                          }
+                        >
+                          {charCount}/{maxLength} characters
+                        </span>
+                      </div>
                     </div>
                     <div className="flex items-center">
                       <label
@@ -413,10 +420,12 @@ const EditTournaments = () => {
                 </form>
               </div>
               <div className="w-1/2 h-full flex justify-center items-center ">
-                <div className="flex justify-center bg-white items-center h-[85%] w-[70%] rounded-2xl drop-shadow-2xl relative group p-2">
+                <div className="flex justify-center bg-white items-center h-[70%] w-[70%] rounded-2xl drop-shadow-2xl relative group p-2">
                   <label
                     htmlFor="imageUpload"
-                    className="cursor-pointer flex justify-center "
+                    className={`${
+                      isEditing ? "cursor-pointer " : "cursor-default"
+                    } flex justify-center `}
                   >
                     <img
                       src={image || img}
@@ -478,7 +487,7 @@ const EditTournaments = () => {
                     !isEditing ||
                     (currentTournament && currentTournament.id === null)
                       ? "bg-gray-400 cursor-not-allowed"
-                      : "bg-[#950202] hover:bg-red-700"
+                      : "bg-[#950202] hover:bg-red-700 cursor-pointer"
                   }`}
                   onClick={deleteTournament}
                   disabled={
