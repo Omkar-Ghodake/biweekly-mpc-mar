@@ -275,7 +275,7 @@ const Login = () => {
         <div className='relative h-full flex '>
           {/* Left side - Image placeholder with purple overlay */}
           <div className='ml-15'>
-            <img src='LoginLogo.png' alt='' className='h-full' />
+            <img src='LoginLogoMain.png' alt='' className='h-full' />
           </div>
 
           {/* Right side - Login form with transparency */}
