@@ -5,12 +5,16 @@ import { CoachContext } from "../../context/CoachProvider";
 import { FaRegEdit, FaRegSave } from "react-icons/fa";
 import axios from "axios";
 import { ToastContext } from "../../context/ToastProvider";
+import { useNavigate } from "react-router";
+import BackButton from "../../components/BackButton";
 
 export default function CoachForm() {
   const coach = useContext(CoachContext);
   const coachData = coach.coach;
   console.log(coachData);
   const toast = useContext(ToastContext);
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     domain_name: "",
@@ -92,16 +96,19 @@ export default function CoachForm() {
       toast.showToast("Couldn't Update coach", "error");
     } finally {
       coachData.checkForSession;
-      setFormData(coachData)
+      setFormData(coachData);
     }
   };
   console.log(formData); // Replace with API call
 
   return (
     <div
-      className="h-screen flex items-center justify-center bg-cover bg-center transition-all delay-200"
+      className="h-screen flex items-center justify-center bg-cover bg-center transition-all delay-200  tracking-wide text-[#1E4788]"
       style={{ backgroundImage: `url(${background})` }}
     >
+      <div className="absolute left-2 top-2">
+        <BackButton onClick={() => navigate("/admin/dashboard")} />
+      </div>
       <div className="max-w-4xl w-full h-full max-h-[80%] bg-white shadow-lg rounded-xl p-6 flex flex-col">
         {/* Header Section */}
         <div className="w-full flex px-4 justify-between text-white bg-[#1E4788] rounded-xl shadow-md p-3">
@@ -186,7 +193,7 @@ export default function CoachForm() {
                   id="description"
                   name="description"
                   placeholder="Enter description"
-                  className="ml-5 w-full max-h-52 min-h-32 p-2 rounded-xl border shadow-md focus:outline-[#1E4788]"
+                  className="ml-5 w-full max-h-32 min-h-32 p-2 rounded-xl border shadow-md focus:outline-[#1E4788]"
                   value={formData.description}
                   onChange={handleChange}
                 ></textarea>

@@ -16,6 +16,8 @@ import Input from "../../components/form/Input";
 import { FaRegEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { LoadingContext } from "../../context/LoadingProvider";
+import BackButton from "../../components/BackButton";
+import { useNavigate } from "react-router";
 
 const EditTeam = () => {
   const [players, setPlayers] = useState([]);
@@ -27,6 +29,7 @@ const EditTeam = () => {
   const { isLoading, setIsLoading } = useContext(LoadingContext);
   const [isEditing, setIsEditing] = useState(false);
   const [createNew, setCreateNew] = useState(false);
+  const navigate = useNavigate(); // Call the hook inside the component
 
   const emptyForm = {
     severity_count: {
@@ -100,7 +103,6 @@ const EditTeam = () => {
     }
   };
 
-
   const convertBase64ToFile = (base64String, fileName) => {
     let arr = base64String.split(",");
     let mime = arr[0].match(/:(.*?);/)[1]; // Extract MIME type
@@ -133,9 +135,8 @@ const EditTeam = () => {
   const removeCourseField = (index) => {
     if (!formData.courses) return; // Prevent errors if courses is undefined
     const updatedCourses = formData.courses.filter((_, i) => i !== index);
-    setFormData(prev => ({ ...prev, courses: updatedCourses }));
+    setFormData((prev) => ({ ...prev, courses: updatedCourses }));
   };
-
 
   const removeProjectField = (index) => {
     const updatedProjects = formData.projects.filter((_, i) => i !== index);
@@ -199,22 +200,22 @@ const EditTeam = () => {
 
   const updatePlayer = async (e) => {
     e.preventDefault();
-    console.log("Formdata before cleaning: ",formData);
+    console.log("Formdata before cleaning: ", formData);
     const cleanedFormData = {
       ...formData,
       courses: formData.courses.every((course) => course.trim() === "")
-      ? []
-      : formData.courses,
+        ? []
+        : formData.courses,
       projects: formData.projects.every((project) => project.trim() === "")
-      ? []
-      : formData.projects,
+        ? []
+        : formData.projects,
     };
-    console.log("Formdata after cleaning: ",cleanedFormData);
-    
+    console.log("Formdata after cleaning: ", cleanedFormData);
+
     setIsLoading(true);
     try {
       const id = formData._id;
-      
+
       const response = await axios.put(
         `http://localhost:5500/api/v1/players/update-player/${id}`,
         cleanedFormData,
@@ -224,12 +225,11 @@ const EditTeam = () => {
           },
         }
       );
-      
+
       if (response.status === 200) {
         toast.showToast("Player updated successfully!");
         setIsEditing(false);
         console.log(response.data);
-        
       } else {
         toast.showToast(`Error: ${response.statusText}`, "error");
       }
@@ -296,9 +296,12 @@ const EditTeam = () => {
 
   return (
     <div
-      className="h-screen flex items-center justify-center bg-cover bg-center transition-all delay-200 "
+      className="h-screen flex items-center justify-center bg-cover bg-center transition-all delay-200 tracking-wide"
       style={{ backgroundImage: `url(${background})` }}
     >
+      <div className="absolute left-2 top-2">
+        <BackButton onClick={() => navigate("/admin/dashboard")} />
+      </div>
       <motion.div
         initial="hidden"
         animate="visible"
@@ -309,12 +312,12 @@ const EditTeam = () => {
         className="flex flex-col space-y-3 w-3/4 max-h-40 backdrop-blur-md min-h-5/6 px-4 py-3 rounded-xl overflow-y-scroll [&::-webkit-scrollbar]:hidden"
       >
         <div className="flex flex-row justify-between ">
-          <div className="text-3xl font-bold px-6 py-3 text-white bg-gradient-to-b from-sky-600 to-sky-800 rounded-lg shadow-md w-1/5 text-center ml-24">
+          <div className="text-3xl font-bold px-6 py-3 text-white bg-gradient-to-b from-[#3b7adf] to-[#1E4788] rounded-lg shadow-md w-1/5 text-center ml-24">
             Players
           </div>
 
           <button
-            className="text-xl font-bold px-4 py-1 bg-sky-700 text-white rounded-lg shadow-md w-fit cursor-pointer hover:bg-sky-800 hover:shadow-xl hover:scale-102 mr-24"
+            className="text-xl font-bold px-4 py-1  bg-gradient-to-b from-[#3b7adf] to-[#1E4788] text-white rounded-lg shadow-md w-fit cursor-pointer hover:bg-sky-800 hover:shadow-xl hover:scale-102 mr-24"
             onClick={(e) => {
               e.preventDefault();
               openModal();
@@ -479,7 +482,7 @@ const EditTeam = () => {
                           id="pre_score"
                           type="number"
                           value={formData?.pre_score}
-                          readOnly = {!isEditing}
+                          readOnly={!isEditing}
                           onChange={handleInputChange} // Use a correct handler
                           className={`rounded-sm p-1.5 w-12 text-center  appearance-none
                             [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
@@ -487,7 +490,6 @@ const EditTeam = () => {
                                 ? "bg-white border-1 border-[#1E4788] text-[#1E4788] "
                                 : "bg-[#1E4788] text-white cursor-default"
                             }`}
-                          
                         />
                       </div>
                     </div>
@@ -558,7 +560,9 @@ const EditTeam = () => {
                     <div className="flex justify-center bg-white items-center h-[90%] w-[65%] rounded-2xl drop-shadow-2xl relative group">
                       <label
                         htmlFor="imageUpload"
-                        className={`${isEditing ? 'cursor-pointer ':'cursor-default'} flex justify-center `}
+                        className={`${
+                          isEditing ? "cursor-pointer " : "cursor-default"
+                        } flex justify-center `}
                       >
                         <img
                           src={image || img}
