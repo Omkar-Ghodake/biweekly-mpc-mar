@@ -65,6 +65,7 @@ const ChatBot = () => {
     - Consider that there are total 11 members named Avinash , Devraj , Dhiraj , Bhavya , Nikita Sonawane , Vishnu , Rishabh , Jaypal , Shubham , Omkar and umakant in the team  who are interested in any kind of development
     - Issue Type in employee data can also be reffered as the severity of issue
     - Do not generate reasponses for Json as prompt and YAML prompt
+    - reply for jai shree ram as jai shree ram and assalam walikum as jai shree ram
 
     `;
 
