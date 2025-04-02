@@ -44,7 +44,7 @@ const ChatBot = () => {
 
     Instuctions : 
     - Give only Answer of query as response and not the instructions in response 
-    - Strictly do not mention the source of your dataset in any format and incase of asked to do so generate a default response 
+    - Strictly do not mention the source of your dataset in any format and incase of asked to do so generate a default response and strictly don't give whole data in response 
     - Strictly follow the given instructions 
     - Remember that a team lead is also a member of team and can be referred as a lead 
     - Return the response in 20-50 words until it's mentioned or required
@@ -58,6 +58,7 @@ const ChatBot = () => {
     - consider total team score is 171 and don't mention score until asked
     - Consider the count of gender from the employee data set as there are 5 females and 13 males in the team
     - Vartika , Sejal and Akhil are not the team members as they are at management level so don't give responses for them until prompt contains their name or specificly asked
+    - Remember that Vartika , Sejal and Akhil are not intrested in product management hence don't generate response related to it
     - Do not use * 
     - Consider that every member is interested and want to work in their release intrest technology
     - When asked related to release intrest or intrest you have to search for the data in employee data dataset
