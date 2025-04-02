@@ -123,10 +123,22 @@ const Login = () => {
   }
 
   const handlePaste = (e) => {
-    const pastedValue = e.clipboardData.getData('Text')
-    const digits = pastedValue.replace(/\D/g, '').slice(0, 6) // Only get numbers and ensure no more than 6 digits
-    setOtp(digits)
-  }
+    e.preventDefault();
+    const pastedValue = e.clipboardData.getData('Text').replace(/\D/g, '').slice(0, 6); // Extract only numbers, max 6 digits
+  
+    if (pastedValue.length === 6) {
+      setOtp(pastedValue);
+      
+      // Auto-fill each input field
+      pastedValue.split('').forEach((digit, index) => {
+        const inputField = document.getElementById(`otp-input-${index}`);
+        if (inputField) {
+          inputField.value = digit;
+        }
+      });
+    }
+  };
+  
 
   const togglePasswordVisibility1 = () => {
     setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
@@ -381,7 +393,7 @@ const Login = () => {
                     placeholder='Enter your Email'
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className=' w-[350px] p-3 rounded-[10px] bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
+                    className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
                   />
                   {error2 && (
                     <div className='text-red-500 text-sm ml-2 mt-1'>
@@ -400,7 +412,9 @@ const Login = () => {
                   <div className='text-center mt-4 flex justify-center'>
                     <button
                       type='button'
-                      onClick={() => setStep(0)}
+                      onClick={() => {setStep(0)
+                        setEmail('')
+                      }}
                       className='text-sm text-blue-950 font-medium  cursor-pointer  flex items-center gap-2'
                     >
                       <FaArrowLeftLong
@@ -427,7 +441,7 @@ const Login = () => {
                         maxLength='1'
                         onChange={(e) => handleOTPChange(e, index)}
                         onPaste={handlePaste}
-                        className='w-10 h-10 text-center text-lg rounded bg-[rgba(209,201,255,0.6)] border-0 focus:outline-none focus:ring-1 focus:ring-blue-500'
+                        className='w-10 h-11 text-center text-lg rounded-[10px] bg-[rgba(209,201,255,0.6)] border-0 focus:outline-none focus:ring-1 focus:ring-blue-500'
                       />
                     ))}
                   </div>
@@ -441,6 +455,7 @@ const Login = () => {
                     <button
                       type='submit'
                       onClick={handleEmailSubmit}
+                      
                       className='text-blue-900 mx-2 cursor-pointer hover:underline'
                     >
                       Resend it.
@@ -449,14 +464,15 @@ const Login = () => {
                   <div className='flex justify-center'>
                     <button
                       type='submit'
-                      onClick={handleOTPSubmit}
+                     onClick={handleOTPSubmit}
+                      
                       className='w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer'
                     >
                       Verify OTP
                     </button>
                   </div>
                   <div className='text-center mt-4 flex justify-center'>
-                    <button
+                    {/* <button
                       type='button'
                       onClick={() => setStep(0)}
                       className='text-sm text-blue-950 font-medium  cursor-pointer  flex items-center gap-2'
@@ -466,7 +482,7 @@ const Login = () => {
                         className='text-blue-900 font-bold'
                       />
                       <span>Back to Login</span>
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               )}
@@ -536,7 +552,9 @@ const Login = () => {
                   <div className='text-center mt-4 flex justify-center'>
                     <button
                       type='button'
-                      onClick={() => setStep(0)}
+                      onClick={() => {setStep(0)
+                        setEmail('')
+                      }}
                       className='text-sm text-blue-950 font-medium  cursor-pointer  flex items-center gap-2'
                     >
                       <FaArrowLeftLong
