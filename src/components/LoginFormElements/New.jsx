@@ -286,7 +286,7 @@ const Login = () => {
         {/* Content container */}
         <div className='relative h-full flex '>
           {/* Left side - Image placeholder with purple overlay */}
-          <div className='ml-15'>
+          <div className='ml-10'>
             <img src='LoginLogoMain.png' alt='' className='h-full' />
           </div>
 
