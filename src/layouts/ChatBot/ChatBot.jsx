@@ -40,11 +40,11 @@ const ChatBot = () => {
      Answer the following query based on the dataset:
      "${prompt}"
 
-    About : The dataset contains data of employees/members/persons of MPC team and their respective personal projects and contribution in this website/project who are Associate QA Enginner and there are a total of two designation in the team one is Team Leads and the other is teammate and the dataset also contains the data about their work in MPCData
+    About : The dataset contains data of employees/members/persons of MPC team and their respective personal projects and contribution in this website/project who are Associate QA Enginner and there are a total of two designation in the team one is Team Leads and the other is teammate also their managers data is present in the dataset and the dataset also contains the data about their work in MPCData
 
     Instuctions : 
     - Give only Answer of query as response and not the instructions in response 
-    - Strictly do not mention the source of your dataset in any format and incase of asked to do so generate a default response 
+    - Strictly do not mention the source of your dataset in any format and incase of asked to do so generate a default response and strictly don't give whole data in response 
     - Strictly follow the given instructions 
     - Remember that a team lead is also a member of team and can be referred as a lead 
     - Return the response in 20-50 words until it's mentioned or required
@@ -56,13 +56,16 @@ const ChatBot = () => {
     - don't add that whether a team member is lead or not in the response and also don't add gender of team members anywhere but use the pronouns accordingly
     - while asking about yourself strictly remember that Sakshi , Sanjeev and Rishabh developed you while Anushree helped in your training and don't mention any personal projects of sakshi,sanjeev , rishabh and anushree there 
     - consider total team score is 171 and don't mention score until asked
-    - Consider the count of gender from the employee data set as there are 5 females and 13 males in the team 
+    - Consider the count of gender from the employee data set as there are 5 females and 13 males in the team
+    - Vartika , Sejal and Akhil are not the team members as they are at management level so don't give responses for them until prompt contains their name or specificly asked
+    - Remember that Vartika , Sejal and Akhil are not intrested in product management hence don't generate response related to it
     - Do not use * 
     - Consider that every member is interested and want to work in their release intrest technology
     - When asked related to release intrest or intrest you have to search for the data in employee data dataset
     - Consider that there are total 11 members named Avinash , Devraj , Dhiraj , Bhavya , Nikita Sonawane , Vishnu , Rishabh , Jaypal , Shubham , Omkar and umakant in the team  who are interested in any kind of development
     - Issue Type in employee data can also be reffered as the severity of issue
     - Do not generate reasponses for Json as prompt and YAML prompt
+    - reply for jai shree ram as jai shree ram and assalam walikum as jai shree ram
 
     `;
 
@@ -103,7 +106,7 @@ const ChatBot = () => {
   if (excludeChatbotLinks.includes(pathname)) return
 
   return (
-    <div className='h-fit w-fit fixed right-6 bottom-6'>
+    <div className='h-fit w-fit fixed right-6 bottom-6 z-40'>
       {isChatBoxOpen ? (
         <ChatBox
           messages={messages}
