@@ -97,17 +97,17 @@ const EditCommon = () => {
       <div className='absolute left-6 top-6'>
         <BackButton onClick={() => navigate('/admin/dashboard')} />
       </div>
-      <div className='max-w-4xl w-full h-full max-h-[85%] bg-white shadow-lg rounded-lg p-6 flex flex-col'>
+      <div className='max-w-4xl w-full bg-white shadow-lg rounded-lg p-6 flex flex-col'>
         <div className='w-full flex px-4 justify-between text-white bg-[#1E4788] rounded-xl shadow-md p-3'>
           <h2 className='text-xl font-bold'>Team Registration</h2>
         </div>
         <div className='flex h-full justify-center items-center gap-x-10 text-[#1E4788]'>
           {/* Image Uploads */}
-          <div className='flex flex-col items-center w-2/5 h-full space-y-5 mt-5'>
+          <div className='flex flex-col items-center w-2/5 h-[75%]  space-y-5 mt-5 justify-center'>
             {['logo', 'display_picture'].map((field) => (
               <div
                 key={field}
-                className='flex-col relative group bg-white w-[80%] rounded-2xl drop-shadow-xl flex items-center justify-center space-y-10 py-5'
+                className='flex-col  bg-white w-[65%] rounded-2xl drop-shadow-xl flex items-center justify-center  py-5'
               >
                 <label
                   htmlFor={field}
@@ -120,9 +120,7 @@ const EditCommon = () => {
                       field === 'display_picture' ? 'w-[95%]' : 'w-[80%]'
                     }`}
                   />
-                  <span className='absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#1E4788] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity text-center'>
-                    Upload
-                  </span>
+                 
                 </label>
                 <input
                   type='file'

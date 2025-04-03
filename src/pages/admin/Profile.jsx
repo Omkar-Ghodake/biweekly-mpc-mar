@@ -117,8 +117,8 @@ export default function CoachForm() {
 
         <div className='flex h-full'>
           {/* Image Upload Section */}
-          <div className='flex flex-col justify-center items-center h-[80%] w-1/3'>
-            <div className='flex justify-center items-center bg-white h-[60%] w-[90%] rounded-2xl drop-shadow-xl relative group mt-5 py-5'>
+          <div className='flex flex-col justify-center items-center h-[30rem] w-1/3'>
+            <div className='flex justify-center items-center bg-white h-[55%] w-[90%] rounded-2xl drop-shadow-xl relative group mt-5 py-5'>
               <label
                 htmlFor='imageUpload'
                 className='cursor-pointer flex justify-center '

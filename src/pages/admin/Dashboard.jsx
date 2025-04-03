@@ -45,7 +45,7 @@ const Dashboard = () => {
 
   return (
     <div className='h-screen flex flex-col space-y-5 items-center justify-center'>
-      <h1 className='z-10 text-5xl text-center p-3 tracking-wide w-2/4 shadow-2xl font-medium rounded-xl bg-white/30'>DASHBOARD</h1>
+      {/* <h1 className='z-10 text-5xl text-center  text-[#1749b3] tracking-wide shadow-2xl font-medium drop-shadow-[2px_2px_0px_gray]'>DASHBOARD</h1> */}
       <img
         src={background}
         alt=''
