@@ -9,6 +9,17 @@ const Dashboard = () => {
 
   const navigate = useNavigate()
 
+  useEffect(() => {
+    if (!isCoachAuthenticated) {
+      navigate('/login')
+    }
+  }, [isCoachAuthenticated, navigate])
+
+  if (!isCoachAuthenticated) {
+    navigate('/login')
+    return null
+  }
+
   const DASHBOARD_ITEMS = [
     {
       href: '/admin/dashboard/editPlayers',
@@ -42,23 +53,25 @@ const Dashboard = () => {
     },
   ]
 
-  if (!isCoachAuthenticated) return navigate("/login");
-
   return (
-    <div className='h-screen flex flex-col space-y-5 items-center justify-between'>
+    <div className='h-screen flex flex-col space-y-5 items-center justify-center w-[70%] mx-auto'>
       <img
         src={background}
         alt=''
         className='fixed inset-0 h-screen w-screen brightness-75'
       />
 
-      <h1 className='z-10 text-5xl flex justify-start text-white px-10 items-center tracking-wide w-full shadow-2xl font-medium rounded-xl text- h-[15%]'>
+      <h1 className='z-10 text-5xl flex justify-start text-white px-10 items-center tracking-wide w-full font-medium rounded-xl h-[15%]'>
         Coach Controls
       </h1>
 
-      <div className='grid grid-cols-3 flex-1'>
+      <div className='grid grid-cols-3 z-40'>
         {DASHBOARD_ITEMS.map((item, index) => (
-          <Link key={item.title} to={item.href} className='rounded-lg p-5'>
+          <Link
+            key={item.title}
+            to={item.href}
+            className='rounded-lg p-5 h-fit'
+          >
             <motion.div
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}

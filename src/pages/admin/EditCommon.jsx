@@ -104,7 +104,7 @@ const EditCommon = () => {
       </div>
       <div className="max-w-4xl w-full bg-white shadow-lg rounded-lg p-6 flex flex-col">
         <div className="w-full flex px-4 justify-between text-white bg-[#1E4788] rounded-xl shadow-md p-3">
-          <h2 className="text-xl font-bold">Team Registration</h2>
+          <h2 className="text-xl font-bold">Team Profile</h2>
         </div>
         <div className="flex h-full justify-center items-center gap-x-10 text-[#1E4788]">
           {/* Image Uploads */}

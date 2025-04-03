@@ -59,31 +59,30 @@ const EditTeam = () => {
 
   const handleInputChange = (e) => {
     const { type, id, value } = e.target;
-    const numValue = type === "number" ? Number(value) || 0 : value; // Ensure valid number
+    let numValue = type === "number" ? Number(value) || 0 : value;
 
-    if (id === "emp_id") {
-      if (value.length > 8) return; // Limit to 8 characters
-      setFormData((prev) => ({
-        ...prev,
-        emp_id: Number(value) || 0, // Ensure emp_id is stored as a number
-      }));
+    // Helper function to sanitize input
+    const sanitizeInput = (val, maxLength) => {
+      let sanitized = val.replace(/^0+/, ""); // Remove leading zeros
+      return sanitized.slice(0, maxLength) || "0"; // Ensure at least "0"
+    };
+
+    const lengthLimits = { emp_id: 8, pre_score: 3 };
+
+    if (id in lengthLimits) {
+      numValue = Number(sanitizeInput(value, lengthLimits[id]));
+      setFormData({ ...formData, [id]: numValue });
       return;
     }
 
     if (["blocker", "critical", "major", "normal", "minor"].includes(id)) {
+      numValue = Number(sanitizeInput(value, 3));
+
       setFormData((prev) => {
         const updatedData = {
           ...prev,
-          severity_count: {
-            ...prev.severity_count,
-            [id]: numValue,
-          },
+          severity_count: { ...prev.severity_count, [id]: numValue },
         };
-
-        const totalIssues = Object.values(updatedData.severity_count).reduce(
-          (acc, count) => acc + count,
-          0
-        );
 
         const totalScore =
           updatedData.severity_count.blocker * 10 +
@@ -94,17 +93,20 @@ const EditTeam = () => {
 
         return {
           ...updatedData,
-          total_issues: totalIssues,
+          total_issues: Object.values(updatedData.severity_count).reduce(
+            (acc, count) => acc + count,
+            0
+          ),
           total_score: totalScore,
         };
       });
-    } else {
-      setFormData((prev) => ({
-        ...prev,
-        [id]: numValue, // Store pre_score and other numbers as numbers
-      }));
+      return;
     }
+
+    setFormData((prev) => ({ ...prev, [id]: numValue }));
   };
+
+  console.log(formData);
 
   const convertBase64ToFile = (base64String, fileName) => {
     let arr = base64String.split(",");
@@ -283,6 +285,21 @@ const EditTeam = () => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
+      // Validate file type (only allow image files)
+      const validImageTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+      ];
+      if (!validImageTypes.includes(file.type)) {
+        toast.showToast(
+          "Please upload a valid image file (JPEG, PNG, GIF, or WEBP)",
+          "error"
+        );
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         setImage(reader.result); // ✅ Store Base64 for preview
@@ -454,7 +471,6 @@ const EditTeam = () => {
                               key={key}
                               label={key.charAt(0).toUpperCase() + key.slice(1)}
                               id={key}
-                              maxLength={3}
                               type="number"
                               value={formData?.severity_count?.[key] ?? 0}
                               onChange={handleInputChange}
@@ -489,6 +505,7 @@ const EditTeam = () => {
                           type="number"
                           value={formData?.pre_score}
                           readOnly={!isEditing}
+                          placeholder=""
                           onChange={handleInputChange} // Use a correct handler
                           className={`rounded-sm p-1.5 w-12 text-center  appearance-none
                             [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
@@ -541,6 +558,7 @@ const EditTeam = () => {
                               }
                               className="w-full bg-white border border-[#F1F1F1] shadow-md shadow-black/15 rounded-lg px-2 py-1"
                               placeholder={`Course ${index + 1}`}
+                              disabled={!isEditing}
                             />
                             {isEditing && (
                               <button
@@ -632,6 +650,7 @@ const EditTeam = () => {
                               }
                               className="w-full bg-white border border-[#F1F1F1] shadow-md shadow-black/15 rounded-lg px-2 py-1"
                               placeholder={`Project ${index + 1}`}
+                              disabled={!isEditing}
                             />
                             {isEditing && (
                               <button
