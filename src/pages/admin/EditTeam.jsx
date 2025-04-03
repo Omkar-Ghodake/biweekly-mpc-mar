@@ -586,7 +586,7 @@ const EditTeam = () => {
                       <img
                         src={image || img}
                         alt='Profile'
-                        className='h-full'
+                        className={`${image ? 'h-full' : 'h-[60%]'}`} 
                       />
                     </div>
 
