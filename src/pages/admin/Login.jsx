@@ -1,11 +1,14 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
+import { FcGoogle } from 'react-icons/fc'
 import { FaArrowLeftLong } from 'react-icons/fa6'
+import Button from '../../components/Button'
+import { useNavigate } from 'react-router'
+import background from '../../assets/background.jpg'
+import { motion, AnimatePresence } from 'framer-motion'
 import { CoachContext } from '../../context/CoachProvider'
 import { ToastContext } from '../../context/ToastProvider'
-import { useNavigate } from 'react-router'
 import { LoadingContext } from '../../context/LoadingProvider'
-import { motion, AnimatePresence } from 'framer-motion'
 
 const Login = () => {
   const [domain, setDomain] = useState('')
@@ -13,9 +16,8 @@ const Login = () => {
   const [error, setError] = useState('')
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
-  const { login } = useContext(CoachContext)
   const { showToast } = useContext(ToastContext)
-  const { isCoachAuthenticated } = useContext(CoachContext)
+  const { isCoachAuthenticated, login } = useContext(CoachContext)
   const { isLoading, setIsLoading } = useContext(LoadingContext)
   const [step, setStep] = useState(0)
   const [email, setEmail] = useState('')
@@ -24,6 +26,8 @@ const Login = () => {
   const [newPassword, setNewPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [otpSent, setOtpSent] = useState(false)
+  const [actualOTP, setActualOTP] = useState('')
+  const [isBlurred, setIsBlurred] = useState(false)
 
   const stepVariants = {
     initial: { opacity: 0, x: 50 },
@@ -172,6 +176,7 @@ const Login = () => {
 
       if (response.ok) {
         setOtpSent(true)
+        setIsBlurred(true)
         setStep(2)
         setIsLoading(false)
         showToast('OTP sent successfully')
@@ -266,7 +271,7 @@ const Login = () => {
       if (response.ok) {
         setIsLoading(false)
         showToast(json.message)
-        navigate('/login')
+        navigate('/admin/login')
       } else {
         if (
           response.status === 401 ||
@@ -284,17 +289,13 @@ const Login = () => {
 
   return (
     <>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="h-dvh overflow-hidden bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col items-center px-7"
-      >
+      <div className="h-dvh overflow-hidden bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col items-center px-7">
         <div className='absolute inset-0 bg-gray-50/90'></div>
         {/* Content container */}
         <div className='relative h-full flex '>
           {/* Left side - Image placeholder with purple overlay */}
           <div className='ml-24'>
-            <img src='LoginLogoMain.png' alt='' className='h-full' />
+            <img src='/LoginLogoMain.png' alt='' className='h-full' />
           </div>
 
           {/* Right side - Login form with transparency */}
@@ -633,7 +634,7 @@ const Login = () => {
             </div>
           </div>
         </div>
-      </motion.div>
+      </div>
     </>
   )
 }

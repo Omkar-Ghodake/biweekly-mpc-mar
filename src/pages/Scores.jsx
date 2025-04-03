@@ -68,14 +68,14 @@ const Scores = () => {
     <>
       {/* <Button onClick={updateData}>click to re fetch</Button> */}
 
-      <Link to={'/exit'}>
+      <Link to={'/credits'}>
         <Button
           className={'absolute top-6 right-6 z-40 flex items-center space-x-2'}
           size='sm'
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
         >
-          <span>Exit</span>
+          <span>Credits</span>
           <FaAngleRight />
         </Button>
       </Link>
@@ -106,9 +106,9 @@ const Scores = () => {
                     custom={index}
                     key={index}
                     onClick={() => handleCardClick(player, index)}
-                    className={`relative  w-56 h-56 rounded-t-lg flex justify-center items-end  mx-auto my-4 rounded-b-lg cursor-pointer ${
+                    className={`relative w-56 h-56 rounded-t-lg flex justify-center items-end  mx-auto my-4 rounded-b-lg cursor-pointer ${
                       index > sortedPlayers.length - 3
-                        ? 'col-span-1  left-70 items-center justify-self-center'
+                        ? 'col-span-1 left-70 items-center justify-self-center'
                         : ''
                     }`}
                   >

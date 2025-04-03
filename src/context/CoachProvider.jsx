@@ -55,7 +55,7 @@ const CoachProvider = ({ children }) => {
           showToast('Session expired. Login again.')
         }
         if (location === '/dashboard') {
-          navigate('/login')
+          navigate('/admin/login')
         }
       }
     } catch (error) {
@@ -68,7 +68,7 @@ const CoachProvider = ({ children }) => {
     setIsCoachAuthenticated(false)
     setAuthToken(null)
     setCoach(undefined)
-    navigate('/login')
+    navigate('/exit')
   }
 
   useEffect(() => {
