@@ -158,7 +158,7 @@ const Scores = () => {
         </div>
       </div>
       {selectedPlayer && (
-        <Modal className='bg-transparent max-w-1/3 flex items-start justify-center'>
+        <Modal className='bg-transparent min-w-[450px] max-w-1/3 flex items-start justify-center'>
           <div className='absolute h-[600px] flex w-fit justify-center items-end mx-auto'>
             {/* Player Rank (Top-Right Corner) */}
             <div

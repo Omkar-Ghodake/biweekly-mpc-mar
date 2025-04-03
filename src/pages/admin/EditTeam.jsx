@@ -393,15 +393,15 @@ const EditTeam = () => {
           ))}
       </motion.div>
       <Modal
-        className="text-md  tracking-wide"
+        className="text-md tracking-wide"
         afterClosing={() => {
           setIsEditing(false);
           setCreateNew(false);
           setFormData(emptyForm);
         }}
       >
-        <ModalHead className="w-1/3 ">
-          <div className="w-full flex px-4 justify-between text-center text-white bg-[#1E4788] rounded-xl shadow-md p-2">
+        <ModalHead className="h-[8vh]">
+          <div className="w-full h-full flex px-4 items-center justify-between text-center text-white bg-[#1E4788] rounded-xl shadow-md p-2">
             {formData.domain_name ? (
               <span>{formData.domain_name}</span>
             ) : (
@@ -414,10 +414,11 @@ const EditTeam = () => {
             )}
           </div>
         </ModalHead>
-        <ModalBody>
+        <ModalBody className={"max-h-[90vh]"}>
           <form
             onKeyDown={(e) => e.key === "Enter" && e.preventDefault()}
             onSubmit={createNew ? createPlayer : updatePlayer}
+            className=""
           >
             <div className="flex flex-col text-[#1E4788]">
               <div className=" w-full h-[470px] flex flex-row">
@@ -580,23 +581,27 @@ const EditTeam = () => {
                   </div>
                 </div>
                 <div className="w-1/2">
-                  <div className="h-2/3 flex justify-center items-center">
-                    <div className="flex justify-center bg-white items-center h-[90%] w-[65%] rounded-2xl drop-shadow-2xl relative group">
+                  <div className="h-2/3 flex flex-col justify-center items-center space-y-5">
+                    <div className="flex justify-center bg-white items-center h-[35vh] w-[35vh] rounded-2xl drop-shadow-2xl relative">
+                      <img
+                        src={image || img}
+                        alt="Profile"
+                        className="h-full"
+                      />
+
+                      {/* <FaRegEdit className="w-6 h-6 absolute bottom-6 right-2"/> */}
+                    </div>
+
+                    <span className="text-center bg-[#1E4788] hover:bg-[#1e3388] text-white text-xs px-2 py-1 rounded ">
                       <label
                         htmlFor="imageUpload"
                         className={`${
                           isEditing ? "cursor-pointer " : "cursor-default"
                         } flex justify-center `}
                       >
-                        <img
-                          src={image || img}
-                          alt="Profile"
-                          className="h-[60%] w-auto"
-                        />
-                        <span className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#1E4788] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                          Upload an Image
-                        </span>
+                        Upload an Image
                       </label>
+
                       <input
                         type="file"
                         accept="image/*"
@@ -605,9 +610,7 @@ const EditTeam = () => {
                         id="imageUpload"
                         disabled={!isEditing}
                       />
-
-                      {/* <FaRegEdit className="w-6 h-6 absolute bottom-6 right-2"/> */}
-                    </div>
+                    </span>
                   </div>
                   <div className="h-1/3 flex flex-col">
                     {/* Heading & Add Button */}

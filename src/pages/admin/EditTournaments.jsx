@@ -126,8 +126,8 @@ const EditTournaments = () => {
     if (
       !currentTournament.title ||
       !currentTournament.description ||
-      !currentTournament.issueCount ||
-      !currentTournament.totalScore ||
+      // !currentTournament.issueCount ||
+      // !currentTournament.totalScore ||
       !currentTournament.logo // Check if logo is selected
     ) {
       toast.showToast("Please fill in all required fields", "error");
@@ -190,8 +190,8 @@ const EditTournaments = () => {
     if (
       !currentTournament.title ||
       !currentTournament.description ||
-      !currentTournament.totalScore ||
-      !currentTournament.issueCount ||
+      // !currentTournament.totalScore ||
+      // !currentTournament.issueCount ||
       !currentTournament.logo
     ) {
       toast.showToast("Please fill in all required fields", "error");
@@ -347,7 +347,7 @@ const EditTournaments = () => {
             }}
             className=" text-md  tracking-wide"
           >
-            <ModalHead className="w-1/3">
+            <ModalHead className="h-[10vh]">
               <div className="w-full text-center text-white bg-[#1E4788] rounded-xl shadow-md p-3 flex justify-between items-center">
                 <span>{currentTournament.title || "New Tournament"}</span>
                 <span className="font-bold ">
@@ -355,7 +355,7 @@ const EditTournaments = () => {
                 </span>
               </div>
             </ModalHead>
-            <ModalBody>
+            <ModalBody className={'max-h-[90vh]'}>
               <div className="p-2 flex flex-row items-start h-[350px]  min-h-[300px] text-[#1E4788]">
                 <div className="w-2/3">
                   <form className="space-y-6">
