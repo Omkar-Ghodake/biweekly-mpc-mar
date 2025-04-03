@@ -11,13 +11,6 @@
   --font-raleway: 'Raleway';
 }
 
-.body {
-  /* font-family: 'Raleway', sans-serif; */
-  /* font-optical-sizing: auto;
-  font-weight: <weight>;
-  font-style: normal; */
-}
-
 /* Button variants solid */
 .btn-primary.btn-solid {
   background-color: rgba(var(--color-primary));

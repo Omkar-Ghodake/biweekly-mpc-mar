@@ -38,6 +38,8 @@ export default function CoachForm() {
   const handleChange = (e) => {
     const { name, value, type } = e.target;
 
+    if (name === "emp_id" && value.length > 10) return; // Prevent input longer than 10 digits
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: type === "number" ? Number(value) : value, // Ensure numbers are stored correctly
@@ -150,13 +152,13 @@ export default function CoachForm() {
           <div className="w-2/3 p-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               {[
-                { label: "Name", name: "name", type: "text" },
-                { label: "Domain Name", name: "domain_name", type: "text" },
+                { label: "Name", name: "name", type: "text", maxLength: 20 },
+                { label: "Domain Name", name: "domain_name", type: "text", maxLength: 15},
                 {
                   label: "Employee ID",
                   name: "emp_id",
                   type: "number",
-                  maxLength: 8,
+                  max: 9999999999, 
                 },
               ].map((field) => (
                 <div key={field.name} className="flex items-center w-full">
@@ -173,6 +175,7 @@ export default function CoachForm() {
                     placeholder={`Enter ${field.label.toLowerCase()}`}
                     required
                     maxLength={field.maxLength}
+                    max={field.max}
                     value={formData[field.name]}
                     onChange={handleChange}
                     className={`ml-5 w-full p-2 rounded-xl transition-all duration-200 border shadow-md ${
