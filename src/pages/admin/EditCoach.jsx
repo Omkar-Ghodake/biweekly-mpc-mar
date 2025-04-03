@@ -2,12 +2,15 @@ import React, { useState, useContext, useEffect } from "react";
 import background from "../../assets/background5.jpg";
 import imgPlaceholder from "../../glb/Blank Profile pic.png";
 import { CoachContext } from "../../context/CoachProvider";
+import { useNavigate } from "react-router";
 
 export default function CoachForm() {
   const coach = useContext(CoachContext);
   const coachData = coach.coach;
   console.log(coach);
-  
+
+  const { isCoachAuthenticated } = useContext(CoachContext);
+
   const [formData, setFormData] = useState({
     name: "",
     domain_name: "",
@@ -18,6 +21,8 @@ export default function CoachForm() {
   });
   const [image, setImage] = useState("");
   const [isEditing, setIsEditing] = useState(true);
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     if (coachData) {
@@ -46,6 +51,8 @@ export default function CoachForm() {
     e.preventDefault();
     console.log(formData); // Replace with API call
   };
+
+  if (!isCoachAuthenticated) return navigate("/login");
 
   return (
     <div

@@ -9,17 +9,6 @@ const Dashboard = () => {
 
   const navigate = useNavigate()
 
-  useEffect(() => {
-    if (!isCoachAuthenticated) {
-      navigate('/login')
-    }
-  }, [isCoachAuthenticated, navigate])
-
-  if (!isCoachAuthenticated) {
-    navigate('/login')
-    return null
-  }
-
   const DASHBOARD_ITEMS = [
     {
       href: '/admin/dashboard/editPlayers',
@@ -52,6 +41,8 @@ const Dashboard = () => {
       subText: 'team',
     },
   ]
+
+  if (!isCoachAuthenticated) return navigate("/login");
 
   return (
     <div className='h-screen flex flex-col space-y-5 items-center justify-between'>
