@@ -1,20 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react'
-import { ModalContext } from '../context/ModalProvider'
-import Modal from '../layouts/Modal/Modal'
-import ModalHead from '../layouts/Modal/ModalHead'
-import ModalBody from '../layouts/Modal/ModalBody'
 import '../Styles/Landing_Exit.css'
-import { useScroll } from '@react-three/drei'
 import Button from '../components/Button'
 import { Link } from 'react-router'
 import { LuSkipForward } from 'react-icons/lu'
 import { TeamContext } from '../context/TeamProvider'
 import { FaAngleRight } from 'react-icons/fa6'
+import { motion } from 'framer-motion'
 
 const Landing = () => {
   const [isVideoComplete, setIsVideoComplete] = useState(false)
 
-  const { openModal } = useContext(ModalContext)
   const { teamInfo } = useContext(TeamContext)
 
   // console.log(teamInfo)
@@ -64,44 +59,67 @@ const Landing = () => {
         </video>
       )}
 
-      {isVideoComplete && (
-        <img
-          src='/Exit_BG.jpg'
-          className='absolute inset-0 w-full h-full object-cover backdrop-blur-3xl'
-        />
-      )}
+      {/* {isVideoComplete && (
+      )} */}
 
       {/*Content */}
       {isVideoComplete && (
-        <div className='absolute inset-0 flex flex-col items-center justify-center z-30 text-white space-y-10'>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className='absolute inset-0 flex flex-col items-center justify-center z-30 text-white space-y-10'
+        >
+          <img
+            src='/Exit_BG.jpg'
+            className='absolute inset-0 w-full h-full object-cover backdrop-blur-3xl -z-10'
+          />
+
           <div className='text-center flex flex-col space-y-5 font-bold'>
             <h1 className='text-7xl'>{teamInfo.short_name}</h1>
             <h1 className='text-5xl'>{teamInfo.long_name}</h1>
           </div>
 
-          <img src={teamInfo.logo} alt='' className='w-[50vh]' />
+          <img
+            src={teamInfo.logo}
+            alt=''
+            className='w-[50vh] landing-logo-spin'
+          />
 
-          <p className='text-3xl font-semibold'>{teamInfo.description}</p>
+          <p className='text-3xl font-semibold w-[70%] mx-auto text-center text-wrap'>
+            {teamInfo.description}
+          </p>
 
           <div className='absolute right-6 bottom-6  flex flex-col items-center justify-center space-y-5'>
-            <Button className={'text-lg'} size='sm'>
-              <Link
-                to={'/login'}
-                className='flex justify-center items-center space-x-2'
-              >
-                <span>I'm a Coach</span> <FaAngleRight />
-              </Link>
-            </Button>
-            <Button className={''} variant='secondary' size='sm'>
-              <Link
-                to={'/team'}
-                className='flex justify-center items-center space-x-2'
-              >
-                <span>I'm a Player</span> <FaAngleRight />
-              </Link>
-            </Button>
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.1 }}
+            >
+              <Button className={'text-lg'} size='sm'>
+                <Link
+                  to={'/login'}
+                  className='flex justify-center items-center space-x-2'
+                >
+                  <span>I'm a Coach</span> <FaAngleRight />
+                </Link>
+              </Button>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              <Button className={''} variant='secondary' size='sm'>
+                <Link
+                  to={'/team'}
+                  className='flex justify-center items-center space-x-2'
+                >
+                  <span>I'm a Player</span> <FaAngleRight />
+                </Link>
+              </Button>
+            </motion.div>
           </div>
-        </div>
+        </motion.div>
       )}
     </div>
   )

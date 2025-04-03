@@ -95,7 +95,12 @@ const Navbar = () => {
   if (excludeNavbarLinks.includes(pathname)) return
 
   return (
-    <nav className='h-fit w-fit fixed left-6 bottom-6 z-40' ref={navRef}>
+    <motion.nav
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      className='h-fit w-fit fixed left-6 bottom-6 z-40'
+      ref={navRef}
+    >
       <div className='relative w-14 h-14'>
         <ul className='vertical-nav-list absolute left-0 bottom-14 mb-5 flex flex-col justify-center items-center space-y-2 w-14 bg--500 z-30'>
           {isNavbarOpen &&
@@ -154,7 +159,7 @@ const Navbar = () => {
             ))}
         </ul>
       </div>
-    </nav>
+    </motion.nav>
   )
 }
 

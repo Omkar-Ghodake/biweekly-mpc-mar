@@ -57,7 +57,6 @@ createRoot(document.getElementById('root')).render(
                   <LoadingProvider>
                     <Routes>
                       <Route path='/' element={<App />} />
-                      {/* <Route path='/background' element={<StadiumBack />} /> */}
                       <Route path='/landing' element={<Landing />} />
                       <Route path='/team' element={<Team />} />
                       <Route path='/tournaments' element={<Tournaments />} />

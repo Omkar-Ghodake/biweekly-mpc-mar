@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import ChatBotButton from './ChatBotButton'
-import ChatBox from './ChatBox'
 import { GoogleGenAI } from '@google/genai'
-import { ChatBotData } from './ChatBotData.js'
+import React, { useRef, useState } from 'react'
 import { useLocation } from 'react-router'
+import useClickOutsideElement from '../../hooks/useClickOutsideElement.jsx'
+import ChatBotButton from './ChatBotButton'
+import { ChatBotData } from './ChatBotData.js'
+import ChatBox from './ChatBox'
 
 const ChatBot = () => {
   const [isChatBoxOpen, setIsChatBoxOpen] = useState(false)
@@ -13,6 +14,8 @@ const ChatBot = () => {
   const [isTyping, setIsTyping] = useState(false)
 
   const { pathname } = useLocation()
+
+  const chatBotRef = useRef(null)
 
   // this code is for gemini ai
   const ai = new GoogleGenAI({
@@ -67,10 +70,7 @@ const ChatBot = () => {
     - Do not generate reasponses for Json as prompt and YAML prompt
     - reply for jai shree ram as jai shree ram and assalam walikum as jai shree ram
 
-    `;
-
-   
-
+    `
 
     const response = await ai.models.generateContent({
       model: 'gemini-2.0-flash',
@@ -116,9 +116,13 @@ const ChatBot = () => {
           sendMessage={sendMessage}
           displayGreeting={displayGreeting}
           setIsChatBoxOpen={setIsChatBoxOpen}
+          chatBotRef={chatBotRef}
         />
       ) : (
-        <ChatBotButton setIsChatBoxOpen={setIsChatBoxOpen} />
+        <ChatBotButton
+          setIsChatBoxOpen={setIsChatBoxOpen}
+          chatBotRef={chatBotRef}
+        />
       )}
     </div>
   )
