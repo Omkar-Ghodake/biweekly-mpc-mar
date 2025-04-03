@@ -9,14 +9,8 @@ const Dashboard = () => {
 
   const navigate = useNavigate()
 
-  useEffect(() => {
-    if (!isCoachAuthenticated) {
-      navigate('/login')
-    }
-  }, [isCoachAuthenticated, navigate])
-
   if (!isCoachAuthenticated) {
-    navigate('/login')
+    navigate('/admin/login')
     return null
   }
 
