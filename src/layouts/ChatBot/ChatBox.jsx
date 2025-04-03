@@ -29,10 +29,10 @@ const ChatBox = ({
       animate={{ opacity: 1, scale: 1 }}
       transition={{
         type: 'spring',
-        stiffness: 200, // Controls speed (higher = faster)
-        damping: 20, // Reduces bounce (higher = less bounce)
+        stiffness: 400,
+        damping: 35,
       }}
-      className='w-[30vw] h-[85vh] bg-gradient-to-b from-blue-900/60 to-blue-950/60 rounded-xl text-white shadow-lg flex flex-col relative z-40 backdrop-blur-2xl border border-blue-900 origin-bottom-right'
+      className='w-[30vw] h-[85vh] overflow-hidden bg-gradient-to-b from-blue-900/60 to-blue-950/60 rounded-xl text-white shadow-lg flex flex-col relative z-40 backdrop-blur-2xl border border-blue-900 origin-bottom-right'
       ref={chatBoxRef}
     >
       <RxCross2
