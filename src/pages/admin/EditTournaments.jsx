@@ -62,15 +62,40 @@ const EditTournaments = () => {
   // Handle input changes for form fields
   const handleInputChange = (e) => {
     const { name, value } = e.target;
+
+    if (name === "totalScore" || name === "issueCount") {
+      // Remove leading zeros and limit to 3 digits
+      let sanitizedValue = value.replace(/^0+/, ""); // Remove leading zeros
+      if (sanitizedValue.length > 3) {
+        sanitizedValue = sanitizedValue.slice(0, 3); // Limit to 3 digits
+      }
+      setCurrentTournament({ ...currentTournament, [name]: sanitizedValue });
+      return;
+    }
+
     setCurrentTournament({ ...currentTournament, [name]: value });
   };
-
-  // Convert Base64 string to a File object
 
   // Handle image upload and update state
   const handleImageUpload = (e) => {
     const file = e.target.files[0]; // Get the selected file
+
     if (file) {
+      // Validate file type (only allow image files)
+      const validImageTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+      ];
+      if (!validImageTypes.includes(file.type)) {
+        toast.showToast(
+          "Please upload a valid image file (JPEG, PNG, GIF, or WEBP)",
+          "error"
+        );
+        return;
+      }
+
       const reader = new FileReader();
       reader.onloadend = () => {
         const base64Image = reader.result; // Convert file to Base64 for preview
@@ -92,12 +117,20 @@ const EditTournaments = () => {
       }));
     }
   };
+
   // Add a new tournament
   const addTournament = async (e) => {
     e.preventDefault();
+    e.preventDefault();
 
     // Validate required fields
-    if (!currentTournament.title || !currentTournament.description) {
+    if (
+      !currentTournament.title ||
+      !currentTournament.description ||
+      !currentTournament.issueCount ||
+      !currentTournament.totalScore ||
+      !currentTournament.logo // Check if logo is selected
+    ) {
       toast.showToast("Please fill in all required fields", "error");
       return;
     }
@@ -154,6 +187,17 @@ const EditTournaments = () => {
   const updateDetails = async (e) => {
     e.preventDefault();
 
+    // Validate required fields
+    if (
+      !currentTournament.title ||
+      !currentTournament.description ||
+      !currentTournament.totalScore ||
+      !currentTournament.issueCount ||
+      !currentTournament.logo
+    ) {
+      toast.showToast("Please fill in all required fields", "error");
+      return;
+    }
     const id = currentTournament._id;
     const formData = new FormData();
     formData.append("title", currentTournament.title);
@@ -331,6 +375,7 @@ const EditTournaments = () => {
                           type="text"
                           placeholder="Enter Tournament Name"
                           value={currentTournament.title}
+                          maxLength={50}
                           onChange={handleInputChange}
                           className={`w-2/4 p-2 rounded-xl transition-all duration-200 ${
                             isEditing
@@ -420,7 +465,12 @@ const EditTournaments = () => {
                             name="totalScore"
                             type="number"
                             value={currentTournament.totalScore}
-                            onChange={handleInputChange}
+                            maxLength={3}
+                            // onChange={handleInputChange}
+                            onChange={(e) => {
+                              if (e.target.value <= 999) handleInputChange(e); // Prevent exceeding max
+                            }}
+                            max={999}
                             className={`w-2/4 p-2 rounded-xl transition-all duration-200 resize-none border-gray-400 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
                               isEditing
                                 ? "border focus:outline-blue-500 bg-gray-100"
