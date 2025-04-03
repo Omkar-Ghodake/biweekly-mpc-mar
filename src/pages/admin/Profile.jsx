@@ -116,7 +116,7 @@ export default function CoachForm() {
       <div className="max-w-4xl w-full bg-white shadow-lg rounded-xl p-6 flex flex-col">
         {/* Header Section */}
         <div className="w-full flex px-4 justify-between text-white bg-[#1E4788] rounded-xl shadow-md p-3">
-          <h2 className="text-xl font-bold">Coach Registration</h2>
+          <h2 className="text-xl font-bold">Coach Profile</h2>
         </div>
 
         <div className="flex h-full">

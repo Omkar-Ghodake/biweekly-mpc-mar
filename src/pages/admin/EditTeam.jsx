@@ -70,7 +70,17 @@ const EditTeam = () => {
       return;
     }
 
+    if(id==="pre_score"){
+      if (value.length > 3) return;
+      setFormData((prev) => ({
+        ...prev,
+        pre_score: Number(value) || 0, // Ensure emp_id is stored as a number
+      }));
+      return;
+    }
+
     if (["blocker", "critical", "major", "normal", "minor"].includes(id)) {
+      if (value.length > 3) return;
       setFormData((prev) => {
         const updatedData = {
           ...prev,
@@ -454,7 +464,6 @@ const EditTeam = () => {
                               key={key}
                               label={key.charAt(0).toUpperCase() + key.slice(1)}
                               id={key}
-                              maxLength={3}
                               type="number"
                               value={formData?.severity_count?.[key] ?? 0}
                               onChange={handleInputChange}
@@ -489,6 +498,7 @@ const EditTeam = () => {
                           type="number"
                           value={formData?.pre_score}
                           readOnly={!isEditing}
+                          placeholder=""
                           onChange={handleInputChange} // Use a correct handler
                           className={`rounded-sm p-1.5 w-12 text-center  appearance-none
                             [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
@@ -541,6 +551,7 @@ const EditTeam = () => {
                               }
                               className="w-full bg-white border border-[#F1F1F1] shadow-md shadow-black/15 rounded-lg px-2 py-1"
                               placeholder={`Course ${index + 1}`}
+                              disabled = {!isEditing}
                             />
                             {isEditing && (
                               <button
@@ -632,6 +643,7 @@ const EditTeam = () => {
                               }
                               className="w-full bg-white border border-[#F1F1F1] shadow-md shadow-black/15 rounded-lg px-2 py-1"
                               placeholder={`Project ${index + 1}`}
+                              disabled = {!isEditing}
                             />
                             {isEditing && (
                               <button

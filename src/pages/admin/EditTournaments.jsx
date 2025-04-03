@@ -46,7 +46,6 @@ const EditTournaments = () => {
   const fileInputRef = useRef(null);
 
   const { isCoachAuthenticated } = useContext(CoachContext);
-
   // Sync tournaments from context to local state
   useEffect(() => {
     setTournaments(tournamentsArray);
