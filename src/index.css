@@ -8,10 +8,11 @@
   --color-secondary-darken: 0, 130, 54;
   --color-danger: 251, 44, 54;
   --color-danger-darken: 231, 0, 11;
+  --font-raleway: 'Raleway';
 }
 
 .body {
-  font-family: 'Raleway', sans-serif;
+  /* font-family: 'Raleway', sans-serif; */
   /* font-optical-sizing: auto;
   font-weight: <weight>;
   font-style: normal; */
@@ -118,6 +119,20 @@
     transform: rotate(-360deg);
   }
 }
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.landing-logo-spin {
+  animation: spin 240s linear forwards;
+}
+
 .animate-spin-reverse {
   animation: spin-reverse 1s linear forwards;
 }

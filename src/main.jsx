@@ -30,6 +30,7 @@ import { PiDressFill } from 'react-icons/pi'
 import Navbar from './layouts/Navbar/Navbar.jsx'
 import TeamProvider from './context/TeamProvider.jsx'
 import New from './components/LoginFormElements/New.jsx'
+import Credit from './pages/Credit.jsx'
 
 {
   /* 
@@ -61,6 +62,7 @@ createRoot(document.getElementById('root')).render(
                       <Route path='/landing' element={<Landing />} />
                       <Route path='/team' element={<Team />} />
                       <Route path='/tournaments' element={<Tournaments />} />
+                      <Route path='/credits' element={<Credit />} />
                       <Route
                         path='/scores'
                         element={
@@ -69,9 +71,8 @@ createRoot(document.getElementById('root')).render(
                           </Suspense>
                         }
                       />
-                      {/* <Route path='/login' element={<Login />} /> */}
+                      {/* <Route path="/login" element={<Login />} /> */}
                       <Route path='/login' element={<New />} />
-
                       <Route path='/admin/dashboard' element={<Dashboard />} />
                       <Route
                         path='/admin/dashboard/editTournaments'
@@ -85,7 +86,10 @@ createRoot(document.getElementById('root')).render(
                         path='/admin/dashboard/editTeam'
                         element={<EditCommon />}
                       />
-                      <Route path='/admin/profile' element={<Profile />} />
+                      <Route
+                        path='/admin/dashboard/profile'
+                        element={<Profile />}
+                      />
                       <Route
                         path='/admin/dashboard/editCoach'
                         element={<EditCoach />}
@@ -98,9 +102,9 @@ createRoot(document.getElementById('root')).render(
                     <Loader />
                     <ChatBot />
                     <Navbar />
+                    <ToastNotification />
                   </LoadingProvider>
                 </TeamProvider>
-                <ToastNotification />
               </CoachProvider>
             </TournamentsProvider>
           </PlayersProvider>

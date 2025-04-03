@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router'
 import { CoachContext } from '../../context/CoachProvider'
-import background from "../../assets/background5.jpg";
+import background from '../../assets/background5.jpg'
 import { motion } from 'framer-motion'
 
 const Dashboard = () => {
@@ -37,21 +37,35 @@ const Dashboard = () => {
       subText: 'Edit',
     },
     {
-      href: '/admin/profile',
+      href: '/admin/dashboard/profile',
       text: 'Profile',
-      subText: '',
+      subText: 'coach',
+    },
+    {
+      href: '/admin/dashboard/analytics-dashboard',
+      text: 'Analysis',
+      subText: 'data',
+    },
+    {
+      href: '/admin/dashboard/documents',
+      text: 'Documents',
+      subText: 'team',
     },
   ]
 
   return (
-    <div className='h-screen flex flex-col space-y-5 items-center justify-center'>
-      {/* <h1 className='z-10 text-5xl text-center  text-[#1749b3] tracking-wide shadow-2xl font-medium drop-shadow-[2px_2px_0px_gray]'>DASHBOARD</h1> */}
+    <div className='h-screen flex flex-col space-y-5 items-center justify-between'>
       <img
         src={background}
         alt=''
         className='fixed inset-0 h-screen w-screen brightness-75'
       />
-      <div className='grid grid-cols-2'>
+
+      <h1 className='z-10 text-5xl flex justify-start text-white px-10 items-center tracking-wide w-full shadow-2xl font-medium rounded-xl text- h-[15%]'>
+        Coach Controls
+      </h1>
+
+      <div className='grid grid-cols-3 flex-1'>
         {DASHBOARD_ITEMS.map((item, index) => (
           <Link key={item.title} to={item.href} className='rounded-lg p-5'>
             <motion.div
@@ -60,7 +74,9 @@ const Dashboard = () => {
               transition={{ delay: index * 0.05 }}
               className='bg-white/30 backdrop-blur-lg rounded-lg w-64 h-44 text-primary flex flex-col justify-center p-5 cursor-pointer shadow-md hover:shadow-xl hover:scale-105 duration-150'
             >
-              <span className='text-2xl font-semibold'>{item.subText}</span>
+              <span className='text-2xl font-semibold capitalize'>
+                {item.subText}
+              </span>
               <span className='text-4xl font-semibold drop-shadow-lg'>
                 {item.text}
               </span>

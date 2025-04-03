@@ -10,26 +10,27 @@ const Team = () => {
 
   return (
     <div className='h-screen flex items-center justify-center'>
-      {/* <img
-        src={background}
-        alt=''
-        className='fixed inset-0 h-screen w-screen brightness-75'
-      /> */}
+      <div className='absolute inset-0 p-6 z-30 flex justify-between w-full'>
+        <h1 className='text-white text-3xl tracking-wider'>
+          <span className='font-semibold'>Our Team: </span>
+          <span>{teamInfo?.tag_line}</span>
+        </h1>
+
+        <Button className={''} size='sm'>
+          <Link
+            to={'/tournaments'}
+            className='flex justify-between items-center space-x-2'
+          >
+            <span>Tournaments</span> <FaAngleRight />
+          </Link>
+        </Button>
+      </div>
 
       <img
         src={teamInfo?.display_picture}
         alt=''
-        className='absolute inset-0 z-30 object-cover'
+        className='absolute inset-0 object-cover'
       />
-
-      <Button className={'absolute right-6 top-6 z-40 h-fit'} size='sm'>
-        <Link
-          to={'/tournaments'}
-          className='flex justify-between items-center space-x-2'
-        >
-          <span>Tournaments</span> <FaAngleRight />
-        </Link>
-      </Button>
     </div>
   )
 }

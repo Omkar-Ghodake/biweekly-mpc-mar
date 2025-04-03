@@ -4,6 +4,7 @@ import { LuSend } from 'react-icons/lu'
 import { RxCross2 } from 'react-icons/rx'
 import '../../Styles/ChatBox.css'
 import typingLoader from '../../assets/TypingLaoder.gif'
+import { motion } from 'framer-motion'
 
 const ChatBox = ({
   messages,
@@ -13,6 +14,7 @@ const ChatBox = ({
   sendMessage,
   displayGreeting,
   setIsChatBoxOpen,
+  chatBoxRef,
 }) => {
   // this code is for handling the scrolling of page as per the messages addition
   const messagesEndRef = useRef(null)
@@ -22,7 +24,17 @@ const ChatBox = ({
   }, [messages])
 
   return (
-    <div className='w-[30vw] h-[85vh] bg-gradient-to-b from-blue-900/60 to-blue-950/60 rounded-xl text-white shadow-lg flex flex-col relative z-40 backdrop-blur-2xl border border-blue-900'>
+    <motion.div
+      initial={{ opacity: 0, scale: 0 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{
+        type: 'spring',
+        stiffness: 200, // Controls speed (higher = faster)
+        damping: 20, // Reduces bounce (higher = less bounce)
+      }}
+      className='w-[30vw] h-[85vh] bg-gradient-to-b from-blue-900/60 to-blue-950/60 rounded-xl text-white shadow-lg flex flex-col relative z-40 backdrop-blur-2xl border border-blue-900 origin-bottom-right'
+      ref={chatBoxRef}
+    >
       <RxCross2
         className='absolute top-5 right-5 cursor-pointer text-xl z-40'
         onClick={() => setIsChatBoxOpen(false)}
@@ -121,7 +133,7 @@ const ChatBox = ({
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   )
 }
 

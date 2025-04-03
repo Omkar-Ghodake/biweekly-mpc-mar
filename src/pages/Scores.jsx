@@ -78,14 +78,12 @@ const Scores = () => {
           <div className="w-auto max-h-[950px] min-h-2/3 justify-center items-center  flex flex-col  p-1 rounded-3xl ">
             <div className=" text-white bg-gradient-to-b from-[#1E4788] to-sky-800 shadow-2xl w-full rounded-xl p-4 mt-2 cursor-pointer">
               <div className="flex items-center justify-center text-3xl font-bold font-serif h-10 uppercase ">
-                {/* Optional logo */}
-                {/* <img src="logo.png" alt="Logo" className="w-12 h-12 mr-4" /> */}
                 <span>Team members</span>
               </div>
             </div>
 
-            <div className="w-full flex-1  overflow-y-scroll [&::-webkit-scrollbar]:hidden opacity-90 rounded-lg backdrop-blur-sm">
-              <div className="grid grid-cols-4 md:grid-cols-4 gap-14 my-5 p-5">
+            <div className="w-full flex-1  overflow-y-scroll [&::-webkit-scrollbar]:hidden opacity-90 rounded-lg backdrop-blur-sm    flex-wrap justify-center items-center">
+              <div className="grid grid-cols-4 md:grid-cols-4 gap-14 my-5 p-5 ">
                 {sortedPlayers.map((player, index) => (
                   <motion.div
                     initial="hidden"
@@ -94,9 +92,13 @@ const Scores = () => {
                     custom={index}
                     key={index}
                     onClick={() => handleCardClick(player, index)}
-                    class="relative w-56 h-56 rounded-t-lg flex justify-center items-end mx-auto my-4 rounded-b-lg cursor-pointer"
+                    className={`relative  w-56 h-56 rounded-t-lg flex justify-center items-end  mx-auto my-4 rounded-b-lg cursor-pointer ${
+                      index > sortedPlayers.length - 3
+                        ? "col-span-1  left-70 items-center justify-self-center"
+                        : ""
+                    }`}
                   >
-                    <div class="absolute inset-0 bg-gray-300 rounded-t-lg opacity-90 "></div>
+                    <div className="absolute inset-0 bg-gray-300 rounded-t-lg opacity-90 "></div>
                     <div className="cursor-pointer">
                       {/* Dark Gray Background (Below Diagonal) */}
                       <div
@@ -116,22 +118,22 @@ const Scores = () => {
                         {index + 1}
                       </div>
                       {/* <!-- Player Image and Name --> */}
-                      <div class=" absolute -top-10 left-18 transform -translate-x-1/2 flex items-center space-x-0">
-                        <img src={player.image} class="w-auto h-36" />
+                      <div className=" absolute -top-10 left-18 transform -translate-x-1/2 flex items-center space-x-0">
+                        <img src={player.image} className="w-auto h-36" />
 
-                        <span class="text-black font-bold text-lg items-start uppercase ">
+                        <span className="text-black font-bold text-lg items-start uppercase ">
                           {player.role ? player.role : "Player"}
                         </span>
                       </div>
                       {/* <!-- Diagonal Line Below Image --> */}
-                      <div class="absolute top-21.5 z-1 left-28 rounded-lg transform -translate-x-1/2 w-[227px]  h-1 bg-white -rotate-10"></div>
+                      <div className="absolute top-21.5 z-1 left-28 rounded-lg transform -translate-x-1/2 w-[227px]  h-1 bg-white -rotate-10"></div>
                     </div>
                     {/* Bottom Triangle */}
-                    <div class="absolute bottom-[-40px] w-0 h-0 border-l-[112px] border-r-[112px] border-t-[40px] border-l-transparent border-r-transparent border-t-[#1E4788] cursor-pointer"></div>
-                    <span class="absolute bottom-15 left-1/2 transform -translate-x-1/2 text-white font-bold text-xl text-center w-full z-1">
+                    <div className="absolute bottom-[-40px] w-0 h-0 border-l-[112px] border-r-[112px] border-t-[40px] border-l-transparent border-r-transparent border-t-[#1E4788] cursor-pointer"></div>
+                    <span className="absolute bottom-15 left-1/2 transform -translate-x-1/2 text-white font-bold text-xl text-center w-full z-1">
                       {player.domain_name}
                     </span>
-                    <span class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white text-sm text-center w-full z-1">
+                    <span className="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white text-sm text-center w-full z-1">
                       Team MPC
                     </span>
                   </motion.div>
@@ -326,6 +328,12 @@ const Scores = () => {
             {/* Triangle */}
             <div className="absolute   border-l-[224px] border-r-[224px] border-t-[90px] top-110 border-l-transparent border-r-transparent border-t-[#1E4788] "></div>
           </div>
+          {/* <div className="absolute w-[553px] h-[598px] left-[1237px] top-[741px] bg-white bg-opacity-70 rounded-b-md "></div>
+
+          
+          <div className="absolute -right-[430px] top-[591px] border-l-[327px] border-r-[327px] border-b-[151px] border-l-transparent border-r-transparent border-b-[#1E4788]"></div>
+
+          <div className="absolute -right-[430px] bottom-[90px]  border-l-[327px] border-r-[327px] border-t-[151px] border-l-transparent border-r-transparent border-t-[#1E4788] "></div> */}
         </Modal>
       )}
     </>

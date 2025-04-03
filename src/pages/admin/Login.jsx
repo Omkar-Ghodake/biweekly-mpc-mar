@@ -1,26 +1,40 @@
-import ForgotPassword from '../../components/ForgotPassword'
-import { ModalContext } from '../../context/ModalProvider'
-import Modal from '../../layouts/Modal/Modal'
 import React, { useContext, useEffect, useState } from 'react'
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
-import Button from '../../components/Button'
+import { FaArrowLeftLong } from 'react-icons/fa6'
 import { CoachContext } from '../../context/CoachProvider'
 import { ToastContext } from '../../context/ToastProvider'
 import { useNavigate } from 'react-router'
 import { LoadingContext } from '../../context/LoadingProvider'
+import { motion, AnimatePresence } from 'framer-motion'
 
 const Login = () => {
   const [domain, setDomain] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
-  // const [loading, setIsLoading] = useState(false)
   const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
-  const { openModal, closeModal } = useContext(ModalContext)
   const { login } = useContext(CoachContext)
   const { showToast } = useContext(ToastContext)
   const { isCoachAuthenticated } = useContext(CoachContext)
   const { isLoading, setIsLoading } = useContext(LoadingContext)
+  const [step, setStep] = useState(0)
+  const [email, setEmail] = useState('')
+  const [otp, setOtp] = useState('')
+  const [error3, setError3] = useState('')
+  const [newPassword, setNewPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [otpSent, setOtpSent] = useState(false)
+
+  const stepVariants = {
+    initial: { opacity: 0, x: 50 },
+    animate: { opacity: 1, x: 0, transition: { duration: 0.3 } },
+    exit: { opacity: 0, x: -50, transition: { duration: 0.1 } },
+  }
+
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false)
+  const [error1, setError1] = useState('')
+  const [error2, setError2] = useState('')
 
   const navigate = useNavigate()
 
@@ -31,6 +45,7 @@ const Login = () => {
   const handlePasswordChange = (e) => {
     setPassword(e.target.value)
   }
+
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible)
   }
@@ -44,7 +59,7 @@ const Login = () => {
     }
 
     // if (password.length < 8 || password.length > 20) {
-    // return setError('Password must be between  8-20 characters')
+    //   return setError("Password must be between  8-20 characters");
     // }
     if (domain.length < 10) {
       return setError('Domain Id should be atleast 10 characters')
@@ -87,83 +102,539 @@ const Login = () => {
     }
   }, [isCoachAuthenticated, navigate])
 
-  return (
-    <div className="h-screen w-full overflow-auto bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col justify-center items-center py-10 px-6">
-      <div className='bg-white w-full max-w-sm mx-auto px-8 py-12 rounded-3xl  shadow-lg'>
-        <h1 className='text-3xl font-semibold text-center text-black mb-6'>
-          Sign In
-        </h1>
+  //forgot password functions
+  const handleOTPChange = (e, index) => {
+    const value = e.target.value
 
-        <div>
-          <div className='flex flex-col'>
-            <label className='text-black text-sm font-medium ml-3 mb-2'>
-              Domain Id
-            </label>
-            <input
-              className='w-full p-2 border border-gray-300 rounded-2xl bg-transparent focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all'
-              placeholder='Enter your domain id'
-              type='domain'
-              value={domain}
-              onChange={handleEmailChange}
-            />
+    if (/[^0-9]/.test(value)) {
+      return // Allow only numeric characters
+    }
+
+    setOtp((prevOtp) => {
+      const otpArray = prevOtp.split('')
+      otpArray[index] = value
+      return otpArray.join('')
+    })
+
+    if (index < 5 && value) {
+      const nextInput = document.getElementById(`otp-input-${index + 1}`)
+      if (nextInput) {
+        nextInput.focus()
+      }
+    }
+  }
+
+  const handlePaste = (e) => {
+    e.preventDefault()
+    const pastedValue = e.clipboardData
+      .getData('Text')
+      .replace(/\D/g, '')
+      .slice(0, 6) // Extract only numbers, max 6 digits
+
+    if (pastedValue.length === 6) {
+      setOtp(pastedValue)
+
+      // Auto-fill each input field
+      pastedValue.split('').forEach((digit, index) => {
+        const inputField = document.getElementById(`otp-input-${index}`)
+        if (inputField) {
+          inputField.value = digit
+        }
+      })
+    }
+  }
+
+  const togglePasswordVisibility1 = () => {
+    setIsConfirmPasswordVisible(!isConfirmPasswordVisible)
+  }
+
+  const sendOTP = async (email) => {
+    try {
+      setIsLoading(true)
+
+      if (!email) {
+        setIsLoading(false)
+        return setError2('Enter Valid Email')
+      }
+
+      const response = await fetch(
+        'http://localhost:5500/api/v1/auth/send-otp',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email }),
+        }
+      )
+
+      const json = await response.json()
+
+      if (response.ok) {
+        setOtpSent(true)
+        setStep(2)
+        setIsLoading(false)
+        showToast('OTP sent successfully')
+      } else {
+        if (
+          response.status === 401 ||
+          response.status === 404 ||
+          response.status === 500
+        ) {
+          setIsLoading(false)
+          return setError2(json.message)
+        }
+      }
+    } catch (error) {}
+  }
+
+  const verifyOTP = async (otp) => {
+    try {
+      setIsLoading(true)
+
+      if (!otp) {
+        setIsLoading(false)
+        return setError1('Enter Valid OTP')
+      }
+
+      const response = await fetch(
+        'http://localhost:5500/api/v1/auth/verify-otp',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, user_otp: otp }),
+        }
+      )
+
+      const json = await response.json()
+
+      if (response.ok) {
+        setIsLoading(false)
+        setStep(3) // Move to password reset step
+        showToast('OTP verified successfully')
+      } else {
+        if (
+          response.status === 401 ||
+          response.status === 404 ||
+          response.status === 500
+        ) {
+          setIsLoading(false)
+          return setError1(json.message)
+        }
+      }
+    } catch (error) {}
+  }
+
+  const handleEmailSubmit = async () => {
+    await sendOTP(email)
+  }
+
+  const handleOTPSubmit = async () => {
+    await verifyOTP(otp)
+  }
+
+  const handlePasswordSubmit = async () => {
+    if (!newPassword || !confirmPassword) {
+      return setError3('Enter All Fields')
+    }
+    if (newPassword !== confirmPassword) {
+      return setError3('Passwords Do Not Match')
+    }
+    setError3('')
+
+    try {
+      setIsLoading(true)
+
+      const response = await fetch(
+        'http://localhost:5500/api/v1/coach/reset-password',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email,
+            newPassword,
+          }),
+        }
+      )
+
+      const json = await response.json()
+
+      if (response.ok) {
+        setIsLoading(false)
+        showToast(json.message)
+        navigate('/login')
+      } else {
+        if (
+          response.status === 401 ||
+          response.status === 404 ||
+          response.status === 500
+        ) {
+          setIsLoading(false)
+          return setError3(json.message)
+        }
+      }
+
+      setIsLoading(false)
+    } catch (error) {}
+  }
+
+  return (
+    <>
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        className="h-dvh overflow-hidden bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col items-center px-7"
+      >
+        <div className='absolute inset-0 bg-gray-50/90'></div>
+        {/* Content container */}
+        <div className='relative h-full flex '>
+          {/* Left side - Image placeholder with purple overlay */}
+          <div className='ml-24'>
+            <img src='LoginLogoMain.png' alt='' className='h-full' />
           </div>
 
-          <div className='flex flex-col'>
-            <label className='text-black text-sm font-medium ml-3 mt-2 mb-2'>
-              Password
-            </label>
-            <div className='relative'>
-              <input
-                className='w-full p-2 border border-gray-300 rounded-2xl bg-transparent focus:outline-none focus:ring-1 focus:ring-blue-500 transition-all'
-                placeholder='Enter your password'
-                type={isPasswordVisible ? 'text' : 'password'}
-                value={password}
-                onChange={handlePasswordChange}
-              />
-              {password != '' && (
-                <button
-                  type='button'
-                  onClick={togglePasswordVisibility}
-                  className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500'
-                >
-                  {isPasswordVisible ? (
-                    <AiFillEyeInvisible size={20} />
-                  ) : (
-                    <AiFillEye size={20} />
-                  )}
-                </button>
-              )}
+          {/* Right side - Login form with transparency */}
+          <div className=' flex items-center justify-center  rounded-r-lg'>
+            <div className='w-full'>
+              {/* Login header */}
+              <h2 className='text-blue-900 font-bold text-2xl mb-8 text-center'>
+                {step === 0 && 'Login'}
+                {step === 1 && 'Forgot your password ?'}
+                {step === 2 && 'OTP Login'}
+                {step === 3 && 'Reset Password to Login'}
+              </h2>
+
+              <AnimatePresence mode='wait'>
+                {step === 0 && (
+                  <motion.div
+                    key='login'
+                    initial='initial'
+                    animate='animate'
+                    exit='exit'
+                    variants={stepVariants}
+                    className='space-y-4'
+                  >
+                    {
+                      <form onSubmit={handleSubmit} className='space-y-4'>
+                        {/* Domain input */}
+                        <div>
+                          <input
+                            type='text'
+                            placeholder='Domain Id'
+                            className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
+                            value={domain}
+                            onChange={handleEmailChange}
+                          />
+                        </div>
+
+                        {/* Password input */}
+                        <div className='relative'>
+                          <input
+                            type={isPasswordVisible ? 'text' : 'password'}
+                            placeholder='Password'
+                            className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
+                            value={password}
+                            onChange={handlePasswordChange}
+                          />
+                          {password !== '' && (
+                            <button
+                              type='button'
+                              className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400'
+                              onClick={togglePasswordVisibility}
+                            >
+                              {isPasswordVisible ? (
+                                <AiFillEyeInvisible size={20} />
+                              ) : (
+                                <AiFillEye size={20} />
+                              )}
+                            </button>
+                          )}
+                        </div>
+
+                        {/* Error message */}
+                        {error && (
+                          <div className='text-red-500 ml-2 text-sm'>
+                            {error}
+                          </div>
+                        )}
+
+                        {/* Forgot password link */}
+                        <div className='text-right -mt-3 px-1'>
+                          <button
+                            type='button'
+                            onClick={() => {
+                              setStep(1)
+                              setError('')
+                            }}
+                            className='text-sm  text-blue-900 hover:underline cursor-pointer font-bold'
+                          >
+                            Forgot Password?
+                          </button>
+                        </div>
+
+                        {/* Login button */}
+                        <div className='flex justify-center items-center'>
+                          <button
+                            type='submit'
+                            className='w-50 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer'
+                            disabled={isLoading}
+                          >
+                            {isLoading ? 'Signing In...' : 'Login'}
+                          </button>
+                        </div>
+
+                        {/* Or login with separator
+                    <div className="flex items-center justify-center gap-2 text-xs text-gray-500 my-2">
+                      <div className="h-px bg-gray-600 w-25"></div>
+                      <span className="text-blue-900 font-bold">
+                        Or Login with
+                      </span>
+                      <div className="h-px bg-gray-900 w-25"></div>
+                    </div> */}
+
+                        {/* Google button */}
+                        {/* <button
+                      type="button"
+                      className="w-full bg-[rgba(209,201,255,0.6)] cursor-pointer py-2 mt-5 rounded-[10px] text-sm flex items-center justify-center gap-2"
+                    >
+                      <FcGoogle size={20} />
+                      Google
+                    </button> */}
+                      </form>
+                    }
+                  </motion.div>
+                )}
+
+                {/* Forgot Password Steps */}
+                {step === 1 && (
+                  <motion.div
+                    key='forgot-password'
+                    initial='initial'
+                    animate='animate'
+                    exit='exit'
+                    variants={stepVariants}
+                    className='space-y-4'
+                  >
+                    {
+                      <div className='space-y-4'>
+                        <input
+                          type='email'
+                          placeholder='Enter your Email'
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
+                        />
+                        {error2 && (
+                          <div className='text-red-500 text-sm ml-2 mt-1'>
+                            {error2}
+                          </div>
+                        )}
+                        <div className='flex justify-center'>
+                          <button
+                            type='submit'
+                            onClick={handleEmailSubmit}
+                            className='w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer'
+                          >
+                            Submit
+                          </button>
+                        </div>
+                        <div className='text-center mt-4 flex justify-center'>
+                          <button
+                            type='button'
+                            onClick={() => {
+                              setStep(0)
+                              setError2('')
+                              setEmail('')
+                            }}
+                            className='text-sm text-blue-950 font-medium  cursor-pointer  flex items-center gap-2'
+                          >
+                            <FaArrowLeftLong
+                              size={18}
+                              className='text-blue-900 font-bold'
+                            />
+                            <span>Back to Login</span>
+                          </button>
+                        </div>
+                      </div>
+                    }
+                  </motion.div>
+                )}
+
+                {step === 2 && otpSent && (
+                  <motion.div
+                    key='otp'
+                    initial='initial'
+                    animate='animate'
+                    exit='exit'
+                    variants={stepVariants}
+                    className='space-y-4'
+                  >
+                    {
+                      <div className='space-y-4'>
+                        <div className='text-center mx-0 text-gray-400 -mt-7'>
+                          <p> Enter Code sent to your Email ID</p>
+                        </div>
+                        <div className='flex justify-center gap-x-2 mb-9'>
+                          {[0, 1, 2, 3, 4, 5].map((index) => (
+                            <input
+                              key={index}
+                              id={`otp-input-${index}`}
+                              type='text'
+                              maxLength='1'
+                              onChange={(e) => handleOTPChange(e, index)}
+                              onPaste={handlePaste}
+                              className='w-10 h-11 text-center text-lg rounded-[10px] bg-[rgba(209,201,255,0.6)] border-0 focus:outline-none focus:ring-1 focus:ring-blue-500'
+                            />
+                          ))}
+                        </div>
+                        {error1 && (
+                          <div className='text-red-500 text-sm mt-1 ml-2 text-center'>
+                            {error1}
+                          </div>
+                        )}
+                        <div className='text-center mt-5 text-gray-400'>
+                          <span> Didn't get the OTP ? </span>
+                          <button
+                            type='submit'
+                            onClick={handleEmailSubmit}
+                            className='text-blue-900 mx-2 cursor-pointer hover:underline'
+                          >
+                            Resend it.
+                          </button>
+                        </div>
+                        <div className='flex justify-center'>
+                          <button
+                            type='submit'
+                            onClick={handleOTPSubmit}
+                            className='w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer'
+                          >
+                            Verify OTP
+                          </button>
+                        </div>
+                        <div className='text-center mt-4 flex justify-center'>
+                          {/* <button
+                      type='button'
+                      onClick={() => setStep(0)}
+                      className='text-sm text-blue-950 font-medium  cursor-pointer  flex items-center gap-2'
+                    >
+                      <FaArrowLeftLong
+                        size={18}
+                        className='text-blue-900 font-bold'
+                      />
+                      <span>Back to Login</span>
+                    </button> */}
+                        </div>
+                      </div>
+                    }
+                  </motion.div>
+                )}
+
+                {step === 3 && (
+                  <motion.div
+                    key='reset-password'
+                    initial='initial'
+                    animate='animate'
+                    exit='exit'
+                    variants={stepVariants}
+                    className='space-y-4'
+                  >
+                    {
+                      <div className='space-y-4'>
+                        <div>
+                          <input
+                            type={isPasswordVisible ? 'text' : 'password'}
+                            placeholder='Enter your New Password'
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
+                          />
+                          {/* {newPassword !== "" && (
+                        <button
+                          type="button"
+                          className="absolute right-3 transform -translate-y-1/2 text-gray-400"
+                          onClick={togglePasswordVisibility}
+                        >
+                          {isPasswordVisible ? (
+                            <AiFillEyeInvisible size={20} />
+                          ) : (
+                            <AiFillEye size={20} />
+                          )}
+                        </button>
+                      )} */}
+                        </div>
+                        <div className='relative'>
+                          <input
+                            type={
+                              isConfirmPasswordVisible ? 'text' : 'password'
+                            }
+                            placeholder='Confirm your Password'
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
+                          />
+                          {confirmPassword !== '' && (
+                            <button
+                              type='button'
+                              onClick={togglePasswordVisibility1}
+                              className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400'
+                            >
+                              {isConfirmPasswordVisible ? (
+                                <AiFillEyeInvisible size={20} />
+                              ) : (
+                                <AiFillEye size={20} />
+                              )}
+                            </button>
+                          )}
+                        </div>
+                        {error3 && (
+                          <div className='text-red-500 text-sm ml-2 mt-1'>
+                            {error3}
+                          </div>
+                        )}
+                        <div className='flex justify-center'>
+                          <button
+                            onClick={() => {
+                              handlePasswordSubmit()
+                              setStep(0)
+                            }}
+                            className='w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer'
+                          >
+                            Reset Password
+                          </button>
+                        </div>
+                        <div className='text-center mt-4 flex justify-center'>
+                          <button
+                            type='button'
+                            onClick={() => {
+                              setStep(0)
+                              setError1('') // Clear OTP errors
+                              setError2('') // Clear email errors
+                              setError3('') // Clear reset password errors
+                              setEmail('')
+                            }}
+                            className='text-sm text-blue-950 font-medium  cursor-pointer  flex items-center gap-2'
+                          >
+                            <FaArrowLeftLong
+                              size={18}
+                              className='text-blue-900 font-bold'
+                            />
+                            <span>Back to Login</span>
+                          </button>
+                        </div>
+                      </div>
+                    }
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
-          {error && <div className='text-red-500 text-sm mt-1'>{error}</div>}
-
-          <div className='flex justify-end'>
-            <button
-              onClick={openModal}
-              className='text-black my-1 text-sm hover:underline focus:outline-none cursor-pointer'
-            >
-              Forgot password?
-            </button>
-
-            <Modal className='w-[500px] min-h-fit flex justify-center items-center'>
-              <ForgotPassword closeModal={closeModal} />
-            </Modal>
-          </div>
-
-          <div>
-            {
-              <Button
-                onClick={handleSubmit}
-                className={'w-full'}
-                disabled={isLoading}
-              >
-                {isLoading ? 'Signing In...' : 'Sign In'}
-              </Button>
-            }
-          </div>
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </>
   )
 }
 
