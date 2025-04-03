@@ -355,7 +355,7 @@ const EditTournaments = () => {
                 </span>
               </div>
             </ModalHead>
-            <ModalBody className={'max-h-[90vh]'}>
+            <ModalBody className={"max-h-[90vh]"}>
               <div className="p-2 flex flex-row items-start h-[350px]  min-h-[300px] text-[#1E4788]">
                 <div className="w-2/3">
                   <form className="space-y-6">
@@ -483,23 +483,21 @@ const EditTournaments = () => {
                     </div>
                   </form>
                 </div>
-                <div className="w-1/2 h-full flex justify-center items-center ">
-                  <div className="flex justify-center bg-white items-center h-[70%] w-[70%] rounded-2xl drop-shadow-2xl relative group p-2">
+                <div className="w-1/2 h-full flex flex-col justify-center items-center space-y-5">
+                  <div className="flex justify-center bg-white items-center h-[35vh] w-[35vh] rounded-2xl drop-shadow-2xl relative">
+                    <img src={image || img} alt="Profile" className="h-full" />
+                  </div>
+
+                  <span className="text-center bg-[#1E4788] hover:bg-[#1e3388] text-white text-xs px-2 py-1 rounded ">
                     <label
                       htmlFor="imageUpload"
                       className={`${
                         isEditing ? "cursor-pointer " : "cursor-default"
                       } flex justify-center `}
                     >
-                      <img
-                        src={image || img}
-                        alt="Profile"
-                        className="h-[60%] w-auto"
-                      />
-                      {isEditing && <span className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#1E4788] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        Upload an Image
-                      </span>}
+                      Upload an Image
                     </label>
+
                     <input
                       type="file"
                       accept="image/*"
@@ -508,9 +506,7 @@ const EditTournaments = () => {
                       id="imageUpload"
                       disabled={!isEditing}
                     />
-
-                    {/* <FaRegEdit className="w-6 h-6 absolute bottom-6 right-2"/> */}
-                  </div>
+                  </span>
                 </div>
               </div>
               {/* Buttons Outside the Form */}

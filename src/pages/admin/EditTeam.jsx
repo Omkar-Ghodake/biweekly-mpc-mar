@@ -588,8 +588,6 @@ const EditTeam = () => {
                         alt="Profile"
                         className="h-full"
                       />
-
-                      {/* <FaRegEdit className="w-6 h-6 absolute bottom-6 right-2"/> */}
                     </div>
 
                     <span className="text-center bg-[#1E4788] hover:bg-[#1e3388] text-white text-xs px-2 py-1 rounded ">
