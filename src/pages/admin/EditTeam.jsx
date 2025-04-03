@@ -575,9 +575,9 @@ const EditTeam = () => {
                           alt="Profile"
                           className="h-[60%] w-auto"
                         />
-                        <span className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#1E4788] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                        {isEditing && <span className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#1E4788] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                           Upload an Image
-                        </span>
+                        </span>}
                       </label>
                       <input
                         type="file"
