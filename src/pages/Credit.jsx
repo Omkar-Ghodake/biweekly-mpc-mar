@@ -145,7 +145,8 @@ const Credit = () => {
   return (
     <>
       {/* <StadiumBack /> */}
-      <div className="w-full h-screen bg-gray-400 flex justify-center items-center">
+      <div className="h-dvh overflow-hidden bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col items-center justify-center ">
+        <div className="absolute inset-0 bg-gray-50/90"></div>
         <div className="relative  w-screen  flex flex-col items-center gap-3  overflow-y-scroll [&::-webkit-scrollbar]:hidden uppercase text-bold  text-center">
           {/* First row: 3 cards in a row */}
           <div className="flex gap-4 font-bold">
@@ -184,7 +185,7 @@ const Credit = () => {
                     "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)",
                 }}
               >
-                <span className="absolute top-10 mt-1 text-center w-full font-bold">
+                <span className="absolute top-10 mt-2.5  text-center w-full font-bold">
                   {item.role}
                 </span>
 

@@ -45,6 +45,7 @@ const Input = ({
           type={type}
           required={required}
           placeholder={type === "text" ? `Enter ${label.charAt(0).toUpperCase() + label.slice(1).toLowerCase()}` : placeholder}
+          maxLength={type === "text" ? 20 : 3}
           value={value}
           onChange={onChange}
           className={`mx-3 ${width} text-center px-2 py-1 rounded-xl transition-all duration-200 appearance-none

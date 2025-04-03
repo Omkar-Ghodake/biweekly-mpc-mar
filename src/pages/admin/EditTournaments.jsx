@@ -18,6 +18,7 @@ import { ToastContext } from "../../context/ToastProvider";
 import { LoadingContext } from "../../context/LoadingProvider";
 import BackButton from "../../components/BackButton";
 import { useNavigate } from "react-router";
+import { CoachContext } from "../../context/CoachProvider";
 
 const EditTournaments = () => {
   const [tournaments, setTournaments] = useState([]); // State to store tournaments
@@ -43,6 +44,8 @@ const EditTournaments = () => {
   ); // State to track if the form is in editing mode
   const [createNew, setCreateNew] = useState(false);
   const fileInputRef = useRef(null);
+
+  const { isCoachAuthenticated } = useContext(CoachContext);
 
   // Sync tournaments from context to local state
   useEffect(() => {
@@ -117,6 +120,7 @@ const EditTournaments = () => {
 
   // Add a new tournament
   const addTournament = async (e) => {
+    e.preventDefault();
     e.preventDefault();
 
     // Validate required fields
@@ -284,6 +288,8 @@ const EditTournaments = () => {
     setCreateNew(true);
     openModal();
   };
+
+  if (!isCoachAuthenticated) return navigate("/login");
 
   return (
     <>
