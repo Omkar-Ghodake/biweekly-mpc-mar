@@ -46,18 +46,13 @@ const EditTournaments = () => {
   ); // State to track if the form is in editing mode
   const [createNew, setCreateNew] = useState(false);
   const fileInputRef = useRef(null);
-  ); // State to track if the form is in editing mode
-  const [createNew, setCreateNew] = useState(false);
-  const fileInputRef = useRef(null);
 
-  const { isCoachAuthenticated } = useContext(CoachContext);
   const { isCoachAuthenticated } = useContext(CoachContext);
   // Sync tournaments from context to local state
   useEffect(() => {
     setTournaments(tournamentsArray);
   }, [tournamentsArray]);
-    setTournaments(tournamentsArray);
-  }, [tournamentsArray]);
+
 
   const handleChange = (e) => {
     if (isEditing) {
@@ -67,7 +62,7 @@ const EditTournaments = () => {
       handleInputChange(e);
     }
   };
-  };
+
 
   // Handle input changes for form fields
   const handleInputChange = (e) => {
