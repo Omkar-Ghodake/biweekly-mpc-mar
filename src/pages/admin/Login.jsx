@@ -54,6 +54,10 @@ const Login = () => {
     setIsPasswordVisible(!isPasswordVisible)
   }
 
+  function capitalizeFirstLetter(val) {
+    return String(val).charAt(0).toUpperCase() + String(val).slice(1)
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
 
@@ -87,7 +91,13 @@ const Login = () => {
       const json = await response.json()
 
       if (response.ok) {
-        showToast(`Welcome coach ${json.data.coach.domain_name}`)
+        let domainNameArray = json.data.coach.domain_name.split('.')
+        let domainName =
+          capitalizeFirstLetter(domainNameArray[0]) +
+          '.' +
+          capitalizeFirstLetter(domainNameArray[1])
+
+        showToast(`Welcome coach ${domainName}`)
         login(json.data.token, json.data.coach)
       } else {
         setError(json.message || 'Invalid domain or password')
@@ -99,12 +109,6 @@ const Login = () => {
       setIsLoading(false)
     }
   }
-
-  useEffect(() => {
-    if (isCoachAuthenticated) {
-      navigate('/admin/dashboard')
-    }
-  }, [isCoachAuthenticated, navigate])
 
   //forgot password functions
   const handleOTPChange = (e, index) => {
@@ -287,108 +291,111 @@ const Login = () => {
     } catch (error) {}
   }
 
+  if (isCoachAuthenticated) return navigate('/admin/dashboard')
+
   return (
-    <>
-      <div className="h-dvh overflow-hidden bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col items-center px-7">
-        <div className='absolute inset-0 bg-gray-50/90'></div>
-        {/* Content container */}
-        <div className='relative h-full flex '>
-          {/* Left side - Image placeholder with purple overlay */}
-          <div className='ml-24'>
-            <img src='/LoginLogoMain.png' alt='' className='h-full' />
-          </div>
+    !isCoachAuthenticated && (
+      <>
+        <div className="h-dvh overflow-hidden bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col items-center px-7">
+          <div className='absolute inset-0 bg-gray-50/90'></div>
+          {/* Content container */}
+          <div className='relative h-full flex '>
+            {/* Left side - Image placeholder with purple overlay */}
+            <div className='ml-24'>
+              <img src='/LoginLogoMain.png' alt='' className='h-full' />
+            </div>
 
-          {/* Right side - Login form with transparency */}
-          <div className=' flex items-center justify-center  rounded-r-lg'>
-            <div className='w-full'>
-              {/* Login header */}
-              <h2 className='text-blue-900 font-bold text-2xl mb-8 text-center'>
-                {step === 0 && 'Login'}
-                {step === 1 && 'Forgot your password ?'}
-                {step === 2 && 'OTP Login'}
-                {step === 3 && 'Reset Password to Login'}
-              </h2>
+            {/* Right side - Login form with transparency */}
+            <div className=' flex items-center justify-center  rounded-r-lg'>
+              <div className='w-full'>
+                {/* Login header */}
+                <h2 className='text-blue-900 font-bold text-2xl mb-8 text-center'>
+                  {step === 0 && 'Login'}
+                  {step === 1 && 'Forgot your password ?'}
+                  {step === 2 && 'OTP Login'}
+                  {step === 3 && 'Reset Password to Login'}
+                </h2>
 
-              <AnimatePresence mode='wait'>
-                {step === 0 && (
-                  <motion.div
-                    key='login'
-                    initial='initial'
-                    animate='animate'
-                    exit='exit'
-                    variants={stepVariants}
-                    className='space-y-4'
-                  >
-                    {
-                      <form onSubmit={handleSubmit} className='space-y-4'>
-                        {/* Domain input */}
-                        <div>
-                          <input
-                            type='text'
-                            placeholder='Domain Id'
-                            className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
-                            value={domain}
-                            onChange={handleEmailChange}
-                          />
-                        </div>
+                <AnimatePresence mode='wait'>
+                  {step === 0 && (
+                    <motion.div
+                      key='login'
+                      initial='initial'
+                      animate='animate'
+                      exit='exit'
+                      variants={stepVariants}
+                      className='space-y-4'
+                    >
+                      {
+                        <form onSubmit={handleSubmit} className='space-y-4'>
+                          {/* Domain input */}
+                          <div>
+                            <input
+                              type='text'
+                              placeholder='Domain Id'
+                              className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
+                              value={domain}
+                              onChange={handleEmailChange}
+                            />
+                          </div>
 
-                        {/* Password input */}
-                        <div className='relative'>
-                          <input
-                            type={isPasswordVisible ? 'text' : 'password'}
-                            placeholder='Password'
-                            className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
-                            value={password}
-                            onChange={handlePasswordChange}
-                          />
-                          {password !== '' && (
+                          {/* Password input */}
+                          <div className='relative'>
+                            <input
+                              type={isPasswordVisible ? 'text' : 'password'}
+                              placeholder='Password'
+                              className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
+                              value={password}
+                              onChange={handlePasswordChange}
+                            />
+                            {password !== '' && (
+                              <button
+                                type='button'
+                                className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400'
+                                onClick={togglePasswordVisibility}
+                              >
+                                {isPasswordVisible ? (
+                                  <AiFillEyeInvisible size={20} />
+                                ) : (
+                                  <AiFillEye size={20} />
+                                )}
+                              </button>
+                            )}
+                          </div>
+
+                          {/* Error message */}
+                          {error && (
+                            <div className='text-red-500 ml-2 text-sm'>
+                              {error}
+                            </div>
+                          )}
+
+                          {/* Forgot password link */}
+                          <div className='text-right -mt-3 px-1'>
                             <button
                               type='button'
-                              className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400'
-                              onClick={togglePasswordVisibility}
+                              onClick={() => {
+                                setStep(1)
+                                setError('')
+                              }}
+                              className='text-sm  text-blue-900 hover:underline cursor-pointer font-bold'
                             >
-                              {isPasswordVisible ? (
-                                <AiFillEyeInvisible size={20} />
-                              ) : (
-                                <AiFillEye size={20} />
-                              )}
+                              Forgot Password?
                             </button>
-                          )}
-                        </div>
-
-                        {/* Error message */}
-                        {error && (
-                          <div className='text-red-500 ml-2 text-sm'>
-                            {error}
                           </div>
-                        )}
 
-                        {/* Forgot password link */}
-                        <div className='text-right -mt-3 px-1'>
-                          <button
-                            type='button'
-                            onClick={() => {
-                              setStep(1)
-                              setError('')
-                            }}
-                            className='text-sm  text-blue-900 hover:underline cursor-pointer font-bold'
-                          >
-                            Forgot Password?
-                          </button>
-                        </div>
+                          {/* Login button */}
+                          <div className='flex justify-center items-center'>
+                            <button
+                              type='submit'
+                              className='w-50 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer'
+                              disabled={isLoading}
+                            >
+                              {isLoading ? 'Signing In...' : 'Login'}
+                            </button>
+                          </div>
 
-                        {/* Login button */}
-                        <div className='flex justify-center items-center'>
-                          <button
-                            type='submit'
-                            className='w-50 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer'
-                            disabled={isLoading}
-                          >
-                            {isLoading ? 'Signing In...' : 'Login'}
-                          </button>
-                        </div>
-
-                        {/* Or login with separator
+                          {/* Or login with separator
                     <div className="flex items-center justify-center gap-2 text-xs text-gray-500 my-2">
                       <div className="h-px bg-gray-600 w-25"></div>
                       <span className="text-blue-900 font-bold">
@@ -397,127 +404,127 @@ const Login = () => {
                       <div className="h-px bg-gray-900 w-25"></div>
                     </div> */}
 
-                        {/* Google button */}
-                        {/* <button
+                          {/* Google button */}
+                          {/* <button
                       type="button"
                       className="w-full bg-[rgba(209,201,255,0.6)] cursor-pointer py-2 mt-5 rounded-[10px] text-sm flex items-center justify-center gap-2"
                     >
                       <FcGoogle size={20} />
                       Google
                     </button> */}
-                      </form>
-                    }
-                  </motion.div>
-                )}
+                        </form>
+                      }
+                    </motion.div>
+                  )}
 
-                {/* Forgot Password Steps */}
-                {step === 1 && (
-                  <motion.div
-                    key='forgot-password'
-                    initial='initial'
-                    animate='animate'
-                    exit='exit'
-                    variants={stepVariants}
-                    className='space-y-4'
-                  >
-                    {
-                      <div className='space-y-4'>
-                        <input
-                          type='email'
-                          placeholder='Enter your Email'
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
-                        />
-                        {error2 && (
-                          <div className='text-red-500 text-sm ml-2 mt-1'>
-                            {error2}
+                  {/* Forgot Password Steps */}
+                  {step === 1 && (
+                    <motion.div
+                      key='forgot-password'
+                      initial='initial'
+                      animate='animate'
+                      exit='exit'
+                      variants={stepVariants}
+                      className='space-y-4'
+                    >
+                      {
+                        <div className='space-y-4'>
+                          <input
+                            type='email'
+                            placeholder='Enter your Email'
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
+                          />
+                          {error2 && (
+                            <div className='text-red-500 text-sm ml-2 mt-1'>
+                              {error2}
+                            </div>
+                          )}
+                          <div className='flex justify-center'>
+                            <button
+                              type='submit'
+                              onClick={handleEmailSubmit}
+                              className='w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer'
+                            >
+                              Submit
+                            </button>
                           </div>
-                        )}
-                        <div className='flex justify-center'>
-                          <button
-                            type='submit'
-                            onClick={handleEmailSubmit}
-                            className='w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer'
-                          >
-                            Submit
-                          </button>
+                          <div className='text-center mt-4 flex justify-center'>
+                            <button
+                              type='button'
+                              onClick={() => {
+                                setStep(0)
+                                setError2('')
+                                setEmail('')
+                              }}
+                              className='text-sm text-blue-950 font-medium  cursor-pointer  flex items-center gap-2'
+                            >
+                              <FaArrowLeftLong
+                                size={18}
+                                className='text-blue-900 font-bold'
+                              />
+                              <span>Back to Login</span>
+                            </button>
+                          </div>
                         </div>
-                        <div className='text-center mt-4 flex justify-center'>
-                          <button
-                            type='button'
-                            onClick={() => {
-                              setStep(0)
-                              setError2('')
-                              setEmail('')
-                            }}
-                            className='text-sm text-blue-950 font-medium  cursor-pointer  flex items-center gap-2'
-                          >
-                            <FaArrowLeftLong
-                              size={18}
-                              className='text-blue-900 font-bold'
-                            />
-                            <span>Back to Login</span>
-                          </button>
-                        </div>
-                      </div>
-                    }
-                  </motion.div>
-                )}
+                      }
+                    </motion.div>
+                  )}
 
-                {step === 2 && otpSent && (
-                  <motion.div
-                    key='otp'
-                    initial='initial'
-                    animate='animate'
-                    exit='exit'
-                    variants={stepVariants}
-                    className='space-y-4'
-                  >
-                    {
-                      <div className='space-y-4'>
-                        <div className='text-center mx-0 text-gray-400 -mt-7'>
-                          <p> Enter Code sent to your Email ID</p>
-                        </div>
-                        <div className='flex justify-center gap-x-2 mb-9'>
-                          {[0, 1, 2, 3, 4, 5].map((index) => (
-                            <input
-                              key={index}
-                              id={`otp-input-${index}`}
-                              type='text'
-                              maxLength='1'
-                              onChange={(e) => handleOTPChange(e, index)}
-                              onPaste={handlePaste}
-                              className='w-10 h-11 text-center text-lg rounded-[10px] bg-[rgba(209,201,255,0.6)] border-0 focus:outline-none focus:ring-1 focus:ring-blue-500'
-                            />
-                          ))}
-                        </div>
-                        {error1 && (
-                          <div className='text-red-500 text-sm mt-1 ml-2 text-center'>
-                            {error1}
+                  {step === 2 && otpSent && (
+                    <motion.div
+                      key='otp'
+                      initial='initial'
+                      animate='animate'
+                      exit='exit'
+                      variants={stepVariants}
+                      className='space-y-4'
+                    >
+                      {
+                        <div className='space-y-4'>
+                          <div className='text-center mx-0 text-gray-400 -mt-7'>
+                            <p> Enter Code sent to your Email ID</p>
                           </div>
-                        )}
-                        <div className='text-center mt-5 text-gray-400'>
-                          <span> Didn't get the OTP ? </span>
-                          <button
-                            type='submit'
-                            onClick={handleEmailSubmit}
-                            className='text-blue-900 mx-2 cursor-pointer hover:underline'
-                          >
-                            Resend it.
-                          </button>
-                        </div>
-                        <div className='flex justify-center'>
-                          <button
-                            type='submit'
-                            onClick={handleOTPSubmit}
-                            className='w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer'
-                          >
-                            Verify OTP
-                          </button>
-                        </div>
-                        <div className='text-center mt-4 flex justify-center'>
-                          {/* <button
+                          <div className='flex justify-center gap-x-2 mb-9'>
+                            {[0, 1, 2, 3, 4, 5].map((index) => (
+                              <input
+                                key={index}
+                                id={`otp-input-${index}`}
+                                type='text'
+                                maxLength='1'
+                                onChange={(e) => handleOTPChange(e, index)}
+                                onPaste={handlePaste}
+                                className='w-10 h-11 text-center text-lg rounded-[10px] bg-[rgba(209,201,255,0.6)] border-0 focus:outline-none focus:ring-1 focus:ring-blue-500'
+                              />
+                            ))}
+                          </div>
+                          {error1 && (
+                            <div className='text-red-500 text-sm mt-1 ml-2 text-center'>
+                              {error1}
+                            </div>
+                          )}
+                          <div className='text-center mt-5 text-gray-400'>
+                            <span> Didn't get the OTP ? </span>
+                            <button
+                              type='submit'
+                              onClick={handleEmailSubmit}
+                              className='text-blue-900 mx-2 cursor-pointer hover:underline'
+                            >
+                              Resend it.
+                            </button>
+                          </div>
+                          <div className='flex justify-center'>
+                            <button
+                              type='submit'
+                              onClick={handleOTPSubmit}
+                              className='w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer'
+                            >
+                              Verify OTP
+                            </button>
+                          </div>
+                          <div className='text-center mt-4 flex justify-center'>
+                            {/* <button
                       type='button'
                       onClick={() => setStep(0)}
                       className='text-sm text-blue-950 font-medium  cursor-pointer  flex items-center gap-2'
@@ -528,32 +535,32 @@ const Login = () => {
                       />
                       <span>Back to Login</span>
                     </button> */}
+                          </div>
                         </div>
-                      </div>
-                    }
-                  </motion.div>
-                )}
+                      }
+                    </motion.div>
+                  )}
 
-                {step === 3 && (
-                  <motion.div
-                    key='reset-password'
-                    initial='initial'
-                    animate='animate'
-                    exit='exit'
-                    variants={stepVariants}
-                    className='space-y-4'
-                  >
-                    {
-                      <div className='space-y-4'>
-                        <div>
-                          <input
-                            type={isPasswordVisible ? 'text' : 'password'}
-                            placeholder='Enter your New Password'
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
-                            className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
-                          />
-                          {/* {newPassword !== "" && (
+                  {step === 3 && (
+                    <motion.div
+                      key='reset-password'
+                      initial='initial'
+                      animate='animate'
+                      exit='exit'
+                      variants={stepVariants}
+                      className='space-y-4'
+                    >
+                      {
+                        <div className='space-y-4'>
+                          <div>
+                            <input
+                              type={isPasswordVisible ? 'text' : 'password'}
+                              placeholder='Enter your New Password'
+                              value={newPassword}
+                              onChange={(e) => setNewPassword(e.target.value)}
+                              className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
+                            />
+                            {/* {newPassword !== "" && (
                         <button
                           type="button"
                           className="absolute right-3 transform -translate-y-1/2 text-gray-400"
@@ -566,76 +573,79 @@ const Login = () => {
                           )}
                         </button>
                       )} */}
-                        </div>
-                        <div className='relative'>
-                          <input
-                            type={
-                              isConfirmPasswordVisible ? 'text' : 'password'
-                            }
-                            placeholder='Confirm your Password'
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
-                          />
-                          {confirmPassword !== '' && (
+                          </div>
+                          <div className='relative'>
+                            <input
+                              type={
+                                isConfirmPasswordVisible ? 'text' : 'password'
+                              }
+                              placeholder='Confirm your Password'
+                              value={confirmPassword}
+                              onChange={(e) =>
+                                setConfirmPassword(e.target.value)
+                              }
+                              className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
+                            />
+                            {confirmPassword !== '' && (
+                              <button
+                                type='button'
+                                onClick={togglePasswordVisibility1}
+                                className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400'
+                              >
+                                {isConfirmPasswordVisible ? (
+                                  <AiFillEyeInvisible size={20} />
+                                ) : (
+                                  <AiFillEye size={20} />
+                                )}
+                              </button>
+                            )}
+                          </div>
+                          {error3 && (
+                            <div className='text-red-500 text-sm ml-2 mt-1'>
+                              {error3}
+                            </div>
+                          )}
+                          <div className='flex justify-center'>
+                            <button
+                              onClick={() => {
+                                handlePasswordSubmit()
+                                setStep(0)
+                              }}
+                              className='w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer'
+                            >
+                              Reset Password
+                            </button>
+                          </div>
+                          <div className='text-center mt-4 flex justify-center'>
                             <button
                               type='button'
-                              onClick={togglePasswordVisibility1}
-                              className='absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400'
+                              onClick={() => {
+                                setStep(0)
+                                setError1('') // Clear OTP errors
+                                setError2('') // Clear email errors
+                                setError3('') // Clear reset password errors
+                                setEmail('')
+                              }}
+                              className='text-sm text-blue-950 font-medium  cursor-pointer  flex items-center gap-2'
                             >
-                              {isConfirmPasswordVisible ? (
-                                <AiFillEyeInvisible size={20} />
-                              ) : (
-                                <AiFillEye size={20} />
-                              )}
+                              <FaArrowLeftLong
+                                size={18}
+                                className='text-blue-900 font-bold'
+                              />
+                              <span>Back to Login</span>
                             </button>
-                          )}
-                        </div>
-                        {error3 && (
-                          <div className='text-red-500 text-sm ml-2 mt-1'>
-                            {error3}
                           </div>
-                        )}
-                        <div className='flex justify-center'>
-                          <button
-                            onClick={() => {
-                              handlePasswordSubmit()
-                              setStep(0)
-                            }}
-                            className='w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer'
-                          >
-                            Reset Password
-                          </button>
                         </div>
-                        <div className='text-center mt-4 flex justify-center'>
-                          <button
-                            type='button'
-                            onClick={() => {
-                              setStep(0)
-                              setError1('') // Clear OTP errors
-                              setError2('') // Clear email errors
-                              setError3('') // Clear reset password errors
-                              setEmail('')
-                            }}
-                            className='text-sm text-blue-950 font-medium  cursor-pointer  flex items-center gap-2'
-                          >
-                            <FaArrowLeftLong
-                              size={18}
-                              className='text-blue-900 font-bold'
-                            />
-                            <span>Back to Login</span>
-                          </button>
-                        </div>
-                      </div>
-                    }
-                  </motion.div>
-                )}
-              </AnimatePresence>
+                      }
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </>
+      </>
+    )
   )
 }
 

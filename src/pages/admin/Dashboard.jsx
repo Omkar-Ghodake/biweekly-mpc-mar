@@ -9,11 +9,6 @@ const Dashboard = () => {
 
   const navigate = useNavigate()
 
-  if (!isCoachAuthenticated) {
-    navigate('/admin/login')
-    return null
-  }
-
   const DASHBOARD_ITEMS = [
     {
       href: '/admin/dashboard/editPlayers',
@@ -47,6 +42,8 @@ const Dashboard = () => {
     },
   ]
 
+  if (!isCoachAuthenticated) return navigate('/admin/login')
+
   return (
     <div className='h-screen flex flex-col space-y-5 items-center justify-center w-[70%] mx-auto'>
       <img
@@ -61,11 +58,7 @@ const Dashboard = () => {
 
       <div className='grid grid-cols-3 z-40'>
         {DASHBOARD_ITEMS.map((item, index) => (
-          <Link
-            key={item.title}
-            to={item.href}
-            className='rounded-lg p-5 h-fit'
-          >
+          <Link key={item.href} to={item.href} className='rounded-lg p-5 h-fit'>
             <motion.div
               initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}

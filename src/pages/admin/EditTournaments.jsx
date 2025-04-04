@@ -34,6 +34,8 @@ const EditTournaments = () => {
     id: null,
     title: "",
     description: "",
+    title: "",
+    description: "",
     totalScore: 0,
     issueCount: 0,
     logo: "",
@@ -44,10 +46,16 @@ const EditTournaments = () => {
   ); // State to track if the form is in editing mode
   const [createNew, setCreateNew] = useState(false);
   const fileInputRef = useRef(null);
+  ); // State to track if the form is in editing mode
+  const [createNew, setCreateNew] = useState(false);
+  const fileInputRef = useRef(null);
 
+  const { isCoachAuthenticated } = useContext(CoachContext);
   const { isCoachAuthenticated } = useContext(CoachContext);
   // Sync tournaments from context to local state
   useEffect(() => {
+    setTournaments(tournamentsArray);
+  }, [tournamentsArray]);
     setTournaments(tournamentsArray);
   }, [tournamentsArray]);
 
@@ -55,7 +63,10 @@ const EditTournaments = () => {
     if (isEditing) {
       setCharCount(e.target.value.length);
       handleInputChange(e);
+      setCharCount(e.target.value.length);
+      handleInputChange(e);
     }
+  };
   };
 
   // Handle input changes for form fields
@@ -126,8 +137,8 @@ const EditTournaments = () => {
     if (
       !currentTournament.title ||
       !currentTournament.description ||
-      // !currentTournament.issueCount ||
-      // !currentTournament.totalScore ||
+      !currentTournament.issueCount ||
+      !currentTournament.totalScore ||
       !currentTournament.logo // Check if logo is selected
     ) {
       toast.showToast("Please fill in all required fields", "error");
@@ -190,8 +201,8 @@ const EditTournaments = () => {
     if (
       !currentTournament.title ||
       !currentTournament.description ||
-      // !currentTournament.totalScore ||
-      // !currentTournament.issueCount ||
+      !currentTournament.totalScore ||
+      !currentTournament.issueCount ||
       !currentTournament.logo
     ) {
       toast.showToast("Please fill in all required fields", "error");
@@ -266,7 +277,11 @@ const EditTournaments = () => {
 
   // Start editing a tournament
   const startEditing = (tournament) => {
-    setCurrentTournament(tournament);
+    setCurrentTournament({
+      ...tournament,
+      totalScore: tournament.totalScore || 0, // Ensure totalScore is set
+      issueCount: tournament.issueCount || 0, // Ensure issueCount is set
+    });
     setImage(tournament.logo || logo_default); // Set image for preview
     openModal();
   };
@@ -347,11 +362,13 @@ const EditTournaments = () => {
             }}
             className=" text-md  tracking-wide"
           >
-            <ModalHead className="h-[10vh]">
+            <ModalHead className="w-full">
               <div className="w-full text-center text-white bg-[#1E4788] rounded-xl shadow-md p-3 flex justify-between items-center">
                 <span>{currentTournament.title || "New Tournament"}</span>
                 <span className="font-bold ">
-                  Total Score: {currentTournament.totalScore || 0}
+                  {currentTournament.totalScore === 0
+                    ? ""
+                    : `Total Score: ${currentTournament.totalScore}`}
                 </span>
               </div>
             </ModalHead>
