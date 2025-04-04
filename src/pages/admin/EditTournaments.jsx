@@ -266,7 +266,11 @@ const EditTournaments = () => {
 
   // Start editing a tournament
   const startEditing = (tournament) => {
-    setCurrentTournament(tournament);
+    setCurrentTournament({
+      ...tournament,
+      totalScore: tournament.totalScore || 0, // Ensure totalScore is set
+      issueCount: tournament.issueCount || 0, // Ensure issueCount is set
+    });
     setImage(tournament.logo || logo_default); // Set image for preview
     openModal();
   };
@@ -351,7 +355,9 @@ const EditTournaments = () => {
               <div className="w-full text-center text-white bg-[#1E4788] rounded-xl shadow-md p-3 flex justify-between items-center">
                 <span>{currentTournament.title || "New Tournament"}</span>
                 <span className="font-bold ">
-                  Total Score: {currentTournament.totalScore || 0}
+                  {currentTournament.totalScore === 0
+                    ? ""
+                    : `Total Score: ${currentTournament.totalScore}`}
                 </span>
               </div>
             </ModalHead>
