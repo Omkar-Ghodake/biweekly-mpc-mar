@@ -126,8 +126,8 @@ const EditTournaments = () => {
     if (
       !currentTournament.title ||
       !currentTournament.description ||
-      !currentTournament.issueCount ||
-      !currentTournament.totalScore ||
+      // !currentTournament.issueCount ||
+      // !currentTournament.totalScore ||
       !currentTournament.logo // Check if logo is selected
     ) {
       toast.showToast("Please fill in all required fields", "error");
@@ -190,8 +190,8 @@ const EditTournaments = () => {
     if (
       !currentTournament.title ||
       !currentTournament.description ||
-      !currentTournament.totalScore ||
-      !currentTournament.issueCount ||
+      // !currentTournament.totalScore ||
+      // !currentTournament.issueCount ||
       !currentTournament.logo
     ) {
       toast.showToast("Please fill in all required fields", "error");
@@ -266,7 +266,11 @@ const EditTournaments = () => {
 
   // Start editing a tournament
   const startEditing = (tournament) => {
-    setCurrentTournament(tournament);
+    setCurrentTournament({
+      ...tournament,
+      totalScore: tournament.totalScore || 0, // Ensure totalScore is set
+      issueCount: tournament.issueCount || 0, // Ensure issueCount is set
+    });
     setImage(tournament.logo || logo_default); // Set image for preview
     openModal();
   };
@@ -351,7 +355,9 @@ const EditTournaments = () => {
               <div className="w-full text-center text-white bg-[#1E4788] rounded-xl shadow-md p-3 flex justify-between items-center">
                 <span>{currentTournament.title || "New Tournament"}</span>
                 <span className="font-bold ">
-                  Total Score: {currentTournament.totalScore || 0}
+                  {currentTournament.totalScore === 0
+                    ? ""
+                    : `Total Score: ${currentTournament.totalScore}`}
                 </span>
               </div>
             </ModalHead>
@@ -496,9 +502,11 @@ const EditTournaments = () => {
                         alt="Profile"
                         className="h-[60%] w-auto"
                       />
-                      {isEditing && <span className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#1E4788] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                        Upload an Image
-                      </span>}
+                      {isEditing && (
+                        <span className="absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#1E4788] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                          Upload an Image
+                        </span>
+                      )}
                     </label>
                     <input
                       type="file"
