@@ -11,7 +11,6 @@ import Exit from './pages/Exit.jsx'
 import Dashboard from './pages/admin/Dashboard.jsx'
 import EditTeam from './pages/admin/EditTeam.jsx'
 import EditTournaments from './pages/admin/EditTournaments.jsx'
-import StadiumBack from './pages/StadiumBack.jsx'
 import ModalProvider from './context/ModalProvider.jsx'
 import Temp from './pages/Temp.jsx'
 import CoachProvider from './context/CoachProvider.jsx'
@@ -25,11 +24,12 @@ import Profile from './pages/admin/Profile.jsx'
 import Loader from './layouts/Loader.jsx'
 import LoadingProvider from './context/LoadingProvider.jsx'
 import EditCoach from './pages/admin/EditCoach.jsx'
-import { PiDressFill } from 'react-icons/pi'
 import Navbar from './layouts/Navbar/Navbar.jsx'
 import TeamProvider from './context/TeamProvider.jsx'
 import Credit from './pages/Credit.jsx'
 import Login from './pages/admin/Login.jsx'
+import AnalyticsDashboard from './pages/admin/AnalyticsDashboard.jsx'
+import Documents from './pages/admin/Documents.jsx'
 
 {
   /* 
@@ -92,6 +92,14 @@ createRoot(document.getElementById('root')).render(
                       <Route
                         path='/admin/dashboard/editCoach'
                         element={<EditCoach />}
+                      />
+                      <Route
+                        path='/admin/dashboard/analytics-dashboard'
+                        element={<AnalyticsDashboard />}
+                      />
+                      <Route
+                        path='/admin/dashboard/documents'
+                        element={<Documents />}
                       />
 
                       <Route path='/exit' element={<Exit />} />

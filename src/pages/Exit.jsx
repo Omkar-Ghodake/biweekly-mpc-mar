@@ -2,6 +2,8 @@ import React from 'react'
 import '../Styles/Landing_Exit.css'
 
 const Exit = () => {
+  console.log('secondsecondsecondsecond')
+
   return (
     <div>
       <div className='relative w-full h-screen overflow-hidden bg-blur'>

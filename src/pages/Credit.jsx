@@ -172,7 +172,7 @@ const Credit = () => {
               <motion.div
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.05 }}
+                transition={{ delay: index * 0.1 }}
                 key={index}
                 className='w-53 h-58 bg-white opacity-90 rounded-lg flex flex-col items-center relative p-4'
                 style={{

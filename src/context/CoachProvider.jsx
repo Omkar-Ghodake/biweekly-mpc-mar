@@ -54,8 +54,11 @@ const CoachProvider = ({ children }) => {
         if (json.error?.message) {
           showToast('Session expired. Login again.')
         }
-        if (location === '/dashboard') {
-          navigate('/admin/login')
+        if (
+          !location.pathname.includes('login') &&
+          location.pathname.includes('admin')
+        ) {
+          navigate('/admin/login/')
         }
       }
     } catch (error) {
@@ -69,11 +72,12 @@ const CoachProvider = ({ children }) => {
     setAuthToken(null)
     setCoach(undefined)
     navigate('/exit')
+    showToast('Logged out successfully.')
   }
 
   useEffect(() => {
     checkForSession()
-  }, [localStorage.getItem('token'), isCoachAuthenticated])
+  }, [localStorage.getItem('token')])
 
   return (
     <CoachContext.Provider
