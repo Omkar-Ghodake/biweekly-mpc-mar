@@ -261,20 +261,20 @@ export const ChatBotData =
       {
         "Name":"Vartika Chawla",
         "Gender":"Female",
-        "Designation": "Deputy Manager",
-        "About":"She is a Deputy Manager in Bond Team"
+        "Designation": "Program manager",
+        "About":"She is a program manager of App Dev Coe"
       },
       {
         "Name":"Sejal Hatiskar",
         "Gender":"Female",
         "Designation": "Program Manager",
-        "About":"She is a program manager of MPC and DAM bond teams"
+        "About":"She is a program manager of MPC and DAM teams"
       },
       {
         "Name":"Akhil Panicker",
         "Gender":"Male",
         "Designation": "L1 Manager",
-        "About":"He's L1 manager who manages whole bond team"    
+        "About":"he is the L1 manager who manages whole bond team and MPC also"    
       }
     ],
 
