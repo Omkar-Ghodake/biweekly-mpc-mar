@@ -133,7 +133,7 @@ const EditCommon = () => {
                   onChange={(e) => handleImageUpload(e, field)}
                   className='hidden'
                 />
-                <span className='cursor-pointer flex items-center justify-center'>
+                <span className='text-center mt-3bg-[#1E4788] hover:bg-[#1e3388] text-white text-xs px-2 py-1 rounded cursor-pointer'>
                   {field.charAt(0).toUpperCase() +
                     field.substring(1, field.length).replace('_', ' ')}
                 </span>

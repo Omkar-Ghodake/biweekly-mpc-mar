@@ -5,7 +5,7 @@ require('dotenv').config()
 const JWT_SECRET = 'ramtaJogi'
 
 exports.verifyCoach = (req, res, next) => {
-  const { authToken } = req.body
+  const { authToken } = req.body  
 
   if (!authToken) {
     return ErrorResponse(res, 401, 'Unauthorized access')

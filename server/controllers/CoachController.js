@@ -2,6 +2,7 @@ const { ErrorResponse, SuccessResponse } = require('../utils/response')
 const Coach = require('../models/coach')
 const bcrypt = require('bcrypt')
 const mongoose = require('mongoose')
+const { uploadOnCloudinary } = require('../utils/cloudinary')
 
 exports.addCoach = async (req, res) => {
   try {
@@ -86,17 +87,35 @@ exports.getAllCoaches = async (req, res) => {
 
 exports.updateCoach = async (req, res) => {
   try {
-    const { id } = req.body
-
+    const { id } = req.coach;
+    
     const existingCoach = await Coach.findById(id)
-
+    
     if (!existingCoach) {
       return ErrorResponse(res, 404, 'Coach not found')
     }
+    
+    console.log("req.file",req.file);
+    let coachImageUrl = existingCoach.image;
+
+    if (req.file) {
+      const imagePath = req.file.path
+      console.log('New Image Path:', imagePath)
+
+      const uploadedImage = await uploadOnCloudinary(imagePath);
+      console.log('Uploaded Image URL:', uploadedImage)
+
+      if (!uploadedImage) {
+        return ErrorResponse(res, 500, 'Image upload failed')
+      }
+
+      coachImageUrl = uploadedImage.url
+    }
+    let updatedData = JSON.parse(JSON.stringify({ ...req.body, image: coachImageUrl }));
 
     const updatedCoach = await Coach.findByIdAndUpdate(
       id,
-      { $set: req.body },
+      { $set: updatedData },
       { new: true }
     ).select('-password')
 

@@ -1,175 +1,196 @@
-import React, { useState, useContext, useEffect } from 'react'
-import background from '../../assets/background5.jpg'
-import imgPlaceholder from '../../glb/Blank Profile pic.png'
-import { CoachContext } from '../../context/CoachProvider'
-import { FaRegEdit, FaRegSave } from 'react-icons/fa'
-import axios from 'axios'
-import { ToastContext } from '../../context/ToastProvider'
-import { useNavigate } from 'react-router'
-import BackButton from '../../components/BackButton'
+import React, { useState, useContext, useEffect } from "react";
+import background from "../../assets/background5.jpg";
+import imgPlaceholder from "../../glb/Blank Profile pic.png";
+import { CoachContext } from "../../context/CoachProvider";
+import { FaRegEdit, FaRegSave } from "react-icons/fa";
+import axios from "axios";
+import { ToastContext } from "../../context/ToastProvider";
+import { useNavigate } from "react-router";
+import BackButton from "../../components/BackButton";
+import { LoadingContext } from "../../context/LoadingProvider";
 
 export default function CoachForm() {
-  const coach = useContext(CoachContext)
-  const coachData = coach.coach
-  console.log(coachData)
-  const toast = useContext(ToastContext)
-  const navigate = useNavigate()
+  const coach = useContext(CoachContext);
+  const coachData = coach.coach;
+  console.log(coachData);
+  const navigate = useNavigate();
+  const { setIsLoading } = useContext(LoadingContext);
 
   const [formData, setFormData] = useState({
-    name: '',
-    domain_name: '',
-    emp_id: '',
-    image: '',
-    description: '',
-    gender: '',
-  })
-  const [image, setImage] = useState('')
-  const [isEditing, setIsEditing] = useState(true)
-
-  const { isCoachAuthenticated } = useContext(CoachContext)
+    name: "",
+    domain_name: "",
+    emp_id: "",
+    image: "",
+    description: "",
+    gender: "",
+  });
+  const [image, setImage] = useState("");
+  const [isEditing, setIsEditing] = useState(true);
+  const toast = useContext(ToastContext);
+  const { isCoachAuthenticated } = useContext(CoachContext);
+  const [authToken, setAuthToken] = useState("");
 
   useEffect(() => {
+    setAuthToken(localStorage.getItem("token"));
     if (coachData) {
-      setFormData((prev) => ({ ...prev, ...coachData }))
-      setImage(coachData.image || '')
+      setFormData((prev) => ({ ...prev, ...coachData }));
+      setImage(coachData.image || "");
     }
-  }, [coachData, isCoachAuthenticated])
+  }, [coachData, isCoachAuthenticated]);
 
   const handleChange = (e) => {
-    const { name, value, type } = e.target
+    const { name, value, type } = e.target;
 
-    if (name === 'emp_id' && value.length > 10) return // Prevent input longer than 10 digits
+    if (name === "emp_id" && value.length > 10) return; // Prevent input longer than 10 digits
 
     setFormData((prevData) => ({
       ...prevData,
-      [name]: type === 'number' ? Number(value) : value, // Ensure numbers are stored correctly
-    }))
-  }
+      [name]: type === "number" ? Number(value) : value, // Ensure numbers are stored correctly
+    }));
+  };
 
   const convertBase64ToFile = (base64String, fileName) => {
-    let arr = base64String.split(',')
-    let mime = arr[0].match(/:(.*?);/)[1] // Extract MIME type
-    let bstr = atob(arr[1]) // Decode Base64
-    let n = bstr.length
-    let u8arr = new Uint8Array(n)
+    let arr = base64String.split(",");
+    let mime = arr[0].match(/:(.*?);/)[1]; // Extract MIME type
+    let bstr = atob(arr[1]); // Decode Base64
+    let n = bstr.length;
+    let u8arr = new Uint8Array(n);
 
     while (n--) {
-      u8arr[n] = bstr.charCodeAt(n)
+      u8arr[n] = bstr.charCodeAt(n);
     }
 
-    const file = new File([u8arr], fileName, { type: mime })
+    const file = new File([u8arr], fileName, { type: mime });
 
     setFormData((prevData) => ({
       ...prevData,
       image: file, // ✅ Store file in formData
-    }))
-  }
+    }));
+  };
   const handleImageUpload = (e) => {
-    const file = e.target.files[0]
+    const file = e.target.files[0];
     if (file) {
-      const reader = new FileReader()
+      const reader = new FileReader();
       reader.onloadend = () => {
-        setImage(reader.result) // ✅ Store Base64 for preview
-        convertBase64ToFile(reader.result, file.name) // ✅ Convert and set in formData
-      }
-      reader.readAsDataURL(file)
-
-      setFormData((prevData) => ({
-        ...prevData,
-        image: file, // ✅ Store file for submission
-      }))
+        setImage(reader.result); // For preview
+        convertBase64ToFile(reader.result, file.name); // Converts and sets image
+      };
+      reader.readAsDataURL(file);
     }
-  }
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    try {
-      const response = await axios.patch(
-        'http://localhost:5500/api/v1/coach/update-coach',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-      )
-      if (response.status === 200) {
-        toast.showToast('Coach Updated Successfully')
-      }
-    } catch (error) {
-      toast.showToast("Couldn't Update coach", 'error')
-    } finally {
-      coachData.checkForSession
-      setFormData(coachData)
-    }
-  }
-  console.log(formData) // Replace with API call
+    e.preventDefault();
 
-  if (!isCoachAuthenticated) return navigate('/admin/login')
+    const coachInfo = new FormData();
+    coachInfo.append("name", formData.name);
+    coachInfo.append("domain_name", formData.domain_name);
+    coachInfo.append("emp_id", formData.emp_id);
+    coachInfo.append("description", formData.description);
+    coachInfo.append("gender", formData.gender);
+    coachInfo.append("authToken", authToken);
+    console.log("image:", formData.image);
+    console.log("image instanceof File:", formData.image instanceof File);
+
+    coachInfo.append("image", formData.image || "image");
+
+    if (!coachInfo.image) {
+      toast.showToast("Image is Required", "error");
+    }
+
+    setIsLoading(true);
+    try {
+      console.log("coachInfo", coachInfo);
+      const response = await axios.patch(
+        "http://localhost:5500/api/v1/coach/update-coach",
+        coachInfo
+      );
+      console.log("response", response);
+      toast.showToast("Coach updated successfully");
+    } catch (error) {
+      toast.showToast("Unable to update Coach", "error");
+    } finally {
+      setIsLoading(false);
+    }
+    console.log(formData); // Replace with API call
+  };
+  console.log(formData); // Replace with API call
+
+  if (!isCoachAuthenticated) return navigate("/admin/login");
 
   return (
     <div
-      className='h-screen flex items-center justify-center bg-cover bg-center transition-all delay-200  tracking-wide text-[#1E4788]'
+      className="h-screen flex items-center justify-center bg-cover bg-center transition-all delay-200  tracking-wide text-[#1E4788]"
       style={{ backgroundImage: `url(${background})` }}
     >
-      <div className='absolute left-6 top-6'>
-        <BackButton onClick={() => navigate('/admin/dashboard')} />
+      <div className="absolute left-6 top-6">
+        <BackButton onClick={() => navigate("/admin/dashboard")} />
       </div>
-      <div className='max-w-4xl w-full bg-white shadow-lg rounded-xl p-6 flex flex-col'>
+      <div className="max-w-4xl w-full bg-white shadow-lg rounded-xl p-6 flex flex-col">
         {/* Header Section */}
-        <div className='w-full flex px-4 justify-between text-white bg-[#1E4788] rounded-xl shadow-md p-3'>
-          <h2 className='text-xl font-bold'>Coach Profile</h2>
+        <div className="w-full flex px-4 justify-between text-white bg-[#1E4788] rounded-xl shadow-md p-3">
+          <h2 className="text-xl font-bold">Coach Profile</h2>
         </div>
 
-        <div className='flex h-full'>
+        <div className="flex h-full">
           {/* Image Upload Section */}
-          <div className='flex flex-col justify-center items-center h-[30rem] w-1/3'>
-            <div className='flex justify-center items-center bg-white h-[55%] w-[90%] rounded-2xl drop-shadow-xl relative group mt-5 py-5'>
-              <label
-                htmlFor='imageUpload'
-                className='cursor-pointer flex justify-center '
-              >
+          <div className="flex flex-col justify-center items-center h-[30rem] w-1/3">
+            <div className="h-2/3 flex flex-col justify-center items-center space-y-5">
+              <div className="flex justify-center bg-white items-center -mt-10 h-[35vh] w-[35vh] rounded-2xl drop-shadow-2xl relative">
                 <img
                   src={image || imgPlaceholder}
-                  alt='Profile'
-                  className='w-[80%] h-auto object-contain'
+                  alt="Profile"
+                  className={`${image ? "h-11/12" : "h-[60%]"}`}
                 />
-                <span className='absolute bottom-2 left-1/2 transform -translate-x-1/2 bg-[#1E4788] text-white text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity duration-200'>
-                  Upload an Image
+              </div>
+
+              {isEditing && (
+                <span className="text-center bg-[#1E4788] hover:bg-[#1e3388] text-white text-xs px-2 py-1 rounded cursor-pointer">
+                  <label
+                    htmlFor="imageUpload"
+                    className={`${
+                      isEditing ? "cursor-pointer " : "cursor-default"
+                    } flex justify-center `}
+                  >
+                    Upload an Image
+                  </label>
+
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    id="imageUpload"
+                    disabled={!isEditing}
+                  />
                 </span>
-              </label>
-              <input
-                type='file'
-                accept='image/*'
-                onChange={handleImageUpload}
-                className='hidden'
-                id='imageUpload'
-              />
+              )}
             </div>
+            
           </div>
 
           {/* Form Fields Section */}
-          <div className='w-2/3 p-6'>
-            <form onSubmit={handleSubmit} className='space-y-4'>
+          <div className="w-2/3 p-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {[
-                { label: 'Name', name: 'name', type: 'text', maxLength: 20 },
+                { label: "Name", name: "name", type: "text", maxLength: 20 },
                 {
-                  label: 'Domain Name',
-                  name: 'domain_name',
-                  type: 'text',
-                  maxLength: 15,
+                  label: "Domain Name",
+                  name: "domain_name",
+                  type: "text",
+                  maxLength: 20,
                 },
                 {
-                  label: 'Employee ID',
-                  name: 'emp_id',
-                  type: 'number',
-                  max: 9999999999,
+                  label: "Employee ID",
+                  name: "emp_id",
+                  type: "number",
+                  max: 99999999,
                 },
               ].map((field) => (
-                <div key={field.name} className='flex items-center w-full'>
+                <div key={field.name} className="flex items-center w-full">
                   <label
                     htmlFor={field.name}
-                    className='font-medium w-1/3 text-[#1E4788]'
+                    className="font-medium w-1/3 text-[#1E4788]"
                   >
                     {field.label}
                   </label>
@@ -185,8 +206,8 @@ export default function CoachForm() {
                     onChange={handleChange}
                     className={`ml-5 w-full p-2 rounded-xl transition-all duration-200 border shadow-md ${
                       isEditing
-                        ? 'focus:outline-[#1E4788]'
-                        : 'bg-gray-100 cursor-default'
+                        ? "focus:outline-[#1E4788]"
+                        : "bg-gray-100 cursor-default"
                     }`}
                     readOnly={!isEditing}
                   />
@@ -194,47 +215,47 @@ export default function CoachForm() {
               ))}
 
               {/* Description Field */}
-              <div className='flex items-center w-full'>
+              <div className="flex items-center w-full">
                 <label
-                  htmlFor='description'
-                  className='font-medium w-1/3 text-[#1E4788]'
+                  htmlFor="description"
+                  className="font-medium w-1/3 text-[#1E4788]"
                 >
                   Description
                 </label>
                 <textarea
-                  id='description'
-                  name='description'
-                  placeholder='Enter description'
-                  className='ml-5 w-full max-h-32 min-h-32 p-2 rounded-xl border shadow-md focus:outline-[#1E4788]'
+                  id="description"
+                  name="description"
+                  placeholder="Enter description"
+                  className="ml-5 w-full max-h-32 min-h-32 p-2 rounded-xl border shadow-md focus:outline-[#1E4788]"
                   value={formData.description}
                   onChange={handleChange}
                 ></textarea>
               </div>
 
               {/* Gender Selection */}
-              <div className='flex items-center w-full'>
+              <div className="flex items-center w-full">
                 <label
-                  htmlFor='gender'
-                  className='font-medium w-1/3 text-[#1E4788]'
+                  htmlFor="gender"
+                  className="font-medium w-1/3 text-[#1E4788]"
                 >
                   Gender
                 </label>
                 <select
-                  id='gender'
-                  name='gender'
+                  id="gender"
+                  name="gender"
                   required
-                  className='ml-5 w-full p-2 rounded-xl border shadow-md focus:outline-[#1E4788]'
+                  className="ml-5 w-full p-2 rounded-xl border shadow-md focus:outline-[#1E4788]"
                   value={formData.gender}
                   onChange={handleChange}
                 >
-                  <option value=''>Select Gender</option>
-                  <option value='male'>Male</option>
-                  <option value='female'>Female</option>
+                  <option value="">Select Gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
                 </select>
               </div>
 
               {/* Submit Button */}
-              <div className='w-full  p-2 flex justify-center space-x-5 rounded-b-2xl'>
+              <div className="w-full  p-2 flex justify-center space-x-5 rounded-b-2xl">
                 {/* Edit Button */}
                 {/* <button
                   type="button"
@@ -249,8 +270,8 @@ export default function CoachForm() {
 
                 {/* Save/Update Button */}
                 <button
-                  type='submit'
-                  className='flex items-center gap-4 w-[120px] h-[40px] px-4 py-2 text-white rounded-xl shadow-md bg-[#68AA45] hover:bg-green-700 hover:cursor-pointer'
+                  type="submit"
+                  className="flex items-center gap-4 w-[120px] h-[40px] px-4 py-2 text-white rounded-xl shadow-md bg-[#68AA45] hover:bg-green-700 hover:cursor-pointer"
                 >
                   <FaRegSave />
                   Save
@@ -261,5 +282,5 @@ export default function CoachForm() {
         </div>
       </div>
     </div>
-  )
+  );
 }

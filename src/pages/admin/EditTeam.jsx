@@ -393,7 +393,7 @@ const EditTeam = () => {
           ))}
       </motion.div>
       <Modal
-        className='text-md tracking-wide'
+        className='text-md tracking-wide min-w-[55vw]'
         afterClosing={() => {
           setIsEditing(false)
           setCreateNew(false)
@@ -401,7 +401,7 @@ const EditTeam = () => {
         }}
       >
         <ModalHead className='h-[8vh]'>
-          <div className='w-full h-full flex px-4 items-center justify-between text-center text-white bg-[#1E4788] rounded-xl shadow-md p-2'>
+          <div className=' h-full flex px-4 items-center justify-between text-center text-white bg-[#1E4788] rounded-xl shadow-md p-2'>
             {formData.domain_name ? (
               <span>{formData.domain_name}</span>
             ) : (
@@ -590,7 +590,7 @@ const EditTeam = () => {
                       />
                     </div>
 
-                    <span className='text-center bg-[#1E4788] hover:bg-[#1e3388] text-white text-xs px-2 py-1 rounded '>
+                    {isEditing && <span className='text-center bg-[#1E4788] hover:bg-[#1e3388] text-white text-xs px-2 py-1 rounded '>
                       <label
                         htmlFor='imageUpload'
                         className={`${
@@ -608,9 +608,9 @@ const EditTeam = () => {
                         id='imageUpload'
                         disabled={!isEditing}
                       />
-                    </span>
+                    </span>}
                   </div>
-                  <div className='h-1/3 flex flex-col'>
+                  <div className='h-1/3 flex flex-col items-center'>
                     {/* Heading & Add Button */}
                     <div className='flex items-center justify-between w-3/4'>
                       <label className='font-medium text-lg my-1'>
