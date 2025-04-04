@@ -292,7 +292,7 @@ const EditTournaments = () => {
       issueCount: 0,
       logo: "",
     });
-    setImage(logo_default); // Reset image to default
+    setImage(null); // Reset image to default
     setIsEditing(true);
     setCreateNew(true);
     openModal();
@@ -498,9 +498,9 @@ const EditTournaments = () => {
                 <div className="w-1/2 h-full flex flex-col justify-center items-center space-y-5">
                   <div className="flex justify-center bg-white items-center h-[35vh] w-[35vh] rounded-2xl drop-shadow-2xl relative">
                     <img
-                      src={image || img}
+                      src={image || logo_default}
                       alt="Profile"
-                      className={`${image ? "h-full" : "h-[60%]"}`}
+                      className={`${image ? "h-full" : "h-1/2"}`}
                     />
                   </div>
 
