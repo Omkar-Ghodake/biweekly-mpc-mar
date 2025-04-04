@@ -54,7 +54,7 @@ const Tournaments = () => {
             <img
               src={tournament.logo}
               alt={tournament.title}
-              className='w-full h-[220px] object-fill rounded-xl transition duration-300 hover:opacity-90'
+              className='w-full h-[220px]  object-fill rounded-xl transition duration-300 hover:opacity-90'
             />
           </motion.div>
         ))}
@@ -71,10 +71,12 @@ const Tournaments = () => {
             {/* Trophy Icon */}
             {/* <FaTrophy className="text-black-500 inline mx-4 " /> */}
             <div
-              className='mt-2 bg-transparent resize-none outline-none h-[150px] max-h-[30vh] p-2 rounded-md overflow-y-auto 
-[&::-webkit-scrollbar]:hidden w-[88%] scrollbar-none'
+              className='mt-2 bg-transparent resize-none outline-none h-[150px] max-h-[30vh] p-2 rounded-md overflow-y-auto
+                        [&::-webkit-scrollbar]:w-1
+                        [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
+                        [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#03104A] w-[87%]'
             >
-              <p className='text-black text-sm whitespace-pre-wrap'>
+              <p className='font-bold text-xl whitespace-pre-wrap '>
                 {current.description || 'No description available'}
               </p>
             </div>
@@ -111,7 +113,7 @@ const Tournaments = () => {
             {/* White Box */}
 
             <div className='absolute left-0 right-[2.44%] top-[14.29%] bottom-0 bg-white rounded-[20px] flex items-center justify-center'>
-              <p className='text-black text-4xl  text-center'>
+              <p className='text-black text-4xl  text-center font-bold'>
                 {current.title || 'Error'}
               </p>
             </div>

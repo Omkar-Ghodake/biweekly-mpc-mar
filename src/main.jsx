@@ -8,7 +8,6 @@ import Team from './pages/Team.jsx'
 import Tournaments from './pages/Tournaments.jsx'
 import Scores from './pages/Scores.jsx'
 import Exit from './pages/Exit.jsx'
-import Login from './pages/admin/Login.jsx'
 import Dashboard from './pages/admin/Dashboard.jsx'
 import EditTeam from './pages/admin/EditTeam.jsx'
 import EditTournaments from './pages/admin/EditTournaments.jsx'
@@ -29,8 +28,8 @@ import EditCoach from './pages/admin/EditCoach.jsx'
 import { PiDressFill } from 'react-icons/pi'
 import Navbar from './layouts/Navbar/Navbar.jsx'
 import TeamProvider from './context/TeamProvider.jsx'
-import New from './components/LoginFormElements/New.jsx'
 import Credit from './pages/Credit.jsx'
+import Login from './pages/admin/Login.jsx'
 
 {
   /* 
@@ -72,7 +71,7 @@ createRoot(document.getElementById('root')).render(
                         }
                       />
                       {/* <Route path="/login" element={<Login />} /> */}
-                      <Route path='/login' element={<New />} />
+                      <Route path='/admin/login' element={<Login />} />
                       <Route path='/admin/dashboard' element={<Dashboard />} />
                       <Route
                         path='/admin/dashboard/editTournaments'

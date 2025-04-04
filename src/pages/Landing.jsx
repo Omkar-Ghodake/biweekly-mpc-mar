@@ -97,7 +97,7 @@ const Landing = () => {
             >
               <Button className={'text-lg'} size='sm'>
                 <Link
-                  to={'/login'}
+                  to={'/admin/login'}
                   className='flex justify-center items-center space-x-2'
                 >
                   <span>I'm a Coach</span> <FaAngleRight />

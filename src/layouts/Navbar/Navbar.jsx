@@ -25,14 +25,14 @@ const VERTICAL_NAV_LINKS = [
   },
   {
     label: 'Exit',
-    path: '/exit',
+    path: '/credits',
     icon: <FaPowerOff />,
     showOnAuth: true,
     showWithoutAuth: true,
   },
   {
     label: 'Login',
-    path: '/login',
+    path: '/admin/login',
     icon: <HiOutlineLogin />,
     showOnAuth: false,
     showWithoutAuth: true,
