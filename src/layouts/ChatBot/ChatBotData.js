@@ -359,8 +359,8 @@ export const ChatBotData =
        },
        {
         "Domain Name": "Nikita Suhane",
-        "Personal Projects Title": "NA",
-        "Personal Project Description": "NA",
+        "Personal Projects Title": "Solved TryHackMe SOC Simulator CTF Challanges",
+        "Personal Project Description": "Introduction to Secure Networking, Security Operations Center",
         "Contribution in Bi-weekly project": "1. Created a text document on notepad listing the tasks performed after the previous biweekly date.\n2. Created an Excel sheet by extracting individual members' issue details from the DevOps Issue Tracker. Scores were collected from the App Development CoE Issue Tracker and the MPC Issue Tracker. The sheet includes each team member's scores, issue count, severity assigned, and the specific application for which the issue was raised. \n3. Contributed content to be written on the tournaments cards for giving a gist of the applications worked upon."
        },
        {
