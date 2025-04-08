@@ -25,7 +25,7 @@ const TeamProvider = ({ children }) => {
   }, [data])
 
   return (
-    <TeamContext.Provider value={{ teamInfo, setTeamInfo }}>
+    <TeamContext.Provider value={{ teamInfo, setTeamInfo, updateData, error }}>
       {children}
     </TeamContext.Provider>
   )

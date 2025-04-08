@@ -18,6 +18,7 @@ const useAxios = (url, method = 'GET', body = null, options = {}) => {
       })
       setData(response.data.data)
     } catch (err) {
+      console.log('err:', err)
       setError(err)
     } finally {
       setLoading(false)

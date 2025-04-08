@@ -5,6 +5,8 @@ import { RxCross2 } from 'react-icons/rx'
 import '../../Styles/ChatBox.css'
 import typingLoader from '../../assets/TypingLaoder.gif'
 import { motion } from 'framer-motion'
+import { RiRobot2Line } from 'react-icons/ri'
+import { GoArrowUp } from 'react-icons/go'
 
 const ChatBox = ({
   messages,
@@ -41,12 +43,56 @@ const ChatBox = ({
       />
 
       {displayGreeting ? (
-        <div className='flex flex-col items-center justify-center flex-1 text-center space-y-1 h-[90%]'>
-          <div className='text-4xl'>🤖</div>
-          <div className='text-4xl'>MPC Chatbot</div>
-          <div className='flex flex-col items-center justify-center'>
-            <p className='text-lg font-semibold'>Hello!</p>
-            <p className='text-lg font-semibold'>How can I assist you today?</p>
+        <div className='flex flex-col items-center flex-1 text-center space-y-1 h-[90%]'>
+          <div className='flex flex-col justify-center items-center space-x-2 w-full px-10 py-5'>
+            <div className='flex justify-center items-center space-x-2 border-b w-full py-2 border-slate-300/40'>
+              <RiRobot2Line className='text-xl' />
+              <span className='text-lg'>MPC Chatbot</span>
+            </div>
+
+            <div className='flex flex-col text-2xl py-10'>
+              <span>Hello!</span>
+              <span>How can I assist you today</span>
+            </div>
+
+            <div className='text-start w-full flex flex-col space-y-2'>
+              <span className=''>Pick a prompt to get started with!</span>
+              {/* 200001002 */}
+              <div className='text-sm flex flex-col space-y-5'>
+                <div
+                  className='bg-white/10 px-5 py-2 flex items-center justify-between cursor-pointer hover:bg-white/20 duration-150'
+                  onClick={() => {
+                    setInput('What is MPC?')
+                    // console.log('prompt:', input)
+                    sendMessage('What is MPC?')
+                    setTimeout(() => {
+                      messagesEndRef.current?.scrollIntoView({
+                        behavior: 'smooth',
+                      })
+                    }, 100)
+                  }}
+                >
+                  <span>What is MPC?</span>
+                  <GoArrowUp />
+                </div>
+                <div
+                  className='bg-white/10 px-5 py-2 flex items-center justify-between cursor-pointer hover:bg-white/20 duration-150'
+                  onClick={() =>
+                    setInput('Give me the total number of members in Team MPC?')
+                  }
+                >
+                  <span>Give me the total number of members in Team MPC?</span>
+                  <GoArrowUp />
+                </div>
+                <div
+                  className='bg-white/10 px-5 py-2 flex items-center justify-between cursor-pointer hover:bg-white/20 duration-150'
+                  onClick={() => setInput('Who are the leads of Team MPC?')}
+                >
+                  <span>Who are the leads of Team MPC?</span>
+                  <GoArrowUp />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       ) : (
@@ -120,13 +166,13 @@ const ChatBox = ({
             disabled={isTyping}
           />
           <button
+            className='bg-white p-2 w-10 h-10 flex justify-center items-center shadow-md rounded-lg cursor-pointer disabled:bg-white/50 hover:bg-white/90 duration-150'
             onClick={() => {
               sendMessage()
               setTimeout(() => {
                 messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
               }, 100)
             }}
-            className='bg-white p-2 w-10 h-10 flex justify-center items-center shadow-md rounded-lg cursor-pointer disabled:bg-white/50 hover:bg-white/90 duration-150'
             disabled={isTyping}
           >
             <LuSend className='text-blue-700' />

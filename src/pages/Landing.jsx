@@ -6,11 +6,16 @@ import { LuSkipForward } from 'react-icons/lu'
 import { TeamContext } from '../context/TeamProvider'
 import { FaAngleRight } from 'react-icons/fa6'
 import { motion } from 'framer-motion'
+import { ErrorContext } from '../context/ErrorProvider'
+import NetworkErrorModal from '../components/NetworkErrorModal'
+import { ToastContext } from '../context/ToastProvider'
 
 const Landing = () => {
   const [isVideoComplete, setIsVideoComplete] = useState(false)
 
-  const { teamInfo } = useContext(TeamContext)
+  const { teamInfo, updateData, error } = useContext(TeamContext)
+  // const { networkError, setNetworkError } = useContext(ErrorContext)
+  const { showToast } = useContext(ToastContext)
 
   // console.log(teamInfo)
 
@@ -28,10 +33,17 @@ const Landing = () => {
   }
 
   useEffect(() => {
+    updateData()
+
     setTimeout(() => {
       setIsVideoComplete(true)
     }, 13600)
   }, [setIsVideoComplete])
+
+  error?.code === 'ERR_NETWORK' &&
+    showToast('Please check you internet connection and try again!')
+  // setNetworkError(error.message)
+  // return <NetworkErrorModal />
 
   return (
     <div className='relative w-full h-screen overflow-hidden bg-blur'>
