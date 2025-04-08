@@ -17,7 +17,7 @@ const TournamentCard = ({ item, index }) => {
           className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
         />
         <div className="group relative w-full">
-          <div className="text-[10%] font-semibold text-gray-800 h-18 max-w-[180px] truncate leading-[4.5rem]">
+          <div className="text-2xl font-semibold text-gray-800 h-18 max-w-[180px] truncate leading-[4.5rem]">
             {item.title}
           </div>
 
