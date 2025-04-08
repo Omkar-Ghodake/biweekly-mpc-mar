@@ -13,8 +13,9 @@ const Tournaments = () => {
   const [current, setCurrent] = useState({})
   const { tournaments, fetchTournaments } = useContext(TournamentsContext)
 
+
   useEffect(() => {
-    fetchTournaments()
+    // fetchTournaments()
   }, [fetchTournaments])
 
   return (
@@ -93,16 +94,19 @@ const Tournaments = () => {
               ></div>
 
               <div className='absolute z-[2]  left-1/2 -translate-x-1/2 -bottom-10  w-[350px] h-[70px]  bg-[#03104A]  rounded-t-[40px] flex items-center justify-evenly text-white'>
-                {current.issueCount !== 0 && (
-                  <>
-                    <p className='text-lg'>
+                  {
+                    current.numeric_data?.map((obj) => <span>
+                      <span>{obj.key}: </span>
+                      <span>{obj.value}</span>
+                    </span>)
+                    // console.log('tournaments:', current.numeric_data)
+                  }
+                    {/* <p className='text-lg'>
                       <b>Issues:</b> {current.issueCount || 0}
                     </p>
                     <p className='text-lg'>
                       <b>Score:</b> {current.totalScore || 0}
-                    </p>
-                  </>
-                )}
+                    </p> */}
               </div>
             </div>
           </div>

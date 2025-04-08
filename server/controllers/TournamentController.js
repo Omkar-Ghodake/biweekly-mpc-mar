@@ -6,7 +6,14 @@ const { default: mongoose } = require('mongoose')
 
 exports.createTournament = async (req, res) => {
   try {
-    const { title, description, numeric_data } = req.body
+    const { title, description, key1, value1, key2, value2 } = req.body
+    console.log(req.body)
+    console.log('file:');
+    console.log(req.file)
+
+    // return SuccessResponse(res, 200, 'asjidasdjka')
+
+    // if (!numeric_data) return ErrorResponse(res, 401, 'Numric data not present')
 
     const logoLocalPath = req.file?.path
     console.log(logoLocalPath)
@@ -24,9 +31,20 @@ exports.createTournament = async (req, res) => {
     const tournament = await Tournament.create({
       title,
       description,
-      numeric_data,
+      numeric_data: [
+        {
+          key: key1,
+          value: value1,
+        },
+        {
+          key: key2,
+          value: value2,
+        }
+      ],
       logo: logo.url,
     })
+
+    console.log('tournament:', tournament);
 
     SuccessResponse(res, 201, 'Tournament Created Successfully.', tournament)
   } catch (error) {
@@ -38,6 +56,10 @@ exports.createTournament = async (req, res) => {
 exports.updateTournament = async (req, res) => {
   try {
     const { id } = req.params
+
+    console.log('body--------------');
+    console.log(req.body);
+    console.log('body--------------');
 
     let tournament = await Tournament.findById(id)
 
@@ -55,10 +77,8 @@ exports.updateTournament = async (req, res) => {
 
     if (req.file) {
       const imagePath = req.file.path
-      console.log('New Image Path:', imagePath)
 
       const uploadedImage = await uploadOnCloudinary(imagePath)
-      console.log('Uploaded Image URL:', uploadedImage)
 
       if (!uploadedImage) {
         return ErrorResponse(res, 500, 'Image upload failed')
@@ -66,10 +86,22 @@ exports.updateTournament = async (req, res) => {
 
       tournamentLogoUrl = uploadedImage.url
     }
+
+    //   key1: 'totalll',
+    // value1: '233',
+    // key2: 'score',
+    // value2: '213',
+
+    const { key1, key2, value1, value2 } = req.body
+
+    const tempArr = []
+    tempArr.push({ key: key1, value: value1 })
+    tempArr.push({ key: key2, value: value2 })
+
+
     let updatedData = JSON.parse(
-      JSON.stringify({ ...req.body, logo: tournamentLogoUrl })
+      JSON.stringify({ ...req.body, logo: tournamentLogoUrl, numeric_data: tempArr })
     )
-    console.log('updatedData', updatedData)
 
     const newTournament = await Tournament.findByIdAndUpdate(
       id,

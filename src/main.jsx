@@ -23,7 +23,6 @@ import EditCommon from './pages/admin/EditCommon.jsx'
 import Profile from './pages/admin/Profile.jsx'
 import Loader from './layouts/Loader.jsx'
 import LoadingProvider from './context/LoadingProvider.jsx'
-import EditCoach from './pages/admin/EditCoach.jsx'
 import Navbar from './layouts/Navbar/Navbar.jsx'
 import TeamProvider from './context/TeamProvider.jsx'
 import Credit from './pages/Credit.jsx'
@@ -83,10 +82,6 @@ createRoot(document.getElementById('root')).render(
                         <Route
                           path='/admin/dashboard/profile'
                           element={<Profile />}
-                        />
-                        <Route
-                          path='/admin/dashboard/editCoach'
-                          element={<EditCoach />}
                         />
                         <Route
                           path='/admin/dashboard/analytics-dashboard'

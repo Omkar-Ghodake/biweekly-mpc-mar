@@ -9,7 +9,7 @@ import background from "../../assets/background5.jpg";
 import { IoMdAdd } from "react-icons/io";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { FaRegEdit } from "react-icons/fa";
-
+import Input from "../../components/form/Input";
 import logo_default from "../../assets/logo_default.png";
 import Button from "../../components/Button";
 import { TournamentsContext } from "../../context/TournamentsProvider";
@@ -36,23 +36,31 @@ const EditTournaments = () => {
     description: "",
     title: "",
     description: "",
-    totalScore: 0,
-    issueCount: 0,
+    numeric_data: [],
     logo: "",
   });
-  const maxLength = 300;
+  // const [numericData, setNumericData] = useState([])
+  const maxLength = 700;
   const [charCount, setCharCount] = useState(
     currentTournament?.description?.length || 0
   ); // State to track if the form is in editing mode
   const [createNew, setCreateNew] = useState(false);
   const fileInputRef = useRef(null);
 
+  const [numericData1, setNumericData1] = useState({
+    key1: null,
+    value1: null,
+  });
+  const [numericData2, setNumericData2] = useState({
+    key2: null,
+    value2: null,
+  });
+
   const { isCoachAuthenticated } = useContext(CoachContext);
   // Sync tournaments from context to local state
   useEffect(() => {
     setTournaments(tournamentsArray);
   }, [tournamentsArray]);
-
 
   const handleChange = (e) => {
     if (isEditing) {
@@ -62,7 +70,6 @@ const EditTournaments = () => {
       handleInputChange(e);
     }
   };
-
 
   // Handle input changes for form fields
   const handleInputChange = (e) => {
@@ -126,14 +133,11 @@ const EditTournaments = () => {
   // Add a new tournament
   const addTournament = async (e) => {
     e.preventDefault();
-    e.preventDefault();
 
     // Validate required fields
     if (
       !currentTournament.title ||
       !currentTournament.description ||
-      !currentTournament.issueCount ||
-      !currentTournament.totalScore ||
       !currentTournament.logo // Check if logo is selected
     ) {
       toast.showToast("Please fill in all required fields", "error");
@@ -143,14 +147,29 @@ const EditTournaments = () => {
     const formData = new FormData();
     formData.append("title", currentTournament.title);
     formData.append("description", currentTournament.description);
-    formData.append("totalScore", currentTournament.totalScore);
-    formData.append("issueCount", currentTournament.issueCount);
 
-    // Append logo if it exists
+    for (var key in numericData1) {
+      formData.append(key, numericData1[key]);
+    }
+
+    for (var key in numericData2) {
+      formData.append(key, numericData2[key]);
+    }
+
+    // console.log('-------------------');
+    // for (const [key, value] of formData.entries()) {
+    //   console.log(`${key}: ${value}`);
+    // }
+    // console.log('-------------------');
+
     if (currentTournament.logo) {
       formData.append("logo", currentTournament.logo); // Append the file directly
     }
+
+    // return;
+
     setIsLoading(true);
+
     try {
       const response = await axios.post(
         "http://localhost:5500/api/v1/tournaments/add-tournament",
@@ -196,19 +215,24 @@ const EditTournaments = () => {
     if (
       !currentTournament.title ||
       !currentTournament.description ||
-      !currentTournament.totalScore ||
-      !currentTournament.issueCount ||
       !currentTournament.logo
     ) {
       toast.showToast("Please fill in all required fields", "error");
       return;
     }
     const id = currentTournament._id;
+
     const formData = new FormData();
     formData.append("title", currentTournament.title);
     formData.append("description", currentTournament.description);
-    formData.append("totalScore", currentTournament.totalScore);
-    formData.append("issueCount", currentTournament.issueCount);
+
+    for (var key in numericData1) {
+      formData.append(key, numericData1[key]);
+    }
+
+    for (var key in numericData2) {
+      formData.append(key, numericData2[key]);
+    }
 
     // Append logo if it's a valid Base64 string
     if (currentTournament.logo) {
@@ -272,10 +296,16 @@ const EditTournaments = () => {
 
   // Start editing a tournament
   const startEditing = (tournament) => {
-    setCurrentTournament({
-      ...tournament,
-      totalScore: tournament.totalScore || 0, // Ensure totalScore is set
-      issueCount: tournament.issueCount || 0, // Ensure issueCount is set
+    setCurrentTournament(tournament);
+    console.log("tournn:", tournament);
+    setNumericData1({
+      key1: tournament?.numeric_data[0]?.key,
+      value1: tournament?.numeric_data[0]?.value,
+    });
+
+    setNumericData2({
+      key2: tournament?.numeric_data[1]?.key,
+      value2: tournament?.numeric_data[1]?.value,
     });
     setImage(tournament.logo || logo_default); // Set image for preview
     openModal();
@@ -307,7 +337,7 @@ const EditTournaments = () => {
         style={{ backgroundImage: `url(${background})` }}
       >
         <div className="absolute left-6 top-6">
-          <BackButton onClick={() => navigate("/admin/dashboard")} />
+          <BackButton url={"/admin/dashboard"} />
         </div>
 
         <div className="flex justify-center items-center h-full w-full">
@@ -352,7 +382,23 @@ const EditTournaments = () => {
           <Modal
             afterClosing={() => {
               setIsEditing(false);
-              setCurrentTournament(null);
+              setCurrentTournament({
+                id: null,
+                title: "",
+                description: "",
+                title: "",
+                description: "",
+                numeric_data: [],
+                logo: "",
+              });
+              setNumericData1({
+                key1: null,
+                value1: null,
+              });
+              setNumericData2({
+                key2: null,
+                value2: null,
+              });
               setCreateNew(false);
             }}
             className=" text-md  tracking-wide"
@@ -360,11 +406,11 @@ const EditTournaments = () => {
             <ModalHead className="w-full">
               <div className="w-full text-center text-white bg-[#1E4788] rounded-xl shadow-md p-3 flex justify-between items-center">
                 <span>{currentTournament.title || "New Tournament"}</span>
-                <span className="font-bold ">
+                {/* <span className="font-bold ">
                   {currentTournament.totalScore === 0
                     ? ""
                     : `Total Score: ${currentTournament.totalScore}`}
-                </span>
+                </span> */}
               </div>
             </ModalHead>
             <ModalBody className={"max-h-[90vh]"}>
@@ -426,72 +472,97 @@ const EditTournaments = () => {
                             required
                           />
                         </div>
-                        {/* Character Count Warning */}
-                        {/* <div className="text-right text-sm pr-4 w-2/4 ml-auto">
-                          <span
-                            className={
-                              charCount > maxLength - 1
-                                ? "text-red-500"
-                                : "text-gray-500"
-                            }
-                          >
-                            {charCount}/{maxLength} characters
-                          </span>
-                        </div> */}
                       </div>
-                      <div className="flex items-center">
-                        <label
-                          htmlFor="issueCount"
-                          className="font-medium w-1/3 text-left pr-4"
-                          style={{ color: "#1E4788" }}
-                        >
-                          Tournament Issue Count
-                        </label>
-                        <input
-                          id="issueCount"
-                          name="issueCount"
-                          type="number"
-                          value={currentTournament.issueCount}
-                          onChange={handleInputChange}
-                          className={`w-2/4 p-2 rounded-xl transition-all duration-200 resize-none border-gray-400 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
-                            isEditing
-                              ? "border focus:outline-blue-500 bg-gray-100"
-                              : "bg-gray-100 cursor-default"
-                          }`}
-                          readOnly={!isEditing}
-                          required
-                        />
-                      </div>
-                      {isEditing && (
-                        <div className="flex items-center">
-                          <label
-                            htmlFor="totalScore"
-                            className="font-medium w-1/3 text-left pr-4"
-                            style={{ color: "#1E4788" }}
-                          >
-                            Tournament Total Score
-                          </label>
+
+                      <div className="w-5/6 flex flex-col space-y-4">
+                        <div className="flex w-full  space-x-8">
                           <input
-                            id="totalScore"
-                            name="totalScore"
-                            type="number"
-                            value={currentTournament.totalScore}
-                            maxLength={3}
-                            // onChange={handleInputChange}
+                            type="text"
+                            name="key1"
+                            value={numericData1.key1}
+                            placeholder="Title"
+                            maxLength={20}
+                            // className="font-medium w-1/3 text-left pr-4"
+                            style={{ color: "#1E4788" }}
                             onChange={(e) => {
-                              if (e.target.value <= 999) handleInputChange(e); // Prevent exceeding max
+                              setNumericData1({
+                                ...numericData1,
+                                key1: e.target.value,
+                              });
                             }}
-                            max={999}
-                            className={`w-2/4 p-2 rounded-xl transition-all duration-200 resize-none border-gray-400 appearance-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none ${
+                            className={`font-medium w-1/2 p-2 rounded-xl text-left pr-4 ${
                               isEditing
-                                ? "border focus:outline-blue-500 bg-gray-100"
+                                ? "border focus:outline-blue-500 border-gray-400"
+                                : " cursor-default"
+                            }`}
+                            readOnly={!isEditing}
+                            required
+                          />
+                          <input
+                            type="text"
+                            name="value1"
+                            value={numericData1.value1}
+                            placeholder="Value"
+                            maxLength={3}
+                            onChange={(e) => {
+                              setNumericData1({
+                                ...numericData1,
+                                value1: e.target.value,
+                              });
+                            }}
+                            className={`w-full p-2 rounded-xl transition-all duration-200 ${
+                              isEditing
+                                ? "border focus:outline-blue-500 bg-gray-100 border-gray-400"
                                 : "bg-gray-100 cursor-default"
                             }`}
                             readOnly={!isEditing}
                             required
                           />
                         </div>
-                      )}
+                        <div className="flex w-full space-x-8">
+                          <input
+                            type="text"
+                            name="key2"
+                            maxLength={20}
+                            value={numericData2.key2}
+                            placeholder="Title"
+                            style={{ color: "#1E4788" }}
+                            onChange={(e) =>
+                              setNumericData2({
+                                ...numericData2,
+                                key2: e.target.value,
+                              })
+                            }
+                            className={`font-medium w-1/2 p-2 rounded-xl text-left pr-4 ${
+                              isEditing
+                                ? "border focus:outline-blue-500 border-gray-400"
+                                : "cursor-default"
+                            }`}
+                            readOnly={!isEditing}
+                            required
+                          />
+                          <input
+                            type="text"
+                            name="value2"
+                            value={numericData2.value2}
+                            placeholder="Value"
+                            maxLength={3}
+                            onChange={(e) =>
+                              setNumericData2({
+                                ...numericData2,
+                                value2: e.target.value,
+                              })
+                            }
+                            className={`w-full p-2 rounded-xl transition-all duration-200 ${
+                              isEditing
+                                ? "border focus:outline-blue-500 bg-gray-100 border-gray-400"
+                                : "bg-gray-100 cursor-default"
+                            }`}
+                            readOnly={!isEditing}
+                            required
+                          />
+                        </div>
+                      </div>
                     </div>
                   </form>
                 </div>

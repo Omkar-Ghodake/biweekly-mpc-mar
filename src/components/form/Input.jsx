@@ -44,7 +44,7 @@ const Input = ({
           id={id}
           type={type}
           required={required}
-          placeholder={type === "text" ? `Enter ${label.charAt(0).toUpperCase() + label.slice(1).toLowerCase()}` : placeholder}
+          placeholder={type === "text" ? `Enter ${label?.charAt(0).toUpperCase() + label?.slice(1).toLowerCase()}` : placeholder}
           maxLength={type === "text" ? 20 : 3}
           value={value}
           onChange={onChange}

@@ -124,7 +124,7 @@ export default function CoachForm() {
       style={{ backgroundImage: `url(${background})` }}
     >
       <div className="absolute left-6 top-6">
-        <BackButton onClick={() => navigate("/admin/dashboard")} />
+      <BackButton url={"/admin/dashboard"} />
       </div>
       <div className="max-w-4xl w-full bg-white shadow-lg rounded-xl p-6 flex flex-col">
         {/* Header Section */}
