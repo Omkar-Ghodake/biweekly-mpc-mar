@@ -196,8 +196,6 @@ const EditTournaments = () => {
     if (
       !currentTournament.title ||
       !currentTournament.description ||
-      !currentTournament.totalScore ||
-      !currentTournament.issueCount ||
       !currentTournament.logo
     ) {
       toast.showToast("Please fill in all required fields", "error");
