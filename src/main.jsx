@@ -23,87 +23,108 @@ import EditCommon from './pages/admin/EditCommon.jsx'
 import Profile from './pages/admin/Profile.jsx'
 import Loader from './layouts/Loader.jsx'
 import LoadingProvider from './context/LoadingProvider.jsx'
-import { PiDressFill } from 'react-icons/pi'
+import EditCoach from './pages/admin/EditCoach.jsx'
 import Navbar from './layouts/Navbar/Navbar.jsx'
 import TeamProvider from './context/TeamProvider.jsx'
 import Credit from './pages/Credit.jsx'
 import Login from './pages/admin/Login.jsx'
 import AnalyticsDashboard from './pages/admin/AnalyticsDashboard.jsx'
 import Documents from './pages/admin/Documents.jsx'
-
-{
-  /* 
-  
-  /
-  /landing
-  /team
-  /tournaments
-  /scores
-  /login
-  /admin/dashboard
-  /exit
-  */
-}
+import IndividualContribution from './pages/admin/documents/IndividualContribution.jsx'
+import PersonalTask from './pages/admin/documents/PersonalTask.jsx'
+import ProductDocs from './pages/admin/documents/ProductDocs.jsx'
+import FileExplorerProvider from './context/FileExplorerProvider.jsx'
+import DocumentViewer from './components/DocViewer/DocumentViewer.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <BrowserRouter>
       <ToastProvider>
-        <ModalProvider>
-          <PlayersProvider>
-            <TournamentsProvider>
-              <CoachProvider>
-                <TeamProvider>
-                  <LoadingProvider>
-                    <Routes>
-                      <Route path='/' element={<App />} />
-                      {/* <Route path='/background' element={<StadiumBack />} /> */}
-                      <Route path='/landing' element={<Landing />} />
-                      <Route path='/team' element={<Team />} />
-                      <Route path='/tournaments' element={<Tournaments />} />
-                      <Route path='/credits' element={<Credit />} />
-                      <Route
-                        path='/scores'
-                        element={
-                          <Suspense fallback={null}>
-                            <Scores />
-                          </Suspense>
-                        }
-                      />
-                      {/* <Route path="/login" element={<Login />} /> */}
-                      <Route path='/admin/login' element={<Login />} />
-                      <Route path='/admin/dashboard' element={<Dashboard />} />
-                      <Route
-                        path='/admin/dashboard/editTournaments'
-                        element={<EditTournaments />}
-                      />
-                      <Route
-                        path='/admin/dashboard/editPlayers'
-                        element={<EditTeam />}
-                      />
-                      <Route
-                        path='/admin/dashboard/editTeam'
-                        element={<EditCommon />}
-                      />
-                      <Route
-                        path='/admin/dashboard/profile'
-                        element={<Profile />}
-                      />
+        <LoadingProvider>
+          <FileExplorerProvider>
+            <ModalProvider>
+              <PlayersProvider>
+                <TournamentsProvider>
+                  <CoachProvider>
+                    <TeamProvider>
+                      <Routes>
+                        <Route path='/' element={<App />} />
+                        {/* <Route path='/background' element={<StadiumBack />} /> */}
+                        <Route path='/landing' element={<Landing />} />
+                        <Route path='/team' element={<Team />} />
+                        <Route path='/tournaments' element={<Tournaments />} />
+                        <Route path='/credits' element={<Credit />} />
+                        <Route
+                          path='/scores'
+                          element={
+                            <Suspense fallback={null}>
+                              <Scores />
+                            </Suspense>
+                          }
+                        />
+                        {/* <Route path="/login" element={<Login />} /> */}
+                        <Route path='/admin/login' element={<Login />} />
+                        <Route
+                          path='/admin/dashboard'
+                          element={<Dashboard />}
+                        />
+                        <Route
+                          path='/admin/dashboard/editTournaments'
+                          element={<EditTournaments />}
+                        />
+                        <Route
+                          path='/admin/dashboard/editPlayers'
+                          element={<EditTeam />}
+                        />
+                        <Route
+                          path='/admin/dashboard/editTeam'
+                          element={<EditCommon />}
+                        />
+                        <Route
+                          path='/admin/dashboard/profile'
+                          element={<Profile />}
+                        />
+                        <Route
+                          path='/admin/dashboard/editCoach'
+                          element={<EditCoach />}
+                        />
+                        <Route
+                          path='/admin/dashboard/analytics-dashboard'
+                          element={<AnalyticsDashboard />}
+                        />
+                        <Route
+                          path='/admin/dashboard/documents'
+                          element={<Documents />}
+                        />
+                        <Route
+                          path='/admin/dashboard/documents/individual-contribution'
+                          element={<IndividualContribution />}
+                        />
+                        <Route
+                          path='/admin/dashboard/documents/personal-task'
+                          element={<PersonalTask />}
+                        />
+                        <Route
+                          path='/admin/dashboard/documents/product-docs'
+                          element={<ProductDocs />}
+                        />
 
-                      <Route path='/exit' element={<Exit />} />
-                      <Route path='/temp' element={<Temp />} />
-                    </Routes>
+                        <Route path='/exit' element={<Exit />} />
+                        <Route path='/temp' element={<Temp />} />
+                      </Routes>
 
-                    <Loader />
-                    <ChatBot />
-                    <Navbar />
-                    <ToastNotification />
-                  </LoadingProvider>
-                </TeamProvider>
-              </CoachProvider>
-            </TournamentsProvider>
-          </PlayersProvider>
-        </ModalProvider>
+                      <Loader />
+                      <ChatBot />
+                      <Navbar />
+                      <ToastNotification />
+                      <DocumentViewer />
+                    </TeamProvider>
+                  </CoachProvider>
+                </TournamentsProvider>
+              </PlayersProvider>
+            </ModalProvider>
+          </FileExplorerProvider>
+        </LoadingProvider>
       </ToastProvider>
     </BrowserRouter>
   </StrictMode>
