@@ -13,11 +13,18 @@ const Tournaments = () => {
   const [current, setCurrent] = useState({})
   const { tournaments, fetchTournaments } = useContext(TournamentsContext)
 
-
   useEffect(() => {
     // fetchTournaments()
   }, [fetchTournaments])
-
+  const formatTextToHTML = (text) => {
+    if (!text) return '';
+  
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')  // for **bold**
+      .replace(/\*(.*?)\*/g, '<b>$1</b>')                // for *bold*
+      .replace(/\n/g, '<br />');                         // for line breaks
+  };
+  
   return (
     <div className="h-screen w-screen overflow-hidden bg-[url('./assets/background.jpg')] bg-cover bg-center flex flex-col items-center">
       <Link to={'/scores'}>
@@ -72,15 +79,15 @@ const Tournaments = () => {
             {/* Trophy Icon */}
             {/* <FaTrophy className="text-black-500 inline mx-4 " /> */}
             <div
-              className='mt-2 bg-transparent resize-none outline-none h-[150px] max-h-[30vh] p-2 rounded-md overflow-y-auto
-                        [&::-webkit-scrollbar]:w-1
-                        [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
-                        [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#03104A] w-[87%]'
-            >
-              <p className='font-bold text-xl whitespace-pre-wrap '>
-                {current.description || 'No description available'}
-              </p>
-            </div>
+  className='mt-2 bg-transparent resize-none outline-none h-[150px] max-h-[30vh] p-2 rounded-md overflow-y-auto
+             [&::-webkit-scrollbar]:w-1
+             [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
+             [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#03104A] w-[87%]'
+  dangerouslySetInnerHTML={{
+    __html: formatTextToHTML(current.description || 'No description available')
+  }}
+/>
+
           </div>
 
           <div className='absolute bottom-6 w-full h-[100px] flex justify-center items-end'>
