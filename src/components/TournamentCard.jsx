@@ -16,11 +16,12 @@ const TournamentCard = ({ item, index }) => {
           alt="Profile"
           className="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md"
         />
-        <div className="group relative w-fit">
-          <div className="text-3xl font-semibold text-gray-800 text-wrap h-18 max-w-56  overflow-hidden text-ellipsis">
+        <div className="group relative w-full">
+          <div className="text-[10%] font-semibold text-gray-800 h-18 max-w-[180px] truncate leading-[4.5rem]">
             {item.title}
           </div>
-          <span className="text-sm font-semibold absolute bottom-full mb-3 left-0 opacity-0  bg-slate-200 group-hover:opacity-90 transition-opacity duration-200 shadow p-1 rounded text-center ">
+
+          <span className="text-sm font-semibold absolute bottom-full mb-3 left-0 opacity-0 bg-slate-200 group-hover:opacity-90 transition-opacity duration-200 shadow p-1 rounded text-center">
             {item.title}
           </span>
         </div>
