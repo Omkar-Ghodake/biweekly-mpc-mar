@@ -496,14 +496,14 @@ const EditTournaments = () => {
                                 : " cursor-default"
                             }`}
                             readOnly={!isEditing}
-                            required
+
                           />
                           <input
                             type="text"
                             name="value1"
                             value={numericData1.value1}
                             placeholder="Value"
-                            maxLength={3}
+                            maxLength={5}
                             onChange={(e) => {
                               setNumericData1({
                                 ...numericData1,
@@ -516,7 +516,7 @@ const EditTournaments = () => {
                                 : "bg-gray-100 cursor-default"
                             }`}
                             readOnly={!isEditing}
-                            required
+
                           />
                         </div>
                         <div className="flex w-full space-x-8">
@@ -539,14 +539,13 @@ const EditTournaments = () => {
                                 : "cursor-default"
                             }`}
                             readOnly={!isEditing}
-                            required
                           />
                           <input
                             type="text"
                             name="value2"
                             value={numericData2.value2}
                             placeholder="Value"
-                            maxLength={3}
+                            maxLength={5}
                             onChange={(e) =>
                               setNumericData2({
                                 ...numericData2,
@@ -559,7 +558,6 @@ const EditTournaments = () => {
                                 : "bg-gray-100 cursor-default"
                             }`}
                             readOnly={!isEditing}
-                            required
                           />
                         </div>
                       </div>
