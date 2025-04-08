@@ -10,15 +10,10 @@ const TournamentSchema = new Schema({
     type: String,
     required: true,
   },
-  totalScore: {
-    type: Number,
-    default : 0
-  },
-  issueCount: {
-    type: Number,
-    default : 0
-
-  },
+  numeric_data: [
+    { key: String, value: Number },
+    { key: String, value: Number },
+  ],
   logo: {
     type: String,
     required: true,

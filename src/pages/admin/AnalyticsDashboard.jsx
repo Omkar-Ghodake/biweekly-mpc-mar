@@ -17,7 +17,7 @@ const AnalyticsDashboard = () => {
       // style={{ backgroundImage: `url(${background})` }}
     >
       <div className='absolute left-6 top-6'>
-        <BackButton onClick={() => navigate('/admin/dashboard')} />
+        <BackButton url={'/admin/dashboard'} />
       </div>
 
       <iframe

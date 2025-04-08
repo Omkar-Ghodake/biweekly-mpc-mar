@@ -201,6 +201,7 @@ const Login = () => {
     try {
       setIsLoading(true)
 
+      // return setStep(3) // Move to password reset step
       if (!otp) {
         setIsLoading(false)
         return setError1('Enter Valid OTP')
@@ -556,7 +557,7 @@ const Login = () => {
                             <input
                               type={isPasswordVisible ? 'text' : 'password'}
                               placeholder='Enter your New Password'
-                              value={newPassword}
+                              // value={newPassword}
                               onChange={(e) => setNewPassword(e.target.value)}
                               className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
                             />
@@ -580,7 +581,7 @@ const Login = () => {
                                 isConfirmPasswordVisible ? 'text' : 'password'
                               }
                               placeholder='Confirm your Password'
-                              value={confirmPassword}
+                              // value={confirmPassword}
                               onChange={(e) =>
                                 setConfirmPassword(e.target.value)
                               }

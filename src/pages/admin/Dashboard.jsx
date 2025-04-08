@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router'
 import { CoachContext } from '../../context/CoachProvider'
 import background from '../../assets/background5.jpg'
 import { motion } from 'framer-motion'
+import AdminBg from '../../components/AdminBg'
 
 const Dashboard = () => {
   const { isCoachAuthenticated } = useContext(CoachContext)
@@ -46,11 +47,7 @@ const Dashboard = () => {
 
   return (
     <div className='h-screen flex flex-col space-y-5 items-center justify-center w-[70%] mx-auto'>
-      <img
-        src={background}
-        alt=''
-        className='fixed inset-0 h-screen w-screen brightness-75'
-      />
+      <AdminBg />
 
       <h1 className='z-10 text-5xl flex justify-start text-white px-10 items-center tracking-wide w-full font-medium rounded-xl h-[15%]'>
         Coach Controls

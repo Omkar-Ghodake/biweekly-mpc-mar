@@ -6,11 +6,11 @@ const { default: mongoose } = require('mongoose')
 
 exports.createTournament = async (req, res) => {
   try {
-    const { title, description, totalScore, issueCount } = req.body
+    const { title, description, numeric_data } = req.body
 
     const logoLocalPath = req.file?.path
-    console.log(logoLocalPath);
-    
+    console.log(logoLocalPath)
+
     if (!logoLocalPath) {
       throw new Error('Logo is required')
     }
@@ -24,8 +24,7 @@ exports.createTournament = async (req, res) => {
     const tournament = await Tournament.create({
       title,
       description,
-      totalScore,
-      issueCount,
+      numeric_data,
       logo: logo.url,
     })
 
@@ -52,7 +51,7 @@ exports.updateTournament = async (req, res) => {
       )
     }
 
-    let tournamentLogoUrl = tournament.logo;
+    let tournamentLogoUrl = tournament.logo
 
     if (req.file) {
       const imagePath = req.file.path
@@ -67,14 +66,20 @@ exports.updateTournament = async (req, res) => {
 
       tournamentLogoUrl = uploadedImage.url
     }
-    let updatedData = JSON.parse(JSON.stringify({ ...req.body, logo: tournamentLogoUrl }));
-    console.log("updatedData",updatedData);
-    
-    const newTournament = await Tournament.findByIdAndUpdate(id, { $set: updatedData }, {
-      new: true,
-    })
-    console.log("tournament",newTournament);
-    
+    let updatedData = JSON.parse(
+      JSON.stringify({ ...req.body, logo: tournamentLogoUrl })
+    )
+    console.log('updatedData', updatedData)
+
+    const newTournament = await Tournament.findByIdAndUpdate(
+      id,
+      { $set: updatedData },
+      {
+        new: true,
+      }
+    )
+    console.log('tournament', newTournament)
+
     return SuccessResponse(
       res,
       200,

@@ -74,20 +74,24 @@ const Landing = () => {
             className='absolute inset-0 w-full h-full object-cover backdrop-blur-3xl -z-10'
           />
 
-          <div className='text-center flex flex-col space-y-5 font-bold'>
-            <h1 className='text-7xl'>{teamInfo.short_name}</h1>
-            <h1 className='text-5xl'>{teamInfo.long_name}</h1>
-          </div>
+          {teamInfo && (
+            <>
+              <div className='text-center flex flex-col space-y-5 font-bold'>
+                <h1 className='text-7xl'>{teamInfo.short_name}</h1>
+                <h1 className='text-5xl'>{teamInfo.long_name}</h1>
+              </div>
 
-          <img
-            src={teamInfo.logo}
-            alt=''
-            className='w-[50vh] landing-logo-spin'
-          />
+              <img
+                src={teamInfo.logo}
+                alt=''
+                className='w-[50vh] landing-logo-spin'
+              />
 
-          <p className='text-3xl font-semibold w-[70%] mx-auto text-center text-wrap'>
-            {teamInfo.description}
-          </p>
+              <p className='text-3xl font-semibold w-[70%] mx-auto text-center text-wrap'>
+                {teamInfo.description}
+              </p>
+            </>
+          )}
 
           <div className='absolute right-6 bottom-6  flex flex-col items-center justify-center space-y-5'>
             <motion.div
