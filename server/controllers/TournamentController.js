@@ -7,9 +7,6 @@ const { default: mongoose } = require('mongoose')
 exports.createTournament = async (req, res) => {
   try {
     const { title, description, key1, value1, key2, value2 } = req.body
-    console.log(req.body)
-    console.log('file:');
-    console.log(req.file)
 
     // return SuccessResponse(res, 200, 'asjidasdjka')
 
@@ -28,19 +25,15 @@ exports.createTournament = async (req, res) => {
       throw new Error(400, 'Unable to fetch logo from cloudinary')
     }
 
+    var tempArr = []
+    tempArr.push({ key: key1, value: value1 })
+    tempArr.push({ key: key1, value: value2 })
+
     const tournament = await Tournament.create({
       title,
       description,
-      numeric_data: [
-        {
-          key: key1,
-          value: value1,
-        },
-        {
-          key: key2,
-          value: value2,
-        }
-      ],
+      numeric_data: tempArr || [{ key: '', value: '' },
+      { key: '', value: '' },],
       logo: logo.url,
     })
 
@@ -56,10 +49,6 @@ exports.createTournament = async (req, res) => {
 exports.updateTournament = async (req, res) => {
   try {
     const { id } = req.params
-
-    console.log('body--------------');
-    console.log(req.body);
-    console.log('body--------------');
 
     let tournament = await Tournament.findById(id)
 
@@ -95,13 +84,24 @@ exports.updateTournament = async (req, res) => {
     const { key1, key2, value1, value2 } = req.body
 
     const tempArr = []
+
+    console.log('req.body:', req.body);
+
     tempArr.push({ key: key1, value: value1 })
     tempArr.push({ key: key2, value: value2 })
 
+    console.log('value1:', value1);
+    console.log('value2:', value2);
+    console.log('tempArr:', tempArr);
 
     let updatedData = JSON.parse(
-      JSON.stringify({ ...req.body, logo: tournamentLogoUrl, numeric_data: tempArr })
+      JSON.stringify({
+        ...req.body, logo: tournamentLogoUrl, numeric_data: tempArr || [{ key: '', value: '' },
+        { key: '', value: '' },],
+      })
     )
+
+    console.log('updatedData:', updatedData)
 
     const newTournament = await Tournament.findByIdAndUpdate(
       id,
