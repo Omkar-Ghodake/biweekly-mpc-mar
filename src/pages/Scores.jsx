@@ -63,6 +63,8 @@ const Scores = () => {
     openModal();
   };
 
+  console.log("selected player", selectedPlayer);
+
   const sortedPlayers = players.sort((a, b) => b.total_score - a.total_score);
   const captains = sortedPlayers
     .filter((p) => p.role?.toLowerCase() === "captain")
@@ -292,7 +294,7 @@ const Scores = () => {
                   {/* Content Below Switch */}
                   <div className="bg-gray-900/50 p-2 rounded-lg mt-1">
                     {activeSection === "courses" && (
-                      <ul
+                      <ol
                         className="list-disc pl-5 max-h-19 h-19 my-2 overflow-y-auto
                         [&::-webkit-scrollbar]:w-1
                         [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
@@ -301,20 +303,20 @@ const Scores = () => {
                         {selectedPlayer.courses &&
                         Array.isArray(selectedPlayer.courses) &&
                         selectedPlayer.courses.length > 0 ? (
-                          selectedPlayer.courses.flatMap((course, index) =>
-                            course.split(",").map((subCourse, subIndex) => (
-                              <li key={`${index}-${subIndex}`}>
-                                {subCourse.trim()}
-                                {console.log(selectedPlayer.courses)}
-                              </li>
-                            ))
-                          )
+                          selectedPlayer.courses.map((subCourse, subIndex) => (
+                            // <li key={`${index}-${subIndex}`}>
+                            //   {subCourse.trim()}
+                            //   {console.log(selectedPlayer.courses)}
+                            // </li>
+
+                            <li key={subIndex}>{subCourse}</li>
+                          ))
                         ) : (
                           <h2 className="flex mr-7  items-center justify-center">
                             No Courses Found
                           </h2>
                         )}
-                      </ul>
+                      </ol>
                     )}
 
                     {activeSection === "projects" && (
@@ -327,14 +329,17 @@ const Scores = () => {
                         {selectedPlayer.projects &&
                         Array.isArray(selectedPlayer.projects) &&
                         selectedPlayer.projects.length > 0 ? (
-                          selectedPlayer.projects.flatMap((project, index) =>
-                            project.split(",").map((subProject, subIndex) => (
-                              <li key={`${index}-${subIndex}`}>
-                                {subProject.trim()}
-                                {console.log(selectedPlayer.projects)}
-                              </li>
-                            ))
-                          )
+                          // selectedPlayer.projects.flatMap((project, index) =>
+                          //   project.split(",").map((subProject, subIndex) => (
+                          //     <li key={`${index}-${subIndex}`}>
+                          //       {subProject.trim()}
+                          //       {console.log(selectedPlayer.projects)}
+                          //     </li>
+                          //   ))
+                          // )
+                          selectedPlayer.projects.map((project, index) => (
+                            <li key={index}>{project}</li>
+                          ))
                         ) : (
                           <h2 className="flex mr-7  items-center justify-center">
                             No Project Found
