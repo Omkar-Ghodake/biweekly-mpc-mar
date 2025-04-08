@@ -149,11 +149,11 @@ const EditTournaments = () => {
     formData.append("description", currentTournament.description);
 
     for (var key in numericData1) {
-      formData.append(key, numericData1[key]);
+      numericData1.key1 && formData.append(key, numericData1[key]);
     }
 
     for (var key in numericData2) {
-      formData.append(key, numericData2[key]);
+      numericData2.key2 && formData.append(key, numericData2[key]);
     }
 
     // console.log('-------------------');
@@ -227,11 +227,11 @@ const EditTournaments = () => {
     formData.append("description", currentTournament.description);
 
     for (var key in numericData1) {
-      formData.append(key, numericData1[key]);
+      key && key.length > 0 && formData.append(key, numericData1[key]);
     }
 
     for (var key in numericData2) {
-      formData.append(key, numericData2[key]);
+      key && key.length > 0 && formData.append(key, numericData2[key]);
     }
 
     // Append logo if it's a valid Base64 string
