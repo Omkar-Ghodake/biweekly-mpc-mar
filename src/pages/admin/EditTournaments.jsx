@@ -372,7 +372,7 @@ const EditTournaments = () => {
               hidden: { opacity: 0 },
               visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
             }}
-            className='justify-start w-3/4 max-h-40 min-h-5/6 py-3 px-3 backdrop-blur-md rounded-lg overflow-y-scroll [&::-webkit-scrollbar]:hidden'
+            className='justify-start w-3/4 max-h-40 min-h-5/6 py-3 px-3  rounded-lg overflow-y-scroll [&::-webkit-scrollbar]:hidden'
           >
             <div className='flex flex-col'>
               <div className='flex flex-row justify-between'>
@@ -389,7 +389,7 @@ const EditTournaments = () => {
                   </div>
                 </button>
               </div>
-              <div className='grid grid-cols-3 md:grid-cols-3 gap-7 mt-5 ml-3'>
+              <div className='grid grid-cols-3 md:grid-cols-3 gap-7 my-9 '>
                 {tournaments.map((tournament) => (
                   <div
                     key={tournament._id}
