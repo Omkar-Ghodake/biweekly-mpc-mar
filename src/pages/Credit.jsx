@@ -74,7 +74,7 @@ const Credit = () => {
       },
       {
         role: 'Product Manager',
-        name: ['Manoj Imbarajan', 'Mridul Upadhya'],
+        name: ['Manoj Inbarajan', 'Mridul Upadhya'],
         icon: (
           <svg
             width='50'

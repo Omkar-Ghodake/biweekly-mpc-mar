@@ -11,8 +11,8 @@ const TournamentSchema = new Schema({
     required: true,
   },
   numeric_data: [
-    { key: String, value: Number },
-    { key: String, value: Number },
+    { key: String || null, value: Number || null },
+    { key: String || null, value: Number || null },
   ],
   logo: {
     type: String,

@@ -32,12 +32,14 @@ exports.createTournament = async (req, res) => {
     const tournament = await Tournament.create({
       title,
       description,
-      numeric_data: tempArr || [{ key: '', value: '' },
-      { key: '', value: '' },],
+      numeric_data: tempArr || [
+        { key: '', value: '' },
+        { key: '', value: '' },
+      ],
       logo: logo.url,
     })
 
-    console.log('tournament:', tournament);
+    console.log('tournament:', tournament)
 
     SuccessResponse(res, 201, 'Tournament Created Successfully.', tournament)
   } catch (error) {
@@ -85,23 +87,19 @@ exports.updateTournament = async (req, res) => {
 
     const tempArr = []
 
-    console.log('req.body:', req.body);
-
     tempArr.push({ key: key1, value: value1 })
     tempArr.push({ key: key2, value: value2 })
 
-    console.log('value1:', value1);
-    console.log('value2:', value2);
-    console.log('tempArr:', tempArr);
-
     let updatedData = JSON.parse(
       JSON.stringify({
-        ...req.body, logo: tournamentLogoUrl, numeric_data: tempArr || [{ key: '', value: '' },
-        { key: '', value: '' },],
+        ...req.body,
+        logo: tournamentLogoUrl,
+        numeric_data: tempArr || [
+          { key: '', value: '' },
+          { key: '', value: '' },
+        ],
       })
     )
-
-    console.log('updatedData:', updatedData)
 
     const newTournament = await Tournament.findByIdAndUpdate(
       id,
@@ -110,7 +108,6 @@ exports.updateTournament = async (req, res) => {
         new: true,
       }
     )
-    console.log('tournament', newTournament)
 
     return SuccessResponse(
       res,
