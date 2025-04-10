@@ -7,40 +7,65 @@ import AdminBg from '../../components/AdminBg'
 
 const Dashboard = () => {
   const { isCoachAuthenticated } = useContext(CoachContext)
+
   const navigate = useNavigate()
 
   const DASHBOARD_ITEMS = [
-    { href: '/admin/dashboard/editPlayers', text: 'Players', subText: 'Edit' },
-    { href: '/admin/dashboard/editTournaments', text: 'Tournaments', subText: 'Edit' },
-    { href: '/admin/dashboard/editTeam', text: 'Team', subText: 'Edit' },
-    { href: '/admin/dashboard/profile', text: 'Profile', subText: 'Coach' },
-    { href: '/admin/dashboard/analytics-dashboard', text: 'Analysis', subText: 'Data' },
-    { href: '/admin/dashboard/documents', text: 'Documents', subText: 'Team' },
+    {
+      href: '/admin/dashboard/editPlayers',
+      text: 'Players',
+      subText: 'Edit',
+    },
+    {
+      href: '/admin/dashboard/editTournaments',
+      text: 'Tournaments',
+      subText: 'Edit',
+    },
+    {
+      href: '/admin/dashboard/editTeam',
+      text: 'Team',
+      subText: 'Edit',
+    },
+    {
+      href: '/admin/dashboard/profile',
+      text: 'Profile',
+      subText: 'coach',
+    },
+    {
+      href: '/admin/dashboard/analytics-dashboard',
+      text: 'Analysis',
+      subText: 'data',
+    },
+    {
+      href: '/admin/dashboard/documents',
+      text: 'Documents',
+      subText: 'team',
+    },
   ]
 
   if (!isCoachAuthenticated) return navigate('/admin/login')
 
   return (
-    <div className='min-h-screen w-full flex flex-col items-center justify-center relative px-4 pt-20 pb-10'>
+    <div className='h-screen flex flex-col space-y-5 items-center justify-center w-[70%] mx-auto'>
       <AdminBg />
 
-      <h1 className='z-10 text-5xl text-white font-bold tracking-wide shadow-2xs mb-12'>
+      <h1 className='z-10 text-5xl flex justify-start text-white px-10 items-center tracking-wide w-full font-medium rounded-xl h-[15%]'>
         Coach Controls
       </h1>
 
-      <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 z-20'>
+      <div className='grid grid-cols-3 z-40'>
         {DASHBOARD_ITEMS.map((item, index) => (
-          <Link key={item.href} to={item.href} className=''>
+          <Link key={item.href} to={item.href} className='rounded-lg p-5 h-fit'>
             <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
+              initial={{ opacity: 0, scale: 0 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: index * 0.05 }}
-              className='bg-white/90 w-64 h-44 rounded-2xl shadow-md hover:shadow-2xl transition-shadow duration-200 flex flex-col justify-center items-start px-6 py-4 hover:scale-[1.03] cursor-pointer'
+              className='bg-white/30 backdrop-blur-lg rounded-lg w-64 h-44 text-primary flex flex-col justify-center p-5 cursor-pointer shadow-md hover:shadow-xl hover:scale-105 duration-150'
             >
-              <span className='text-gray-700 text-lg font-medium capitalize mb-1'>
+              <span className='text-2xl font-semibold capitalize'>
                 {item.subText}
               </span>
-              <span className='text-3xl font-semibold text-blue-900 drop-shadow-sm tracking-wide'>
+              <span className='text-4xl font-semibold drop-shadow-lg'>
                 {item.text}
               </span>
             </motion.div>
