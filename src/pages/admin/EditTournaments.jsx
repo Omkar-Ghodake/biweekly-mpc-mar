@@ -34,7 +34,6 @@ const EditTournaments = () => {
     id: null,
     title: '',
     description: '',
-    numeric_data: [],
     logo: '',
   })
   // const [numericData, setNumericData] = useState([])
@@ -199,7 +198,6 @@ const EditTournaments = () => {
         id: null,
         title: '',
         description: '',
-        numeric_data: [],
         logo: '',
       })
       setCreateNew(false)
@@ -236,24 +234,38 @@ const EditTournaments = () => {
 
     for (var key in numericData1) {
       numericData1[key] &&
-        numericData1[key].length > 0 &&
+        numericData1[key].toString().length > 0 &&
         formData.append(key, numericData1[key])
+    }
+
+    for (var pair of formData.entries()) {
+      console.log(pair[0] + ', ' + pair[1])
     }
 
     for (var key in numericData2) {
       numericData2[key] &&
-        numericData2[key].length > 0 &&
+        numericData2[key].toString().length > 0 &&
         formData.append(key, numericData2[key])
     }
+
+    // for (var pair of formData.entries()) {
+    //   console.log(pair[0] + ', ' + pair[1])
+    // }
 
     // Append logo if it's a valid Base64 string
     if (currentTournament.logo) {
       formData.append('logo', currentTournament.logo)
     }
 
-    // for (var pair of formData.entries()) {
-    //   console.log(pair[0] + ', ' + pair[1])
-    // }
+    console.log('step 2 start--------')
+    for (var pair of formData.entries()) {
+      console.log(pair[0] + ', ' + pair[1])
+    }
+    console.log('step 2 end--------')
+
+    for (var pair of formData.entries()) {
+      console.log(pair[0] + ', ' + pair[1])
+    }
 
     // return
     setIsLoading(true)
@@ -309,7 +321,6 @@ const EditTournaments = () => {
         id: null,
         title: '',
         description: '',
-        numeric_data: [],
         logo: '',
       })
       closeModal()
@@ -322,15 +333,20 @@ const EditTournaments = () => {
   const startEditing = (tournament) => {
     setCurrentTournament(tournament)
     console.log('tournn:', tournament)
-    setNumericData1({
-      key1: tournament?.numeric_data[0]?.key,
-      value1: tournament?.numeric_data[0]?.value,
-    })
 
-    setNumericData2({
-      key2: tournament?.numeric_data[1]?.key,
-      value2: tournament?.numeric_data[1]?.value,
-    })
+    const k1 = tournament?.numeric_data[0]?.key
+    const v1 = tournament?.numeric_data[0]?.value
+
+    const k2 = tournament?.numeric_data[1]?.key
+    const v2 = tournament?.numeric_data[1]?.value
+
+    console.log('k1, v1', k1, v1)
+    setNumericData1({ key1: k1, value1: v1 })
+    setNumericData2({ key2: k2, value2: v2 })
+
+    // setNumericData1({ key1: k1, value1: v1 })
+    // setNumericData2({ key2: k2, value2: v2 })
+    // setNumericData2(v1)
     setImage(tournament.logo || logo_default) // Set image for preview
     openModal()
   }
@@ -346,13 +362,23 @@ const EditTournaments = () => {
       issueCount: 0,
       logo: '',
     })
+    setNumericData1({
+      key1: '',
+      value1: '',
+    })
+    setNumericData2({
+      key2: '',
+      value2: '',
+    })
     setImage(null) // Reset image to default
     setIsEditing(true)
     setCreateNew(true)
     openModal()
   }
 
-  if (!isCoachAuthenticated) return navigate('/admin/login')
+  useEffect(() => {
+    if (!isCoachAuthenticated) return navigate('/admin/login')
+  }, [isCoachAuthenticated])
 
   return (
     <>
@@ -410,7 +436,6 @@ const EditTournaments = () => {
                 id: null,
                 title: '',
                 description: '',
-                numeric_data: [],
                 logo: '',
               })
               setNumericData1({
