@@ -24,8 +24,8 @@ export default function DocumentViewer() {
         className='z-50 absolute inset-0 flex justify-center h-screen w-screen items-center bg-black/30 backdrop-blur-lg'
       >
         {/* <h2>Word Document Viewer (.docx)</h2> */}
-        <div className='relative h-[90vh] w-[50vw] bg-white'>
-          <div className='h-[90vh] w-[50vw] absolute inset-0 overflow-y-auto'>
+        <div className='relative h-[90vh] w-[80vw] bg-white'>
+          <div className='h-[90vh] w-[80vw] absolute inset-0 overflow-y-auto'>
             {openedFile[0].fileType === 'pdf' && (
               <PDFViewer openedFile={openedFile} />
             )}
@@ -34,11 +34,14 @@ export default function DocumentViewer() {
             )}
           </div>
 
-          <span
-            onClick={closeFile}
-            className='cursor-pointer absolute top-2 right-5 p-1 text-base text-black hover:underline duration-150 z-50'
-          >
-            Close
+          <span className='absolute top-2 right-5 text-base text-black bg-white duration-150 z-50 w-1/2 text-end flex items-center justify-end space-x-1'>
+            <span
+              className='flex items-center space-x-1 w-fit cursor-pointer hover:text-red-500'
+              onClick={closeFile}
+            >
+              <span>Close</span>
+              <RxCross2 />
+            </span>
           </span>
         </div>
       </motion.div>

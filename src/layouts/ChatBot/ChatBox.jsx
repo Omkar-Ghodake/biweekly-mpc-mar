@@ -63,7 +63,6 @@ const ChatBox = ({
                   className='bg-white/10 px-5 py-2 flex items-center justify-between cursor-pointer hover:bg-white/20 duration-150'
                   onClick={() => {
                     setInput('What is MPC?')
-                    // console.log('prompt:', input)
                     sendMessage('What is MPC?')
                     setTimeout(() => {
                       messagesEndRef.current?.scrollIntoView({
@@ -75,18 +74,35 @@ const ChatBox = ({
                   <span>What is MPC?</span>
                   <GoArrowUp />
                 </div>
+
                 <div
                   className='bg-white/10 px-5 py-2 flex items-center justify-between cursor-pointer hover:bg-white/20 duration-150'
-                  onClick={() =>
+                  onClick={() => {
                     setInput('Give me the total number of members in Team MPC?')
-                  }
+                    sendMessage(
+                      'Give me the total number of members in Team MPC?'
+                    )
+                    setTimeout(() => {
+                      messagesEndRef.current?.scrollIntoView({
+                        behavior: 'smooth',
+                      })
+                    }, 100)
+                  }}
                 >
                   <span>Give me the total number of members in Team MPC?</span>
                   <GoArrowUp />
                 </div>
                 <div
                   className='bg-white/10 px-5 py-2 flex items-center justify-between cursor-pointer hover:bg-white/20 duration-150'
-                  onClick={() => setInput('Who are the leads of Team MPC?')}
+                  onClick={() => {
+                    setInput('Who are the leads of Team MPC?')
+                    sendMessage('Who are the leads of Team MPC?')
+                    setTimeout(() => {
+                      messagesEndRef.current?.scrollIntoView({
+                        behavior: 'smooth',
+                      })
+                    }, 100)
+                  }}
                 >
                   <span>Who are the leads of Team MPC?</span>
                   <GoArrowUp />
@@ -164,6 +180,8 @@ const ChatBox = ({
               }
             }}
             disabled={isTyping}
+            minLength={2}
+            required
           />
           <button
             className='bg-white p-2 w-10 h-10 flex justify-center items-center shadow-md rounded-lg cursor-pointer disabled:bg-white/50 hover:bg-white/90 duration-150'

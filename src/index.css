@@ -103,6 +103,30 @@
   background: #555;
 }
 
+/* width */
+.files-scrollbar::-webkit-scrollbar {
+  width: 7px;
+  border-radius: 100%;
+}
+
+/* Track */
+.files-scrollbar::-webkit-scrollbar-track {
+  width: 7px;
+  background: rgba(0, 0, 0, 0.5);
+  --tw-backdrop-blur: blur(var(--blur-2xl) /* 40px */);
+}
+
+/* Handle */
+.files-scrollbar::-webkit-scrollbar-thumb {
+  border-radius: 20px;
+  background: #494949;
+}
+
+/* Handle on hover */
+.files-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
 /* toast notification animation */
 @keyframes spin-reverse {
   from {
