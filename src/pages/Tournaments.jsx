@@ -12,6 +12,14 @@ const Tournaments = () => {
   const { openModal } = useContext(ModalContext)
   const [current, setCurrent] = useState({})
   const { tournaments, fetchTournaments } = useContext(TournamentsContext)
+  const formatTextToHTML = (text) => {
+    if (!text) return ''
+
+    return text
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') // for **bold**
+      .replace(/\*(.*?)\*/g, '<b>$1</b>') // for *bold*
+      .replace(/\n/g, '<br />') // for line breaks
+  }
 
   useEffect(() => {
     // fetchTournaments()
@@ -67,18 +75,23 @@ const Tournaments = () => {
           <div className='absolute inset-0 bottom-6 right-3 bg-white rounded-[40px]'></div>
 
           {/* Inner Light Gray Box */}
-          <div className='absolute left-[6.18%] right-[19.53%] top-[23.38%]  bg-[#d6d6d6] rounded-[20px] p-4 flex flex-col'>
+          <div className='absolute left-[6.18%] right-[19.53%] top-1/2 -translate-y-1/2  bg-[#d6d6d6] rounded-[20px] p-4 flex flex-col'>
             {/* Trophy Icon */}
             {/* <FaTrophy className="text-black-500 inline mx-4 " /> */}
             <div
-              className='mt-2 bg-transparent resize-none outline-none h-[150px] max-h-[30vh] p-2 rounded-md overflow-y-auto
-                        [&::-webkit-scrollbar]:w-1
-                        [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
-                        [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#03104A] w-[87%]'
+              className='mt-2 p-2 bg-transparent resize-none outline-none h-[178px] max-h-[30vh] rounded-md overflow-y-auto
+             [&::-webkit-scrollbar]:w-1
+             [&::-webkit-scrollbar-track]:rounded-full [&::-webkit-scrollbar-track]:bg-gray-100
+             [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-[#03104A] w-[85%]'
             >
-              <p className='font-bold text-xl whitespace-pre-wrap '>
-                {current.description || 'No description available'}
-              </p>
+              <p
+                className='text-lg'
+                dangerouslySetInnerHTML={{
+                  __html: formatTextToHTML(
+                    current.description || 'No description available'
+                  ),
+                }}
+              ></p>
             </div>
           </div>
 
@@ -102,8 +115,8 @@ const Tournaments = () => {
                       obj.value &&
                       obj.key.length > 0 &&
                       obj.value.toString().length > 0 && (
-                        <span className='text-xl'>
-                          <span>{obj.key}</span>
+                        <span className='text-xl '>
+                          <span className=''>{obj.key}</span>
                           <span className='font-bold '>: {obj.value}</span>
                         </span>
                       )
@@ -127,13 +140,16 @@ const Tournaments = () => {
             {/* White Box */}
 
             <div className='absolute left-0 right-[2.44%] top-[14.29%] bottom-0 bg-white rounded-[20px] flex items-center justify-center'>
-              <p className='text-black text-4xl  text-center font-bold'>
+              <p className='text-black text-3xl  text-center font-bold'>
                 {current.title || 'Error'}
               </p>
             </div>
           </div>
 
-          <div className='absolute left-[69.49%] top-[18%] drop-shadow-lg w-[150px] h-[150px] md:w-[200px] md:h-[200px] lg:w-[250px] lg:h-[250px] flex items-center justify-center'>
+          <div
+            className='absolute left-[69.49%] top-1/2 -translate-y-1/2
+           drop-shadow-lg w-[150px] h-[150px] md:w-[200px] md:h-[200px] lg:w-[250px] lg:h-[250px] flex items-center justify-center'
+          >
             {/* Outer Dark Blue Circle */}
             <div className='w-full h-full bg-[#03104A] rounded-full flex items-center justify-center relative'>
               {/* Inner White Circle with Dynamic Image */}

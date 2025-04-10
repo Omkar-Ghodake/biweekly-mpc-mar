@@ -27,9 +27,13 @@ const File = ({ name, ext, uri }) => {
       onClick={() => openFile(uri, ext)}
     >
       <span>{ICONS[ext] || ''}</span>
-      <span>
-        {name.substring(0, 15)} {name.length > 15 && '...'}
-      </span>
+      {name ? (
+        <span>
+          {name?.substring(0, 15)} {name?.length > 15 && '...'}
+        </span>
+      ) : (
+        <span>Unnamed</span>
+      )}
     </div>
   )
 }

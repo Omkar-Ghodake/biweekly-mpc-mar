@@ -22,7 +22,11 @@ const ChatBot = () => {
     apiKey: 'AIzaSyBdTxoCOu2KI4EsTi5XHlVdL-AAi_rlu8o',
   })
 
-  const excludeChatbotLinks = ['/', '/landing', '/admin/dashboard/analytics-dashboard']
+  const excludeChatbotLinks = [
+    '/',
+    '/landing',
+    '/admin/dashboard/analytics-dashboard',
+  ]
 
   async function main() {
     const response = await ai.models.generateContent({
@@ -85,18 +89,19 @@ const ChatBot = () => {
     return response.text
   }
 
-  const sendMessage = async () => {
-    if (!input.trim()) return
+  const sendMessage = async (msg = null) => {
+    if (!msg && !input?.trim()) return
 
     setDisplayGreeting(false)
 
-    const userMessage = { sender: 'user', text: input }
+    const userMessage = { sender: 'user', text: msg || input }
+
     setMessages([...messages, userMessage])
     setInput('')
     setIsTyping(true)
 
     try {
-      const response = await generateResponse(input)
+      const response = await generateResponse(msg || input)
       const botResponse = {
         sender: 'bot',
         text: response,

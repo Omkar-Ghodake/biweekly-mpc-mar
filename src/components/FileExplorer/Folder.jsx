@@ -7,7 +7,7 @@ const Folder = ({ name }) => {
 
   return (
     <div
-      className='flex items-center text-lg space-x-5 bg-[#1B1B1B] hover:bg-[#242424] p-4 rounded-lg cursor-pointer duration-150 w-full'
+      className='flex items-center text-lg space-x-5 bg-[#1B1B1B] hover:bg-[#242424] p-4 rounded-lg cursor-pointer duration-150 w-full h-full'
       onClick={() => appendDirectory(name)}
       title={name}
     >

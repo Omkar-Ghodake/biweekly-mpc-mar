@@ -292,7 +292,9 @@ const Login = () => {
     } catch (error) {}
   }
 
-  if (isCoachAuthenticated) return navigate('/admin/dashboard')
+  useEffect(() => {
+    if (isCoachAuthenticated) return navigate('/admin/dashboard')
+  }, [isCoachAuthenticated])
 
   return (
     !isCoachAuthenticated && (

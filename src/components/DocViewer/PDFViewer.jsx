@@ -8,7 +8,7 @@ const PDFViewer = ({ openedFile }) => {
     <DocViewer
       // className='w-[40vw] absolute hidden'
       style={{
-        width: '50vw',
+        minWidth: '60vw',
         height: '90vh',
       }}
       // documents={[
@@ -20,21 +20,19 @@ const PDFViewer = ({ openedFile }) => {
       documents={openedFile}
       pluginRenderers={DocViewerRenderers}
       // style={{ height: '80vh' }}
-      config={
-        {
-          // header: {
-          //   disableHeader: false,
-          //   disableFileName: false,
-          //   retainURLParams: false,
-          // },
-          // csvDelimiter: ',', // "," as default,
-          // pdfZoom: {
-          //   defaultZoom: 1.1, // 1 as default,
-          //   zoomJump: 0.2, // 0.1 as default,
-          // },
-          // pdfVerticalScrollByDefault: true, // false as default
-        }
-      }
+      config={{
+        // header: {
+        //   disableHeader: false,
+        //   disableFileName: false,
+        //   retainURLParams: false,
+        // },
+        // csvDelimiter: ',', // "," as default,
+        pdfZoom: {
+          defaultZoom: 1, // 1 as default,
+          zoomJump: 0.2, // 0.1 as default,
+        },
+        // pdfVerticalScrollByDefault: true, // false as default
+      }}
     />
   )
 }

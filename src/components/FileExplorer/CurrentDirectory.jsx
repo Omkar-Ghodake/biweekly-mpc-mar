@@ -17,8 +17,8 @@ const CurrentDirectory = () => {
   }, [currentDirectory])
 
   return (
-    <div className='text-white bg-black/50 backdrop-blur-2xl h-[80vh] rounded-lg p-5'>
-      <motion.h1 className='text-2xl font-medium mb-10 flex space-x-5 items-center'>
+    <div className='h-[85vh] rounded-lg w-full'>
+      <motion.h1 className='text-2xl font-medium z-10 sticky top-0 bg-black/30 backdrop-blur-2xl left-0 h-[8vh] px-5 rounded-t-lg flex space-x-5 items-center w-full'>
         <span className='flex items-center space-x-2'>
           <motion.button
             initial={{ opacity: 0, scale: 0 }}
@@ -47,7 +47,7 @@ const CurrentDirectory = () => {
             key={path}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className='flex items-center space-x-2'
+            className='flex items-center space-x-2 flex-wrap'
           >
             <span>{path}</span>
             <span>
@@ -62,10 +62,10 @@ const CurrentDirectory = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           // transition={{ delay: 0.15 }}
-          className='flex items-center space-x-5'
+          className='grid grid-cols-4 gap-5 w-full h-[72vh] p-5  bg-black/50 backdrop-blur-2xl overflow-y-auto files-scrollbar'
         >
           {currentDirectory.children.map((item) => (
-            <li key={item.name} className='w-1/4'>
+            <li key={item.name} className='w-full h-16'>
               {item.type === 'folder' ? (
                 <Folder name={item.name} />
               ) : (
