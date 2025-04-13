@@ -277,6 +277,7 @@ const Login = () => {
         setIsLoading(false)
         showToast(json.message)
         navigate('/admin/login')
+        setStep(0)
       } else {
         if (
           response.status === 401 ||
@@ -289,6 +290,7 @@ const Login = () => {
       }
 
       setIsLoading(false)
+      setError3('')
     } catch (error) {}
   }
 
@@ -315,7 +317,7 @@ const Login = () => {
                 <h2 className='text-blue-900 font-bold text-2xl mb-8 text-center'>
                   {step === 0 && 'Login'}
                   {step === 1 && 'Forgot your password ?'}
-                  {step === 2 && 'OTP Login'}
+                  {step === 2 && 'OTP Verification'}
                   {step === 3 && 'Reset Password to Login'}
                 </h2>
 
@@ -612,7 +614,6 @@ const Login = () => {
                             <button
                               onClick={() => {
                                 handlePasswordSubmit()
-                                setStep(0)
                               }}
                               className='w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer'
                             >

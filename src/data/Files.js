@@ -60,12 +60,12 @@ export const FILE_SYSTEM = {
           ext: 'pdf',
           uri: '/documentation/Individual Contribution/Mridul.Upadhya.pdf',
         },
-        {
-          name: 'Nikita.Sonawane',
-          type: 'file',
-          ext: 'pdf',
-          uri: '/documentation/Individual Contribution/Nikita.Sonawane.pdf',
-        },
+        // {
+        //   name: 'Nikita.Sonawane',
+        //   type: 'file',
+        //   ext: 'pdf',
+        //   uri: '/documentation/Individual Contribution/Nikita.Sonawane.pdf',
+        // },
         {
           name: 'Nikita.Suhane',
           type: 'file',
@@ -287,6 +287,12 @@ export const FILE_SYSTEM = {
               uri: '/documentation/Product/Anagha.Shinde/Figma.pdf',
             },
           ],
+        },
+        {
+          name: 'Time sheet',
+          type: 'file',
+          ext: 'xlsx',
+          uri: '/documentation/Product/MPC Biweekly March 2025.xlsx',
         },
       ],
     },

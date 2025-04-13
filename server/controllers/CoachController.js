@@ -87,22 +87,21 @@ exports.getAllCoaches = async (req, res) => {
 
 exports.updateCoach = async (req, res) => {
   try {
-    const { id } = req.coach;
-    
+    const { id } = req.coach
+
     const existingCoach = await Coach.findById(id)
-    
+
     if (!existingCoach) {
       return ErrorResponse(res, 404, 'Coach not found')
     }
-    
-    console.log("req.file",req.file);
-    let coachImageUrl = existingCoach.image;
+
+    let coachImageUrl = existingCoach.image
 
     if (req.file) {
       const imagePath = req.file.path
       console.log('New Image Path:', imagePath)
 
-      const uploadedImage = await uploadOnCloudinary(imagePath);
+      const uploadedImage = await uploadOnCloudinary(imagePath)
       console.log('Uploaded Image URL:', uploadedImage)
 
       if (!uploadedImage) {
@@ -111,7 +110,9 @@ exports.updateCoach = async (req, res) => {
 
       coachImageUrl = uploadedImage.url
     }
-    let updatedData = JSON.parse(JSON.stringify({ ...req.body, image: coachImageUrl }));
+    let updatedData = JSON.parse(
+      JSON.stringify({ ...req.body, image: coachImageUrl })
+    )
 
     const updatedCoach = await Coach.findByIdAndUpdate(
       id,

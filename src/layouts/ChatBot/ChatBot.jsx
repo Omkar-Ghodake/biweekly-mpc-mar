@@ -16,6 +16,7 @@ const ChatBot = () => {
   const { pathname } = useLocation()
 
   const chatBotRef = useRef(null)
+  const chatBoxInputRef = useRef(null)
 
   // this code is for gemini ai
   const ai = new GoogleGenAI({
@@ -90,6 +91,8 @@ const ChatBot = () => {
   }
 
   const sendMessage = async (msg = null) => {
+    console.log('chatBoxInputRef:', chatBoxInputRef)
+
     if (!msg && !input?.trim()) return
 
     setDisplayGreeting(false)
@@ -112,6 +115,8 @@ const ChatBot = () => {
     } catch (error) {
       sendMessage()
     }
+
+    chatBoxInputRef.current.focus()
   }
 
   if (excludeChatbotLinks.includes(pathname)) return
@@ -128,6 +133,7 @@ const ChatBot = () => {
           displayGreeting={displayGreeting}
           setIsChatBoxOpen={setIsChatBoxOpen}
           chatBotRef={chatBotRef}
+          chatBoxInputRef={chatBoxInputRef}
         />
       ) : (
         <ChatBotButton

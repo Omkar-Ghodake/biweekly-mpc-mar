@@ -17,6 +17,7 @@ const ChatBox = ({
   displayGreeting,
   setIsChatBoxOpen,
   chatBoxRef,
+  chatBoxInputRef,
 }) => {
   // this code is for handling the scrolling of page as per the messages addition
   const messagesEndRef = useRef(null)
@@ -166,6 +167,7 @@ const ChatBox = ({
           <input
             type='text'
             value={input}
+            ref={chatBoxInputRef}
             onChange={(e) => setInput(e.target.value)}
             placeholder='Type your message'
             className='flex-1 bg-[#1E3A8A] bg-opacity-20 text-white px-4 py-2 outline-none placeholder-white/70 w-[80%] h-10 rounded-lg border border-transparent focus:border-blue-300 disabled:placeholder-white/40 disabled:cursor-not-allowed'
