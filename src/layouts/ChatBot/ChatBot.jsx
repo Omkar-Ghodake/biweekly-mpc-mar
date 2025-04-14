@@ -1,44 +1,44 @@
-import { GoogleGenAI } from '@google/genai'
-import React, { useRef, useState } from 'react'
-import { useLocation } from 'react-router'
-import useClickOutsideElement from '../../hooks/useClickOutsideElement.jsx'
-import ChatBotButton from './ChatBotButton'
-import { ChatBotData } from './ChatBotData.js'
-import ChatBox from './ChatBox'
+import { GoogleGenAI } from "@google/genai";
+import React, { useRef, useState } from "react";
+import { useLocation } from "react-router";
+import useClickOutsideElement from "../../hooks/useClickOutsideElement.jsx";
+import ChatBotButton from "./ChatBotButton";
+import { ChatBotData } from "./ChatBotData.js";
+import ChatBox from "./ChatBox";
 
 const ChatBot = () => {
-  const [isChatBoxOpen, setIsChatBoxOpen] = useState(false)
-  const [displayGreeting, setDisplayGreeting] = useState(true)
-  const [messages, setMessages] = useState([])
-  const [input, setInput] = useState('')
-  const [isTyping, setIsTyping] = useState(false)
+  const [isChatBoxOpen, setIsChatBoxOpen] = useState(false);
+  const [displayGreeting, setDisplayGreeting] = useState(true);
+  const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
 
-  const { pathname } = useLocation()
+  const { pathname } = useLocation();
 
-  const chatBotRef = useRef(null)
-  const chatBoxInputRef = useRef(null)
+  const chatBotRef = useRef(null);
+  const chatBoxInputRef = useRef(null);
 
   // this code is for gemini ai
   const ai = new GoogleGenAI({
-    apiKey: 'AIzaSyBdTxoCOu2KI4EsTi5XHlVdL-AAi_rlu8o',
-  })
+    apiKey: "AIzaSyBdTxoCOu2KI4EsTi5XHlVdL-AAi_rlu8o",
+  });
 
   const excludeChatbotLinks = [
-    '/',
-    '/landing',
-    '/admin/dashboard/analytics-dashboard',
-  ]
+    "/",
+    "/landing",
+    "/admin/dashboard/analytics-dashboard",
+  ];
 
   async function main() {
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
-      contents: 'Explain how AI works',
-    })
-    console.log(response.text)
+      model: "gemini-2.0-flash",
+      contents: "Explain how AI works",
+    });
+    console.log(response.text);
   }
 
   const generateResponse = async (prompt) => {
-    console.log(ChatBotData)
+    console.log(ChatBotData);
     // manipulated prompt
 
     const final_prompt = `
@@ -65,7 +65,7 @@ const ChatBot = () => {
     - consider synonyms of the words also while parsing the query 
     - don't add that whether a team member is lead or not in the response and also don't add gender of team members anywhere but use the pronouns accordingly
     - while asking about yourself strictly remember that Sakshi , Sanjeev and Rishabh developed you while Anushree helped in your training and don't mention any personal projects of sakshi,sanjeev , rishabh and anushree there 
-    - remember that total score of MPC is 219 and don't mention score until asked
+    - remember that total score of MPC is 227 and don't mention score until asked
     - Consider the count of gender from the employee data set as there are 5 females and 13 males in the team but do not mention the count until it's explicitly asked 
     - Vartika , Sejal and Akhil are not the team members as they are at management level so don't give responses for them until prompt contains their name or specificly asked
     - Remember that Vartika , Sejal and Akhil are not intrested in product management hence don't generate response related to it
@@ -81,48 +81,48 @@ const ChatBot = () => {
     - Remember that Anagha and ansushree are not females with same name 
     - reply for jai shree ram as jai shree ram , assalam walikum as jai shree ram and yashu yashu as jai shree ram
 
-    `
+    `;
 
     const response = await ai.models.generateContent({
-      model: 'gemini-2.0-flash',
+      model: "gemini-2.0-flash",
       contents: final_prompt,
-    })
-    return response.text
-  }
+    });
+    return response.text;
+  };
 
   const sendMessage = async (msg = null) => {
-    console.log('chatBoxInputRef:', chatBoxInputRef)
+    console.log("chatBoxInputRef:", chatBoxInputRef);
 
-    if (!msg && !input?.trim()) return
+    if (!msg && !input?.trim()) return;
 
-    setDisplayGreeting(false)
+    setDisplayGreeting(false);
 
-    const userMessage = { sender: 'user', text: msg || input }
+    const userMessage = { sender: "user", text: msg || input };
 
-    setMessages([...messages, userMessage])
-    setInput('')
-    setIsTyping(true)
+    setMessages([...messages, userMessage]);
+    setInput("");
+    setIsTyping(true);
 
     try {
-      const response = await generateResponse(msg || input)
+      const response = await generateResponse(msg || input);
       const botResponse = {
-        sender: 'bot',
+        sender: "bot",
         text: response,
-      }
+      };
 
-      setMessages((prev) => [...prev, botResponse])
-      setIsTyping(false)
+      setMessages((prev) => [...prev, botResponse]);
+      setIsTyping(false);
     } catch (error) {
-      sendMessage()
+      sendMessage();
     }
 
-    chatBoxInputRef.current.focus()
-  }
+    chatBoxInputRef.current.focus();
+  };
 
-  if (excludeChatbotLinks.includes(pathname)) return
+  if (excludeChatbotLinks.includes(pathname)) return;
 
   return (
-    <div className='h-fit w-fit fixed right-6 bottom-6 z-40'>
+    <div className="h-fit w-fit fixed right-6 bottom-6 z-40">
       {isChatBoxOpen ? (
         <ChatBox
           messages={messages}
@@ -142,7 +142,7 @@ const ChatBot = () => {
         />
       )}
     </div>
-  )
-}
+  );
+};
 
-export default ChatBot
+export default ChatBot;

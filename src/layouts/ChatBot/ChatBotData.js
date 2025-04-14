@@ -132,7 +132,7 @@ export const ChatBotData =
       {
         "Domain Name": "Nikita.Sonawane",
         "Gender": "Female",
-        "Score": 9,
+        "Score": 17,
         "EmployeeID": "55099135",
         "Previous Team": "JCPC",
         "Qualification": "B.Tech",
@@ -141,7 +141,7 @@ export const ChatBotData =
         "Release interest": "Backend Development",
         "Current Team": "MPC",
         "Designation": "Teammate",
-        "Issue type": {"Minor_Issue": 1,"Normal_Issue": 1,"Major_Issue": 1,"Critical_Issue": 0,"Blocker_Issue": 0},
+        "Issue type": {"Minor_Issue": 1,"Normal_Issue": 1,"Major_Issue": 1,"Critical_Issue": 1,"Blocker_Issue": 0},
       },
       {
         "Domain Name": "Nikita.Suhane",
