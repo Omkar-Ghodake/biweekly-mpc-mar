@@ -175,12 +175,17 @@ exports.deleteCoaches = async (req, res) => {
 
 exports.changePassword = async (req, res) => {
   try {
+    console.log(';hitteed')
+
     const { currentPassword, newPassword } = req.body
     const { id } = req.coach
 
+    console.log('req.body:', req.body)
+    console.log('req.coach:', req.coach)
+
     if (!currentPassword)
-      return ErrorResponse(res, 401, 'Current password is required')
-    if (!newPassword) return ErrorResponse(res, 401, 'New password is required')
+      return ErrorResponse(res, 404, 'Current password is required')
+    if (!newPassword) return ErrorResponse(res, 404, 'New password is required')
 
     const existingCoach = await Coach.findById(id)
     if (!existingCoach) return ErrorResponse(res, 404, 'Coach not found')
@@ -217,7 +222,16 @@ exports.resetPassword = async (req, res) => {
     if (!existingCoach.isOTPVerified)
       return ErrorResponse(res, 401, 'OTP not verified')
 
-    // console.log(first)
+    const isPasswordSame = await bcrypt.compare(
+      newPassword,
+      existingCoach.password
+    )
+    if (isPasswordSame)
+      return ErrorResponse(
+        res,
+        401,
+        'New password cannot be same as old password'
+      )
 
     const salt = await bcrypt.genSalt(10)
     const hashedPass = await bcrypt.hash(newPassword, salt)

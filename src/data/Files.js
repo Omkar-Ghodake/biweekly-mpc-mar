@@ -239,10 +239,22 @@ export const FILE_SYSTEM = {
           type: 'folder',
           children: [
             {
+              name: 'Coach US',
+              type: 'file',
+              ext: 'pdf',
+              uri: '/documentation/Product/Mridul.Upadhya/US_Coach_role.pdf',
+            },
+            {
               name: 'User Story',
               type: 'file',
               ext: 'pdf',
-              uri: '/documentation/Product/Mridul.Upadhya/Mridul.Upadhya.pdf',
+              uri: '/documentation/Product/Mridul.Upadhya/US_Common.pdf',
+            },
+            {
+              name: 'User Story',
+              type: 'file',
+              ext: 'pdf',
+              uri: '/documentation/Product/Mridul.Upadhya/US_Player_role.pdf',
             },
           ],
         },

@@ -245,7 +245,11 @@ const Login = () => {
     await verifyOTP(otp)
   }
 
-  const handlePasswordSubmit = async () => {
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault()
+
+    console.log('password submit...')
+
     if (!newPassword || !confirmPassword) {
       return setError3('Enter All Fields')
     }
@@ -272,6 +276,8 @@ const Login = () => {
       )
 
       const json = await response.json()
+
+      console.log('json:', json)
 
       if (response.ok) {
         setIsLoading(false)
@@ -341,6 +347,8 @@ const Login = () => {
                               className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
                               value={domain}
                               onChange={handleEmailChange}
+                              minLength={5}
+                              maxLength={20}
                             />
                           </div>
 
@@ -352,6 +360,8 @@ const Login = () => {
                               className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
                               value={password}
                               onChange={handlePasswordChange}
+                              minLength={8}
+                              maxLength={20}
                             />
                             {password !== '' && (
                               <button
@@ -556,7 +566,10 @@ const Login = () => {
                       className='space-y-4'
                     >
                       {
-                        <div className='space-y-4'>
+                        <form
+                          className='space-y-4'
+                          onSubmit={handlePasswordSubmit}
+                        >
                           <div>
                             <input
                               type={isPasswordVisible ? 'text' : 'password'}
@@ -564,21 +577,11 @@ const Login = () => {
                               // value={newPassword}
                               onChange={(e) => setNewPassword(e.target.value)}
                               className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
+                              minLength={8}
+                              maxLength={20}
                             />
-                            {/* {newPassword !== "" && (
-                        <button
-                          type="button"
-                          className="absolute right-3 transform -translate-y-1/2 text-gray-400"
-                          onClick={togglePasswordVisibility}
-                        >
-                          {isPasswordVisible ? (
-                            <AiFillEyeInvisible size={20} />
-                          ) : (
-                            <AiFillEye size={20} />
-                          )}
-                        </button>
-                      )} */}
                           </div>
+
                           <div className='relative'>
                             <input
                               type={
@@ -590,6 +593,8 @@ const Login = () => {
                                 setConfirmPassword(e.target.value)
                               }
                               className=' w-[350px] p-3 rounded-2xl bg-[rgba(209,201,255,0.6)]  focus:outline-none focus:ring-1 focus:ring-blue-500'
+                              minLength={8}
+                              maxLength={20}
                             />
                             {confirmPassword !== '' && (
                               <button
@@ -612,9 +617,7 @@ const Login = () => {
                           )}
                           <div className='flex justify-center'>
                             <button
-                              onClick={() => {
-                                handlePasswordSubmit()
-                              }}
+                              // onClick={handlePasswordSubmit}
                               className='w-40 bg-blue-900 text-white py-2 rounded-2xl cursor-pointer'
                             >
                               Reset Password
@@ -639,7 +642,7 @@ const Login = () => {
                               <span>Back to Login</span>
                             </button>
                           </div>
-                        </div>
+                        </form>
                       }
                     </motion.div>
                   )}

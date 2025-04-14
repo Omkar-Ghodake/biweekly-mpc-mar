@@ -8,11 +8,13 @@ import { ToastContext } from '../../context/ToastProvider'
 import { useNavigate } from 'react-router'
 import BackButton from '../../components/BackButton'
 import { LoadingContext } from '../../context/LoadingProvider'
+import Modal from '../../layouts/Modal/Modal'
+import { ModalContext } from '../../context/ModalProvider'
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai'
 
 export default function CoachForm() {
   const coach = useContext(CoachContext)
   const coachData = coach.coach
-  console.log(coachData)
   const navigate = useNavigate()
   const { setIsLoading } = useContext(LoadingContext)
 
@@ -27,8 +29,18 @@ export default function CoachForm() {
   const [image, setImage] = useState('')
   const [isEditing, setIsEditing] = useState(false)
   const toast = useContext(ToastContext)
-  const { isCoachAuthenticated } = useContext(CoachContext)
   const [authToken, setAuthToken] = useState('')
+  const [passwords, setPasswords] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  })
+  const [changePassErr, setChangePassErr] = useState('')
+  const [showCurrentPass, setShowCurrentPass] = useState(false)
+  const [showConfirmPass, setShowConfirmPass] = useState(false)
+
+  const { isCoachAuthenticated } = useContext(CoachContext)
+  const { openModal, closeModal } = useContext(ModalContext)
 
   useEffect(() => {
     setAuthToken(localStorage.getItem('token'))
@@ -47,6 +59,59 @@ export default function CoachForm() {
       ...prevData,
       [name]: type === 'number' ? Number(value) : value, // Ensure numbers are stored correctly
     }))
+  }
+
+  const handlePasswordChange = (e) => {
+    setPasswords({ ...passwords, [e.target.name]: e.target.value })
+  }
+
+  const handleSubmitChangePass = async (e) => {
+    setChangePassErr('')
+
+    e.preventDefault()
+
+    if (passwords.newPassword !== passwords.confirmPassword) {
+      return setChangePassErr('Passwords do not match')
+    }
+
+    const changePassData = new FormData()
+    changePassData.append('currentPassword', passwords.currentPassword)
+    changePassData.append('newPassword', passwords.newPassword)
+    changePassData.append('authToken', authToken)
+
+    // for (var pair of changePassData.entries()) {
+    //   console.log(pair[0] + ', ' + pair[1])
+    // }
+
+    setIsLoading(true)
+    try {
+      const response = await axios.patch(
+        'http://localhost:5500/api/v1/coach/change-password',
+        changePassData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      )
+
+      toast.showToast('Coach updated successfully')
+      setChangePassErr('')
+      closeModal()
+      setPasswords({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      })
+
+      e.target.reset()
+    } catch (error) {
+      // toast.showToast(error.response.data.message, 'error')
+      setChangePassErr(error.response.data.message)
+      // console.log('error:', error.response.data.message)
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const convertBase64ToFile = (base64String, fileName) => {
@@ -90,8 +155,6 @@ export default function CoachForm() {
     coachInfo.append('description', formData.description)
     coachInfo.append('gender', formData.gender)
     coachInfo.append('authToken', authToken)
-    console.log('image:', formData.image)
-    console.log('image instanceof File:', formData.image instanceof File)
 
     coachInfo.append('image', formData.image || 'image')
 
@@ -101,21 +164,17 @@ export default function CoachForm() {
 
     setIsLoading(true)
     try {
-      console.log('coachInfo', coachInfo)
       const response = await axios.patch(
         'http://localhost:5500/api/v1/coach/update-coach',
         coachInfo
       )
-      console.log('response', response)
       toast.showToast('Coach updated successfully')
     } catch (error) {
       toast.showToast('Unable to update Coach', 'error')
     } finally {
       setIsLoading(false)
     }
-    console.log(formData) // Replace with API call
   }
-  console.log(formData) // Replace with API call
 
   if (!isCoachAuthenticated) return navigate('/admin/login')
 
@@ -313,11 +372,146 @@ export default function CoachForm() {
                     <span>Edit</span>
                   </div>
                 </button>
+
+                <button
+                  type='button'
+                  className={`w-fit h-[40px] px-4 py-2 text-white rounded-xl shadow-md hover:cursor-pointer ${
+                    isEditing
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-sky-700 hover:bg-sky-800 hover:cursor-pointer'
+                  } disabled:cursor-default`}
+                  disabled={isEditing}
+                  onClick={openModal}
+                >
+                  <div className='flex items-center justify-center gap-4'>
+                    <FaRegEdit />
+                    <span>Change Password</span>
+                  </div>
+                </button>
               </div>
             </form>
           </div>
         </div>
       </div>
+
+      <Modal
+        className={'min-w-[40vw] min-h-[50vh] flex justify-center items-center'}
+      >
+        <div className='flex flex-col h-fit space-y-10 w-full'>
+          <h1 className='text-center text-2xl font-bold'>Change Password</h1>
+
+          <form
+            className='flex flex-col items-center justify-center space-y-5 w-2/3 mx-auto'
+            onSubmit={handleSubmitChangePass}
+          >
+            <div className='flex items-center justify-between space-x-5 w-full'>
+              <label
+                htmlFor='currentPassword'
+                className='font-medium w-1/3 text-[#1E4788]'
+              >
+                Current Password
+              </label>
+
+              <div className='relative'>
+                <input
+                  type='password'
+                  name='currentPassword'
+                  placeholder={`Current Password`}
+                  required
+                  minLength={8}
+                  maxLength={20}
+                  onChange={handlePasswordChange}
+                  className={`w-full p-2 rounded-xl transition-all duration-200 border shadow-md focus:outline-[#1E4788]`}
+                />
+
+                <span className='absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer'>
+                  {showConfirmPass ? (
+                    <AiFillEyeInvisible size={20} />
+                  ) : (
+                    <AiFillEye size={20} />
+                  )}
+                </span>
+              </div>
+            </div>
+
+            <div className='flex items-center justify-between space-x-5 w-full'>
+              <label
+                htmlFor='newPassword'
+                className='font-medium w-1/3 text-[#1E4788]'
+              >
+                New Password
+              </label>
+
+              <div className='relative'>
+                <input
+                  type='password'
+                  name='newPassword'
+                  placeholder={`New Password`}
+                  required
+                  minLength={8}
+                  maxLength={20}
+                  onChange={handlePasswordChange}
+                  className={`w-full p-2 rounded-xl transition-all duration-200 border shadow-md focus:outline-[#1E4788]`}
+                />
+              </div>
+            </div>
+
+            <div className='flex items-center justify-between space-x-5 w-full'>
+              <label
+                htmlFor='confirmPassword'
+                className='font-medium w-1/3 text-[#1E4788]'
+              >
+                Confirm Password
+              </label>
+
+              <div className='relative'>
+                <input
+                  type='password'
+                  name='confirmPassword'
+                  placeholder={`Confirm Password`}
+                  required
+                  minLength={8}
+                  maxLength={20}
+                  onChange={handlePasswordChange}
+                  className={`w-full p-2 rounded-xl transition-all duration-200 border shadow-md focus:outline-[#1E4788]`}
+                />
+
+                <span className='absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer'>
+                  {showConfirmPass ? (
+                    <AiFillEyeInvisible
+                      size={20}
+                      onClick={() => showConfirmPass(true)}
+                    />
+                  ) : (
+                    <AiFillEye
+                      size={20}
+                      onClick={() => showConfirmPass(false)}
+                    />
+                  )}
+                </span>
+              </div>
+            </div>
+
+            <span className='w-full text-red-500'>
+              {changePassErr && changePassErr}
+            </span>
+
+            <button
+              type='submit'
+              className={`w-fit h-[40px] mt-5 px-4 py-2 text-white rounded-xl shadow-md hover:cursor-pointer ${
+                isEditing
+                  ? 'bg-gray-400 cursor-not-allowed'
+                  : 'bg-sky-700 hover:bg-sky-800 hover:cursor-pointer'
+              } disabled:cursor-default`}
+            >
+              <div className='flex items-center justify-center gap-4'>
+                <FaRegEdit />
+                <span>Change Password</span>
+              </div>
+            </button>
+          </form>
+        </div>
+      </Modal>
     </div>
   )
 }

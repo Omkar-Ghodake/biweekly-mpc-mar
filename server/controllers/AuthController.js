@@ -108,7 +108,7 @@ exports.verifyOTP = async (req, res) => {
     if (!email) return ErrorResponse(res, 401, 'Email is required')
 
     const existingCoach = await Coach.findOne({
-      domain_name: email.toLowerCase().substring(0, email.indexOf('@')),
+      email,
     }).select('-password')
     if (!existingCoach) return ErrorResponse(res, 404, 'User not found')
 

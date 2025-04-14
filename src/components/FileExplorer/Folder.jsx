@@ -15,7 +15,7 @@ const Folder = ({ name }) => {
         <FaFolder />
       </span>
       <span>
-        {name.substring(0, 15)} {name.length > 15 && '...'}
+        {name.substring(0, 12)} {name.length > 12 && '...'}
       </span>
     </div>
   )
