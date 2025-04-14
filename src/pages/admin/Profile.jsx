@@ -414,7 +414,7 @@ export default function CoachForm() {
 
               <div className='relative'>
                 <input
-                  type='password'
+                  type={showCurrentPass ? 'text' : 'password'}
                   name='currentPassword'
                   placeholder={`Current Password`}
                   required
@@ -425,10 +425,16 @@ export default function CoachForm() {
                 />
 
                 <span className='absolute right-2 top-1/2 transform -translate-y-1/2 cursor-pointer'>
-                  {showConfirmPass ? (
-                    <AiFillEyeInvisible size={20} />
+                  {showCurrentPass ? (
+                    <AiFillEyeInvisible
+                      size={20}
+                      onClick={() => setShowCurrentPass(false)}
+                    />
                   ) : (
-                    <AiFillEye size={20} />
+                    <AiFillEye
+                      size={20}
+                      onClick={() => setShowCurrentPass(true)}
+                    />
                   )}
                 </span>
               </div>
@@ -460,13 +466,14 @@ export default function CoachForm() {
               <label
                 htmlFor='confirmPassword'
                 className='font-medium w-1/3 text-[#1E4788]'
+                type={showConfirmPass ? 'text' : 'password'}
               >
                 Confirm Password
               </label>
 
               <div className='relative'>
                 <input
-                  type='password'
+                  type={showConfirmPass ? 'text' : 'password'}
                   name='confirmPassword'
                   placeholder={`Confirm Password`}
                   required
@@ -480,12 +487,12 @@ export default function CoachForm() {
                   {showConfirmPass ? (
                     <AiFillEyeInvisible
                       size={20}
-                      onClick={() => showConfirmPass(true)}
+                      onClick={() => setShowConfirmPass(false)}
                     />
                   ) : (
                     <AiFillEye
                       size={20}
-                      onClick={() => showConfirmPass(false)}
+                      onClick={() => setShowConfirmPass(true)}
                     />
                   )}
                 </span>
